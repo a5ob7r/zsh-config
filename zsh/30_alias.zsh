@@ -1,19 +1,24 @@
-# shellcheck shell=bash
-# shellcheck disable=SC2154
+if grep --version | grep -q GNU; then
+  alias grep='grep --color=auto'
+  alias gr="grep -F -irn --exclude-dir='.git'"
+fi
 
 # define alias of colorful and detail ls
 if (( $+commands[exa] )); then
   alias ll='exa -1'
   alias la='exa -lag --icons'
-elif ls --color=auto > /dev/null 2>&1; then
+elif ls --version | grep -q GNU; then
   # when GNU LS(= coreutils) is installed
-  alias ll='ls -1 --color=auto'
-  alias la='ls -lAh --color=auto'
+  alias ls='ls --color=auto'
+  alias ll='ls -1'
+  alias la='ls -lAh'
 else
   # BSD LS
   alias ll='ls -1G'
   alias la="ls -hlTAFG"
 fi
+
+alias mv='mv -in'
 
 if (( $+commands[docker] )); then
   alias dk='docker'
