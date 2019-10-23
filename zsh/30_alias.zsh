@@ -52,3 +52,8 @@ alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias shinit='exec $SHELL -l'
+
+__list_path() {
+  echo "${path}" | tr ' ' '\n'
+}
+alias path=__list_path
