@@ -1,8 +1,4 @@
-# shellcheck shell=bash
-# shellcheck disable=SC1090
-# shellcheck disable=SC2154
-
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z} r:|[._-]=*'
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' completer _expand _complete _match _approximate _list
 zstyle ':completion:*' group-name ''
