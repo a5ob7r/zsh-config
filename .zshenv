@@ -4,6 +4,8 @@ DOTFILES=$(dirname "$(readlink ~/.zshenv)")
 export DOTFILES
 # }}}
 
+source "${DOTFILES}/lib.zsh"
+
 # {{{ basic
 export LANG=en_US.UTF-8
 export LC_TIME="C"
@@ -15,11 +17,8 @@ export PAGER=less
 # prevent adding duplication path
 typeset -U path PATH
 
-export path=( \
-  ~/bin(N-/) \
-  ~/.local/bin(N-/) \
-  "${path[@]}" \
-  )
+add2path ~/bin
+add2path ~/.local/bin
 # }}}
 
 # {{{ less
@@ -66,7 +65,7 @@ init_anyenv() {
     return 0
   fi
 
-  export PATH="${ANYENV_ROOT}/bin:${PATH}"
+  add2path "${ANYENV_ROOT}/bin"
   eval "$(anyenv init - --no-rehash)"
 }
 
@@ -76,10 +75,9 @@ unset -f init_anyenv
 
 # {{{ other
 export GOPATH=~/go
-export path=( \
-  "${GOPATH}"/bin(N-/) \
-  "${path[@]}" \
-  )
+add2path "${GOPATH}/bin"
+export path
+
 export PIPENV_VENV_IN_PROJECT=1
 export SPACESHIP_CHAR_SYMBOL='❯'
 export SPACESHIP_CHAR_SUFFIX=' '
