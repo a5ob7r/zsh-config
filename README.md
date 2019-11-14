@@ -7,6 +7,6 @@ make link
 
 ## Install local zsh completions
 ```sh
-zplugin creinstall "$DOTFILES"/zsh/compdefs
-zplugin creinstall "$DOTFILES"/zsh/compdefs_local
+cd path/to/zsh-config
+zpl creinstall "${PWD}/completions/"
 ```
