@@ -10,7 +10,7 @@ fghq() {
   ghq_root=$(ghq root)
 
   local repo
-  repo=$(ghq list | fzf-tmux) || return 1
+  repo=$(ghq list | fzy) || return 1
 
   cd "$ghq_root/$repo" || return 1
 }

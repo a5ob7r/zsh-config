@@ -2,7 +2,7 @@
 # shellcheck disable=SC1090
 
 
-for f in "$DOTFILES"/zsh/*.zsh; do
+for f in "$DOTFILES"/configs/*.zsh; do
   source "$f"
 done
 
