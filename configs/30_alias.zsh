@@ -15,8 +15,10 @@ elif gnu ls; then
   alias la='ls -lAh'
 else
   # BSD LS
-  alias ll='ls -1G'
-  alias la="ls -hlTAFG"
+  alias ls='ls -GF'
+  alias l='ls -ohA'
+  alias ll='ls -1'
+  alias la="ls -lhTA"
 fi
 
 alias mv='mv -in'
