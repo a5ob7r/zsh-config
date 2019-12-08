@@ -22,7 +22,9 @@ zplugin light 'sindresorhus/pure'
 
 zplugin light 'b4b4r07/enhancd'
 
-zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh"
-zplugin light trapd00r/LS_COLORS
+if has dircolors; then
+  zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh"
+  zplugin light trapd00r/LS_COLORS
+fi
 
 autoload -Uz compinit && compinit -u
