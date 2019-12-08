@@ -1,14 +1,14 @@
-if grep --version | grep -q GNU; then
+if gnu grep; then
   alias grep='grep --color=auto'
   alias gr="grep -F -irn --exclude-dir='.git'"
 fi
 
 # define alias of colorful and detail ls
-if (( $+commands[exa] )); then
+if has exa; then
   alias l='exa -la'
   alias lg='l -g'
   alias ll='exa -1'
-elif ls --version | grep -q GNU; then
+elif gnu ls; then
   # when GNU LS(= coreutils) is installed
   alias ls='ls --color=auto'
   alias ll='ls -1'
@@ -21,30 +21,30 @@ fi
 
 alias mv='mv -in'
 
-if (( $+commands[docker] )); then
+if has docker; then
   alias dk='docker'
 fi
 
-if (( $+commands[docker-compose] )); then
+if has docker-compose; then
   alias dkcp='docker-compose'
 fi
 
-if (( $+commands[tmux] )); then
+if has tmux; then
   alias t='tmux'
 fi
 
-if (( $+commands[hub] )); then
+if has hub; then
   alias g='hub'
-elif (( $+commands[git] )); then
+elif has git; then
   alias g='git'
 fi
 
-if (( $+commands[volt] )); then
+if has volt; then
   alias v='volt'
   alias vb='volt build'
 fi
 
-if (( $+commands[pipenv])); then
+if has pipenv; then
   alias p='pipenv'
 fi
 
