@@ -1,3 +1,5 @@
 # {{{ local zshenv
-[[ -f ~/.zshenv.local ]] && source ~/.zshenv.local
+if [[ -f ~/.zshenv.local ]]; then
+  source ~/.zshenv.local
+fi
 # }}}

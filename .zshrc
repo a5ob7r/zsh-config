@@ -13,7 +13,9 @@ for f in "$DOTFILES"/configs/*.zsh; do
   source "$f"
 done
 
-[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+if [[ -f ~/.zshrc.local ]]; then
+  source ~/.zshrc.local
+fi
 
 # Prevents .zshrc updating by zplugin installer.
 # <<zplugin>>

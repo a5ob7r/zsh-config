@@ -87,4 +87,6 @@ case ${OSTYPE} in
     ;;
 esac
 
-[[ -f ~/.zlogin.local ]] && source ~/.zlogin.local
+if [[ -f ~/.zlogin.local ]]; then
+  source ~/.zlogin.local
+fi
