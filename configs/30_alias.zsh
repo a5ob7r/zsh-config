@@ -5,9 +5,9 @@ fi
 
 # define alias of colorful and detail ls
 if (( $+commands[exa] )); then
-  alias l='exa -la --icons'
+  alias l='exa -la'
   alias lg='l -g'
-  alias ll='exa -1 --icons'
+  alias ll='exa -1'
 elif ls --version | grep -q GNU; then
   # when GNU LS(= coreutils) is installed
   alias ls='ls --color=auto'
