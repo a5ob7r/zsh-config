@@ -21,8 +21,6 @@ else
   alias la="ls -lhTA"
 fi
 
-alias mv='mv -in'
-
 if has docker; then
   alias dk='docker'
 fi
