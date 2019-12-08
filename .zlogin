@@ -41,7 +41,9 @@ export SPROMPT="zsh: correct: %F{red}%R%f -> %F{green}%r%f [No/Yes/Abort/Edit]? 
 
 # {{{ fzf
 export FZF_DEFAULT_OPTS='--reverse'
-export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
+if has rg; then
+  export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
+fi
 export FZF_TMUX=1
 # }}}
 
