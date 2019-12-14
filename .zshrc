@@ -192,8 +192,14 @@ if [[ "$0" == -* ]]; then
 
   # {{{ anyenv
   __anyenv_init() {
+    local -r ANYENV_ROOT=~/.anyenv
     local -r ANYENV_INIT_PATH=~/.config/anyenv/ANYENV_INIT.env
 
+    if [[ ! -d "${ANYENV_ROOT}" ]]; then
+      return
+    fi
+
+    export ANYENV_ROOT
     add2path ~/.anyenv/bin
 
     [[ -f "${ANYENV_INIT_PATH}" ]] \
