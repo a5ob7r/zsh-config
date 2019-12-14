@@ -23,9 +23,7 @@ __add_directory_path_to_path_with_duplicate_check() {
 alias add2path='__add_directory_path_to_path_with_duplicate_check'
 
 __exists_command() {
-  local -r CMD=${1}
-
-  (( ${+commands[${CMD}]} ))
+  whence ${1} > /dev/null
 }
 
 alias has='__exists_command'
