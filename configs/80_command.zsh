@@ -28,7 +28,19 @@ fdkrm() {
 }
 
 zshtimes() {
-  for _ in $(seq 1 10); do sleep 0.1; time zsh -i -c exit; done
+  local -ir NB_TIMES=${1}
+
+  repeat "${NB_TIMES}"; do
+    sleep 1
+    time (zsh -ic exit)
+  done
+}
+
+zshtimes-stat() {
+  local -ir NB_TIMES=${1}
+
+  zshtimes "${NB_TIMES}" 2>&1 \
+    | tee >(cut -d ' ' -f 9 | awk '{s += $1; c += 1} END {printf "\n  AVG: %f second\n", s/c}')
 }
 
 zshcompiles() {
