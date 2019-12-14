@@ -85,8 +85,28 @@ zshtimes-stat() {
 }
 
 zshcompiles() {
-  local f_zsh=(~/.zshrc ~/.zshenv "$DOTFILES"/zsh/*.zsh)
-  for f in "${f_zsh[@]}"; do zcompile "$f"; done
+  local -ra ZSH_CONFIGS=( \
+    ~/.zshenv \
+    ~/.zprofile \
+    ~/.zshrc \
+    ~/.zlogin \
+  )
+
+  zsh_compile() {
+    local -ra CONFIGS=( \
+      "${1}" \
+      "${1}.local" \
+    )
+
+    for c in "${CONFIGS[@]}"; do
+      if [[ -f "${c}" ]]; then
+        zcompile "${c}"
+        echo "Compiled: ${c}"
+      fi
+    done
+  }
+
+  for zc in "${ZSH_CONFIGS[@]}"; do zsh_compile "${zc}"; done
 }
 
 __fzf_use_tmux__() {
