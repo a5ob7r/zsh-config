@@ -396,7 +396,7 @@ source ~/.zplugin/bin/zplugin.zsh
 zplugin ice wait blockf lucid
 zplugin light 'zsh-users/zsh-completions'
 
-zplugin ice wait lucid
+zplugin ice wait atload"_zsh_autosuggest_start" lucid
 zplugin light 'zsh-users/zsh-autosuggestions'
 
 zplugin ice wait atinit"zpcompinit; zpcdreplay" lucid
