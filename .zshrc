@@ -1,3 +1,14 @@
+# zshrc
+#
+# 1. shell functions
+# 2. environment variables
+# 3. aliases
+# 4. zstyle
+# 5. options
+# 6. fzf
+# 6. hook
+# 7. zplugin
+
 __add_directory_path_to_path_with_duplicate_check() {
   local -r DIRPATH="${1}"
 
@@ -130,34 +141,6 @@ if [[ "$0" == -* ]]; then
   esac
 fi
 # }}}
-
-! [[ -d ~/.zplugin ]] && \
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
-
-source ~/.zplugin/bin/zplugin.zsh
-
-# If you place the source below compinit,
-# then add those two lines after the source:
-#autoload -Uz _zplugin
-#(( ${+_comps} )) && _comps[zplugin]=_zplugin
-
-zplugin ice blockf
-zplugin light 'zsh-users/zsh-completions'
-zplugin light 'zsh-users/zsh-autosuggestions'
-
-zplugin light 'zdharma/fast-syntax-highlighting'
-
-zplugin ice pick"async.zsh" src"pure.zsh"
-zplugin light 'sindresorhus/pure'
-
-zplugin light 'b4b4r07/enhancd'
-
-if has dircolors; then
-  zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh"
-  zplugin light trapd00r/LS_COLORS
-fi
-
-autoload -Uz compinit && compinit -u
 
 if gnu grep; then
   alias grep='grep --color=auto'
@@ -367,9 +350,38 @@ zshcompiles() {
   local f_zsh=(~/.zshrc ~/.zshenv "$DOTFILES"/zsh/*.zsh)
   for f in "${f_zsh[@]}"; do zcompile "$f"; done
 }
-if [[ -f ~/.zshrc.local ]]; then
-  source ~/.zshrc.local
+
+! [[ -d ~/.zplugin ]] && \
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
+
+source ~/.zplugin/bin/zplugin.zsh
+
+# If you place the source below compinit,
+# then add those two lines after the source:
+#autoload -Uz _zplugin
+#(( ${+_comps} )) && _comps[zplugin]=_zplugin
+
+zplugin ice blockf
+zplugin light 'zsh-users/zsh-completions'
+zplugin light 'zsh-users/zsh-autosuggestions'
+
+zplugin light 'zdharma/fast-syntax-highlighting'
+
+zplugin ice pick"async.zsh" src"pure.zsh"
+zplugin light 'sindresorhus/pure'
+
+zplugin light 'b4b4r07/enhancd'
+
+if has dircolors; then
+  zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh"
+  zplugin light trapd00r/LS_COLORS
 fi
+
+autoload -Uz compinit && compinit -u
 
 # Prevents .zshrc updating by zplugin installer.
 # <<zplugin>>
+
+if [[ -f ~/.zshrc.local ]]; then
+  source ~/.zshrc.local
+fi
