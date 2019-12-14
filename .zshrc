@@ -393,23 +393,24 @@ source ~/.zplugin/bin/zplugin.zsh
 #autoload -Uz _zplugin
 #(( ${+_comps} )) && _comps[zplugin]=_zplugin
 
-zplugin ice blockf
+zplugin ice wait blockf lucid
 zplugin light 'zsh-users/zsh-completions'
+
+zplugin ice wait lucid
 zplugin light 'zsh-users/zsh-autosuggestions'
 
+zplugin ice wait atinit"zpcompinit; zpcdreplay" lucid
 zplugin light 'zdharma/fast-syntax-highlighting'
 
-zplugin ice pick"async.zsh" src"pure.zsh"
+PS1="> "
+zplugin ice wait'!' pick"async.zsh" src"pure.zsh" lucid
 zplugin light 'sindresorhus/pure'
 
+zplugin ice wait lucid
 zplugin light 'b4b4r07/enhancd'
 
-if has dircolors; then
-  zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh"
-  zplugin light trapd00r/LS_COLORS
-fi
-
-autoload -Uz compinit && compinit -u
+zplugin ice wait atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" lucid
+zplugin light trapd00r/LS_COLORS
 
 # Prevents .zshrc updating by zplugin installer.
 # <<zplugin>>
