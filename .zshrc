@@ -33,12 +33,16 @@ __exists_command() {
 alias has='__exists_command'
 
 __is_gnu_coreutils() {
-  local -r CMD=${1}
-
-  ${CMD} --version 2>&1 | grep -q GNU
+  ${1} --version 2>&1 | grep -q GNU
 }
 
 alias gnu='__is_gnu_coreutils'
+
+__is_gnu_coreutils_installed() {
+  has dircolors
+}
+
+alias gnui='__is_gnu_coreutils_installed'
 
 __list_path() {
   tr ' ' '\n' <<< "${path}"
@@ -263,7 +267,7 @@ if [[ "$0" == -* ]]; then
 fi
 # }}}
 
-if gnu grep; then
+if gnui; then
   alias grep='grep --color=auto'
   alias gr="grep -F -irn --exclude-dir='.git'"
 fi
@@ -273,7 +277,7 @@ if has exa; then
   alias l='exa -la'
   alias lg='l -g'
   alias ll='exa -1'
-elif gnu ls; then
+elif gnui ls; then
   # when GNU LS(= coreutils) is installed
   alias ls='ls --color=auto'
   alias ll='ls -1'
