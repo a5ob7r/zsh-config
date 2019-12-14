@@ -60,6 +60,7 @@ if has dircolors; then
 fi
 
 autoload -Uz compinit && compinit -u
+
 if gnu grep; then
   alias grep='grep --color=auto'
   alias gr="grep -F -irn --exclude-dir='.git'"
@@ -142,7 +143,6 @@ if [[ -n "${TMUX}" ]] && has anyenv; then
     source "${env}"/completions/*.zsh
   done
 fi
-# shellcheck shell=bash
 
 setopt correct
 setopt emacs
@@ -163,6 +163,7 @@ setopt share_history
 
 unsetopt beep
 unsetopt flow_control
+
 # Auto-completion
 source ~/.fzf/shell/completion.zsh 2> /dev/null
 
@@ -220,8 +221,6 @@ fzf-history-widget() {
 }
 zle     -N   fzf-history-widget
 bindkey '^R' fzf-history-widget
-
-# shellcheck shell=bash
 
 # execute whenever the current working directory is changed
 chpwd() {
