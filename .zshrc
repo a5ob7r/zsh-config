@@ -9,6 +9,10 @@
 # 6. hook
 # 7. zplugin
 
+if [[ "${ZSH_DEBUG}" -eq 1 ]]; then
+  zmodload zsh/zprof && zprof
+fi
+
 __add_directory_path_to_path_with_duplicate_check() {
   local -r DIRPATH="${1}"
 
@@ -382,4 +386,8 @@ autoload -Uz compinit && compinit -u
 
 if [[ -f ~/.zshrc.local ]]; then
   source ~/.zshrc.local
+fi
+
+if has zprof; then
+  zprof | less
 fi
