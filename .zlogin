@@ -48,12 +48,17 @@ export FZF_TMUX=1
 # }}}
 
 # {{{ anyenv
-export ANYENV_ROOT=~/.anyenv
+__anyenv_init() {
+  local -r ANYENV_INIT_PATH=~/.config/anyenv/ANYENV_INIT.env
 
-if [[ -d ${ANYENV_ROOT} ]] ; then
-  add2path "${ANYENV_ROOT}/bin"
-  eval "$(anyenv init - --no-rehash)"
-fi
+  add2path ~/.anyenv/bin
+
+  [[ -f "${ANYENV_INIT_PATH}" ]] \
+    || anyenv init - --no-rehash  > "${ANYENV_INIT_PATH}"
+
+  source "${ANYENV_INIT_PATH}"
+}
+__anyenv_init
 # }}}
 
 # {{{ other
