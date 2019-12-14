@@ -26,8 +26,12 @@ __is_gnu_coreutils() {
 }
 
 alias gnu='__is_gnu_coreutils'
-# shellcheck shell=bash
-# shellcheck disable=SC1090
+
+__list_path() {
+  tr ' ' '\n' <<< "${path}"
+}
+
+alias path=__list_path
 
 ! [[ -d ~/.zplugin ]] && \
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
@@ -112,10 +116,6 @@ alias ...='cd ../../'
 alias ....='cd ../../../'
 alias shinit='exec $SHELL -l'
 
-__list_path() {
-  echo "${path}" | tr ' ' '\n'
-}
-alias path=__list_path
 zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' completer _expand _complete _match _approximate _list
