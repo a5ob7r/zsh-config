@@ -18,9 +18,9 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 
-if [[ -n $TMUX ]] && (( $+commands[anyenv] )); then
-  source "$ANYENV_ROOT/completions/anyenv.zsh"
-  for env in "$ANYENV_ROOT"/envs/*; do
-    source "$env"/completions/*.zsh
+if [[ -n "${TMUX}" ]] && has anyenv; then
+  source ~/.anyenv/completions/anyenv.zsh
+  for env in ~/.anyenv/envs/*; do
+    source "${env}"/completions/*.zsh
   done
 fi
