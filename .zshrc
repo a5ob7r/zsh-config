@@ -9,6 +9,8 @@
 # 6. hook
 # 7. zplugin
 
+# TIMEATSTART=$(date +%s%3N)
+
 if [[ "${ZSH_DEBUG}" -eq 1 ]]; then
   zmodload zsh/zprof && zprof
 fi
@@ -55,7 +57,7 @@ zshtimes() {
 
   repeat "${NB_TIMES}"; do
     sleep 1
-    time (zsh -ic exit)
+    time (zsh -ic exit 2> /dev/null)
   done
 }
 
@@ -427,3 +429,8 @@ fi
 if has zprof; then
   zprof | less
 fi
+
+# TIMEATEND=$(date +%s%3N)
+# STARTUPTIME=$(bc <<< "${TIMEATEND} - ${TIMEATSTART}")
+# echo "startup time: ${STARTUPTIME} ms" >&2
+# unset TIMEATSTART TIMEATEND STARTUPTIME
