@@ -50,28 +50,6 @@ __list_path() {
 
 alias path=__list_path
 
-fghq() {
-  local ghq_root
-  ghq_root=$(ghq root)
-
-  local repo
-  repo=$(ghq list | fzy) || return 1
-
-  cd "$ghq_root/$repo" || return 1
-}
-
-fdkrmi() {
-  local images
-  images=$(docker images | fzf-tmux --multi --header-lines=1) &&
-    echo "$images" | awk '{print $3}' | xargs docker rmi
-}
-
-fdkrm() {
-  local containers
-  containers=$(docker container ls -a | fzf-tmux --multi --header-lines=1) &&
-    echo "$containers" | awk '{print $1}' | xargs docker rm
-}
-
 zshtimes() {
   local -ir NB_TIMES=${1}
 
@@ -160,6 +138,34 @@ fzf-history-widget() {
   zle redisplay
   typeset -f zle-line-init >/dev/null && zle zle-line-init
   return $ret
+}
+
+fghq() {
+  local -r REPO="$(ghq list | $(__fzfcmd))"
+  [[ -n "${REPO}" ]] || return 1
+
+  local -r GHQ_ROOT="$(ghq root)"
+  cd "${GHQ_ROOT}/${REPO}" || return 1
+}
+
+fdkrmi() {
+  local -ra IMAGES=( $(docker images | "$(__fzfcmd)" --multi --header-lines=1 | awk '{print $3}') )
+
+  [[ -n "${IMAGES[*]}" ]] || return 1
+
+  for image in "${IMAGES[@]}"; do
+    docker rmi "${image}"
+  done
+}
+
+fdkrm() {
+  local -ra CONTAINERS=( $(docker container ls -a | "$(__fzfcmd)" --multi --header-lines=1 | awk '{print $1}') )
+
+  [[ -n "${CONTAINERS[*]}" ]] || return 1
+
+  for container in "${CONTAINERS[@]}"; do
+    docker rm "${container}"
+  done
 }
 
 
