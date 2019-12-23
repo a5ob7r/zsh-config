@@ -207,11 +207,10 @@ if [[ "$0" == -* ]]; then
   # }}}
 
   # {{{ fzf
-  export FZF_DEFAULT_OPTS='--reverse'
+  export FZF_DEFAULT_OPTS='--reverse --height=40%'
   if has rg; then
     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
   fi
-  export FZF_TMUX=1
   # }}}
 
   # {{{ anyenv
