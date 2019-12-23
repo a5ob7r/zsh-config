@@ -1,13 +1,4 @@
 # zshrc
-#
-# 1. shell functions
-# 2. environment variables
-# 3. aliases
-# 4. zstyle
-# 5. options
-# 6. fzf
-# 6. hook
-# 7. zplugin
 
 # TIMEATSTART=$(date +%s%3N)
 
