@@ -164,7 +164,7 @@ fzf-history-widget() {
 
 
 # {{{ Process for login shell
-if [[ "$0" == -* ]]; then
+if [[ "${-}" == *l* ]]; then
   # {{{ basic
   export LANG=en_US.UTF-8
   export LC_TIME="C"
