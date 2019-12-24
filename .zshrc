@@ -161,6 +161,42 @@ fdkrm() {
   done
 }
 
+__anyenv_init() {
+  local -r ANYENV_ROOT=~/.anyenv
+  local -r ANYENV_CONFIG_ROOT=~/.config/anyenv
+  local -r ANYENV_INIT_PATH="${ANYENV_CONFIG_ROOT}/ANYENV_INIT.env"
+  local -r ANYENV_INIT_EXPORT_PATH="${ANYENV_CONFIG_ROOT}/ANYENV_INIT_EXPORT.env"
+  local -r ANYENV_INIT_OTHER_PATH="${ANYENV_CONFIG_ROOT}/ANYENV_INIT_OTHER.env"
+
+  if [[ ! -d "${ANYENV_ROOT}" ]]; then
+    return
+  fi
+
+  if ! has anyenv; then
+    add2path "${ANYENV_ROOT}/bin"
+    export path
+  fi
+
+  if [[ ! -f "${ANYENV_INIT_PATH}" ]]; then
+    anyenv init - --no-rehash  > "${ANYENV_INIT_PATH}"
+  fi
+
+  if [[ ! -f "${ANYENV_INIT_EXPORT_PATH}" ]]; then
+    grep -i export < "${ANYENV_INIT_PATH}" > "${ANYENV_INIT_EXPORT_PATH}"
+  fi
+
+  if [[ ! -f "${ANYENV_INIT_OTHER_PATH}" ]]; then
+    grep -iv export < "${ANYENV_INIT_PATH}" > "${ANYENV_INIT_OTHER_PATH}"
+  fi
+
+  if [[ "${-}" == *l* ]]; then
+    source "${ANYENV_INIT_EXPORT_PATH}"
+    export path
+  fi
+
+  source "${ANYENV_INIT_OTHER_PATH}"
+}
+
 
 # {{{ Process for login shell
 if [[ "${-}" == *l* ]]; then
@@ -212,26 +248,6 @@ if [[ "${-}" == *l* ]]; then
   fi
   # }}}
 
-  # {{{ anyenv
-  __anyenv_init() {
-    local -r ANYENV_ROOT=~/.anyenv
-    local -r ANYENV_INIT_PATH=~/.config/anyenv/ANYENV_INIT.env
-
-    if [[ ! -d "${ANYENV_ROOT}" ]]; then
-      return
-    fi
-
-    export ANYENV_ROOT
-    add2path ~/.anyenv/bin
-
-    [[ -f "${ANYENV_INIT_PATH}" ]] \
-      || anyenv init - --no-rehash  > "${ANYENV_INIT_PATH}"
-
-    source "${ANYENV_INIT_PATH}"
-  }
-  __anyenv_init
-  # }}}
-
   # {{{ other
   export GOPATH=~/go
   add2path "${GOPATH}/bin"
@@ -262,6 +278,8 @@ if [[ "${-}" == *l* ]]; then
   esac
 fi
 # }}}
+
+__anyenv_init
 
 if gnui; then
   alias grep='grep --color=auto'
@@ -318,13 +336,6 @@ alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias shinit='exec $SHELL -l'
-
-if [[ -n "${TMUX}" ]] && has anyenv; then
-  source ~/.anyenv/completions/anyenv.zsh
-  for env in ~/.anyenv/envs/*; do
-    source "${env}"/completions/*.zsh
-  done
-fi
 
 # Auto-completion
 source ~/.fzf/shell/completion.zsh 2> /dev/null
