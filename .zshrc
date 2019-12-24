@@ -238,8 +238,6 @@ if [[ "${-}" == *l* ]]; then
   export path
 
   export PIPENV_VENV_IN_PROJECT=1
-  export SPACESHIP_CHAR_SYMBOL='❯'
-  export SPACESHIP_CHAR_SUFFIX=' '
   # }}}
 
   __enable_ssh_agent() {
