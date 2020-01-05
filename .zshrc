@@ -133,7 +133,7 @@ fzf-history-widget() {
   return $ret
 }
 
-fghq() {
+__cd_to_git_repository() {
   local -r REPO="$(ghq list | $(__fzfcmd))"
   [[ -n "${REPO}" ]] || return 1
 
@@ -331,6 +331,7 @@ if has pipenv; then
   alias p='pipenv'
 fi
 
+alias cdg='__cd_to_git_repository'
 alias cdh='cd ~'
 alias ..='cd ../'
 alias ...='cd ../../'
