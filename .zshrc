@@ -391,15 +391,12 @@ bindkey '^R' fzf-history-widget
 zle     -N   fzf-file-widget
 bindkey '^T' fzf-file-widget
 
+
+# {{{ zinit
 ! [[ -d ~/.zinit ]] \
   && sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
 
 source ~/.zinit/bin/zinit.zsh
-
-# If you place the source below compinit,
-# then add those two lines after the source:
-#autoload -Uz _zinit
-#(( ${+_comps} )) && _comps[zinit]=_zinit
 
 zinit ice wait blockf lucid
 zinit light 'zsh-users/zsh-completions'
@@ -419,9 +416,8 @@ zinit light 'b4b4r07/enhancd'
 
 zinit ice wait atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" lucid
 zinit light trapd00r/LS_COLORS
+# }}}
 
-# Prevents .zshrc updating by zinit installer.
-# <<zinit>>
 
 if [[ -f ~/.zshrc.local ]]; then
   source ~/.zshrc.local
