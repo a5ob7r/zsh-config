@@ -391,37 +391,37 @@ bindkey '^R' fzf-history-widget
 zle     -N   fzf-file-widget
 bindkey '^T' fzf-file-widget
 
-! [[ -d ~/.zplugin ]] && \
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
+! [[ -d ~/.zinit ]] \
+  && sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
 
-source ~/.zplugin/bin/zplugin.zsh
+source ~/.zinit/bin/zinit.zsh
 
 # If you place the source below compinit,
 # then add those two lines after the source:
-#autoload -Uz _zplugin
-#(( ${+_comps} )) && _comps[zplugin]=_zplugin
+#autoload -Uz _zinit
+#(( ${+_comps} )) && _comps[zinit]=_zinit
 
-zplugin ice wait blockf lucid
-zplugin light 'zsh-users/zsh-completions'
+zinit ice wait blockf lucid
+zinit light 'zsh-users/zsh-completions'
 
-zplugin ice wait atload"_zsh_autosuggest_start" lucid
-zplugin light 'zsh-users/zsh-autosuggestions'
+zinit ice wait atload"_zsh_autosuggest_start" lucid
+zinit light 'zsh-users/zsh-autosuggestions'
 
-zplugin ice wait atinit"zpcompinit; zpcdreplay" lucid
-zplugin light 'zdharma/fast-syntax-highlighting'
+zinit ice wait atinit"zpcompinit; zpcdreplay" lucid
+zinit light 'zdharma/fast-syntax-highlighting'
 
 PS1="> "
-zplugin ice wait'!' pick"async.zsh" src"pure.zsh" lucid
-zplugin light 'sindresorhus/pure'
+zinit ice wait'!' pick"async.zsh" src"pure.zsh" lucid
+zinit light 'sindresorhus/pure'
 
-zplugin ice wait lucid
-zplugin light 'b4b4r07/enhancd'
+zinit ice wait lucid
+zinit light 'b4b4r07/enhancd'
 
-zplugin ice wait atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" lucid
-zplugin light trapd00r/LS_COLORS
+zinit ice wait atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" lucid
+zinit light trapd00r/LS_COLORS
 
-# Prevents .zshrc updating by zplugin installer.
-# <<zplugin>>
+# Prevents .zshrc updating by zinit installer.
+# <<zinit>>
 
 if [[ -f ~/.zshrc.local ]]; then
   source ~/.zshrc.local
