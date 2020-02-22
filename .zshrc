@@ -197,6 +197,16 @@ __anyenv_init() {
   source "${ANYENV_INIT_OTHER_PATH}"
 }
 
+__run-help-tmux-pane() {
+  local -r CMD="${(qqq)LBUFFER}"
+
+  if [[ -n "${TMUX_PANE}" ]]; then
+    tmux split-window "man ${CMD}"
+  else
+    man "${CMD}"
+  fi
+}
+
 
 # {{{ Process for login shell
 if [[ "${-}" == *l* ]]; then
@@ -390,6 +400,9 @@ zle     -N   fzf-history-widget
 bindkey '^R' fzf-history-widget
 zle     -N   fzf-file-widget
 bindkey '^T' fzf-file-widget
+
+zle -N __run-help-tmux-pane
+bindkey '^[h' __run-help-tmux-pane
 
 
 # {{{ zinit
