@@ -288,9 +288,9 @@ fi
 
 # define alias of colorful and detail ls
 if has exa; then
-  alias l='exa -la'
-  alias lg='l -g'
-  alias ll='exa -1'
+  alias l='exa -aF1'
+  alias ll='exa -aFl'
+  alias lg='ll -g'
 elif gnui ls; then
   # when GNU LS(= coreutils) is installed
   alias ls='ls --color=auto'
@@ -343,7 +343,7 @@ source ~/.fzf/shell/completion.zsh 2> /dev/null
 
 # execute whenever the current working directory is changed
 chpwd() {
-  ll
+  l
 }
 
 setopt correct
