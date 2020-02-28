@@ -221,7 +221,6 @@ if [[ "${-}" == *l* ]]; then
   # prevent adding duplication path
   typeset -U path PATH
 
-  add2path ~/.local/bin
   add2path ~/bin
   # }}}
 
