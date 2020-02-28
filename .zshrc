@@ -373,24 +373,22 @@ bindkey '^[h' __run-help-tmux-pane
 
 source ~/.zinit/bin/zinit.zsh
 
-zinit ice wait blockf lucid
-zinit light 'zsh-users/zsh-completions'
+zinit wait lucid light-mode for \
+  blockf \
+    zsh-users/zsh-completions \
+  atinit"zicompinit; zicdreplay" \
+    zdharma/fast-syntax-highlighting \
+  atload"_zsh_autosuggest_start" \
+    zsh-users/zsh-autosuggestions \
+  \
+    b4b4r07/enhancd \
+  atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" \
+    trapd00r/LS_COLORS \
+  wait'!' pick"async.zsh" src"pure.zsh" \
+    sindresorhus/pure
 
-zinit ice wait atload"_zsh_autosuggest_start" lucid
-zinit light 'zsh-users/zsh-autosuggestions'
-
-zinit ice wait atinit"zpcompinit; zpcdreplay" lucid
-zinit light 'zdharma/fast-syntax-highlighting'
-
+# For delay loading of pure prompt
 PS1="> "
-zinit ice wait'!' pick"async.zsh" src"pure.zsh" lucid
-zinit light 'sindresorhus/pure'
-
-zinit ice wait lucid
-zinit light 'b4b4r07/enhancd'
-
-zinit ice wait atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" lucid
-zinit light trapd00r/LS_COLORS
 # }}}
 
 
