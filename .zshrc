@@ -438,6 +438,7 @@ fi
 
 if has zprof; then
   zprof | less
+  exit
 fi
 
 # TIMEATEND=$(date +%s%3N)
