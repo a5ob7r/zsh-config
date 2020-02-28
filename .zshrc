@@ -161,42 +161,6 @@ fdkrm() {
   done
 }
 
-__anyenv_init() {
-  local -r ANYENV_ROOT=~/.anyenv
-  local -r ANYENV_CONFIG_ROOT=~/.config/anyenv
-  local -r ANYENV_INIT_PATH="${ANYENV_CONFIG_ROOT}/ANYENV_INIT.env"
-  local -r ANYENV_INIT_EXPORT_PATH="${ANYENV_CONFIG_ROOT}/ANYENV_INIT_EXPORT.env"
-  local -r ANYENV_INIT_OTHER_PATH="${ANYENV_CONFIG_ROOT}/ANYENV_INIT_OTHER.env"
-
-  if [[ ! -d "${ANYENV_ROOT}" ]]; then
-    return
-  fi
-
-  if ! has anyenv; then
-    add2path "${ANYENV_ROOT}/bin"
-    export path
-  fi
-
-  if [[ ! -f "${ANYENV_INIT_PATH}" ]]; then
-    anyenv init - --no-rehash  > "${ANYENV_INIT_PATH}"
-  fi
-
-  if [[ ! -f "${ANYENV_INIT_EXPORT_PATH}" ]]; then
-    grep -i export < "${ANYENV_INIT_PATH}" > "${ANYENV_INIT_EXPORT_PATH}"
-  fi
-
-  if [[ ! -f "${ANYENV_INIT_OTHER_PATH}" ]]; then
-    grep -iv export < "${ANYENV_INIT_PATH}" > "${ANYENV_INIT_OTHER_PATH}"
-  fi
-
-  if [[ "${-}" == *l* ]]; then
-    source "${ANYENV_INIT_EXPORT_PATH}"
-    export path
-  fi
-
-  source "${ANYENV_INIT_OTHER_PATH}"
-}
-
 __run-help-tmux-pane() {
   local -r CMD="${(qqq)LBUFFER}"
 
@@ -288,7 +252,6 @@ if [[ "${-}" == *l* ]]; then
 fi
 # }}}
 
-__anyenv_init
 
 if gnui; then
   alias grep='grep --color=auto'
