@@ -368,6 +368,10 @@ bindkey '^[h' __run-help-tmux-pane
 
 
 # {{{ zinit
+declare -A ZINIT
+ZINIT[COMPINIT_OPTS]=-C
+ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
+
 ! [[ -d ~/.zinit ]] \
   && sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
 
@@ -378,9 +382,9 @@ zinit wait lucid light-mode for \
     zsh-users/zsh-completions \
   atinit"zicompinit; zicdreplay" \
     zdharma/fast-syntax-highlighting \
-  atload"_zsh_autosuggest_start" \
+  compile"{src/*.zsh,src/strategies/*.zsh}" atload"_zsh_autosuggest_start" \
     zsh-users/zsh-autosuggestions \
-  \
+  compile"src/*.sh" \
     b4b4r07/enhancd \
   atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" \
     trapd00r/LS_COLORS \
