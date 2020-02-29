@@ -6,6 +6,16 @@ if [[ "${ZSH_DEBUG}" -eq 1 ]]; then
   zmodload zsh/zprof && zprof
 fi
 
+#######################################
+# Add command path to a environment variable "path" and prevent from reorder
+# them
+# Global:
+#   path: Command "path"
+# Arguments:
+#   DIRPATH: A command directory path
+# Return:
+#   None
+#######################################
 __add_directory_path_to_path_with_duplicate_check() {
   local -r DIRPATH="${1}"
 
@@ -19,30 +29,75 @@ __add_directory_path_to_path_with_duplicate_check() {
 
 alias add2path='__add_directory_path_to_path_with_duplicate_check'
 
+#######################################
+# Search whether or not a command can call from a shell prompt
+# Global:
+#   None
+# Arguments:
+#   1: A command name
+# Return:
+#   0 or 1: Whether or not a command can call
+#######################################
 __exists_command() {
   whence ${1} > /dev/null
 }
 
 alias has='__exists_command'
 
+#######################################
+# Search that whether or not a command is made by GNU
+# Global:
+#   None
+# Arguments:
+#   1: A command name
+# Return:
+#   0 or 1: Whether or not a command is made by GNU
+#######################################
 __is_gnu_coreutils() {
   ${1} --version 2>&1 | grep -q GNU
 }
 
 alias gnu='__is_gnu_coreutils'
 
+#######################################
+# Search that whether or not GNU coreutils is installed
+# Global:
+#   None
+# Arguments:
+#   None
+# Return:
+#   0 or 1: Whether or not GNU coreutils is installed
+#######################################
 __is_gnu_coreutils_installed() {
   has dircolors
 }
 
 alias gnui='__is_gnu_coreutils_installed'
 
+#######################################
+# List up path directories per line
+# Global:
+#   path: Command "path"
+# Arguments:
+#   None
+# Return:
+#   Path directories
+#######################################
 __list_path() {
   tr ' ' '\n' <<< "${path}"
 }
 
 alias path='__list_path'
 
+#######################################
+# Measure zsh start up time
+# Global:
+#   None
+# Arguments:
+#   NB_TIMES: Number of times to measure
+# Return:
+#   Measured times of zsh start up
+#######################################
 zshtimes() {
   local -ir NB_TIMES=${1}
 
@@ -52,6 +107,15 @@ zshtimes() {
   done
 }
 
+#######################################
+# Measure zsh start up time and calculate mean time
+# Global:
+#   None
+# Arguments:
+#   NB_TIMES: Number of times to measure
+# Return:
+#   Measured times of zsh start up and mean time
+#######################################
 zshtimes-stat() {
   local -ir NB_TIMES=${1}
 
@@ -59,6 +123,15 @@ zshtimes-stat() {
     | tee >(cut -d ' ' -f 9 | awk '{s += $1; c += 1} END {printf "\n  AVG: %f second\n", s/c}')
 }
 
+#######################################
+# Zcompile zsh user configures
+# Global:
+#   None
+# Arguments:
+#   None
+# Return:
+#   Compiled zsh user configure names
+#######################################
 zshcompiles() {
   local -ra ZSH_CONFIGS=( \
     ~/.zshenv \
@@ -67,6 +140,15 @@ zshcompiles() {
     ~/.zlogin \
   )
 
+  #######################################
+  # Zcompile zsh user configure and local it
+  # Global:
+  #   None
+  # Arguments:
+  #   1: Zsh configure path
+  # Return:
+  #   Compiled zsh user configure names
+  #######################################
   zsh_compile() {
     local -ra CONFIGS=( \
       "${1}" \
