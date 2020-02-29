@@ -1,4 +1,4 @@
-CONFIGS := .zshenv .zshrc .zprofile .zlogin
+CONFIGS := .zshrc .zprofile
 
 link:
 	@$(foreach config, $(CONFIGS), ln -sfv $(CURDIR)/$(config) $(HOME)/$(config);)
