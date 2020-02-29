@@ -41,7 +41,7 @@ __list_path() {
   tr ' ' '\n' <<< "${path}"
 }
 
-alias path=__list_path
+alias path='__list_path'
 
 zshtimes() {
   local -ir NB_TIMES=${1}
@@ -85,7 +85,7 @@ zshcompiles() {
 }
 
 __fzf_use_tmux__() {
-  [ -n "$TMUX_PANE" ] && [ "${FZF_TMUX:-0}" != 0 ] && [ ${LINES:-40} -gt 15 ]
+  [ -n "${TMUX_PANE}" ] && [ "${FZF_TMUX:-0}" != 0 ] && [ ${LINES:-40} -gt 15 ]
 }
 
 __fzfcmd() {
@@ -215,18 +215,28 @@ if [[ "${-}" == *l* ]]; then
   # }}}
 
   # {{{ fzf
-  export FZF_DEFAULT_OPTS='--reverse --height=40%'
-  if has rg; then
-    export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
+  if has fzf; then
+    export FZF_DEFAULT_OPTS='--reverse --height=40%'
+
+    if has rg; then
+      export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
+    fi
   fi
   # }}}
 
   # {{{ other
-  export GOPATH=~/go
-  add2path "${GOPATH}/bin"
-  export path
+  if has go; then
+    export GOPATH=~/go
+    add2path "${GOPATH}/bin"
+  fi
 
-  export PIPENV_VENV_IN_PROJECT=1
+  if has volt; then
+    export VOLTPATH=~/.vim/volt
+  fi
+
+  if has pipenv; then
+    export PIPENV_VENV_IN_PROJECT=1
+  fi
   # }}}
 
   __enable_ssh_agent() {
@@ -244,11 +254,17 @@ if [[ "${-}" == *l* ]]; then
 
   case ${OSTYPE} in
     linux* )
+      # unzip-iconv
+      export ZIPINFOOPT='-OCP932'
+      export UNZIPOPT='-OCP932'
+
       __enable_ssh_agent
       ;;
     darwin* )
       ;;
   esac
+
+  export path
 fi
 # }}}
 
@@ -308,7 +324,7 @@ alias cdh='cd ~'
 alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
-alias shinit='exec $SHELL -l'
+alias shinit='exec ${SHELL}'
 
 # Auto-completion
 source ~/.fzf/shell/completion.zsh 2> /dev/null
