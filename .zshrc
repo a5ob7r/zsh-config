@@ -387,12 +387,11 @@ zinit wait lucid light-mode for \
   compile"src/*.sh" \
     b4b4r07/enhancd \
   atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" \
-    trapd00r/LS_COLORS \
-  wait'!' pick"async.zsh" src"pure.zsh" \
-    sindresorhus/pure
+    trapd00r/LS_COLORS
 
-# For delay loading of pure prompt
-PS1="> "
+zinit light-mode for \
+  pick"async.zsh" src"pure.zsh" \
+    sindresorhus/pure
 # }}}
 
 
