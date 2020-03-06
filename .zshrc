@@ -368,10 +368,10 @@ elif gnui ls; then
   alias la='ls -lAh'
 else
   # BSD LS
-  alias ls='ls -GF'
-  alias l='ls -ohA'
-  alias ll='ls -1'
-  alias la="ls -lhTA"
+  alias ls='ls -GFh'
+  alias l='ls -1A'
+  alias ll='l -o'
+  alias lg='l -l'
 fi
 
 if has docker; then
