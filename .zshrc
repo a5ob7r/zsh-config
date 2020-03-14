@@ -409,7 +409,7 @@ alias ....='cd ../../../'
 alias shinit='exec ${SHELL}'
 
 # Auto-completion
-source ~/.fzf/shell/completion.zsh 2> /dev/null
+source ~/.local/share/fzf/shell/completion.zsh 2> /dev/null
 
 # execute whenever the current working directory is changed
 chpwd() {
