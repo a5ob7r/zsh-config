@@ -1,7 +1,5 @@
 # zshrc
 
-# TIMEATSTART=$(date +%s%3N)
-
 # Profiling of zsh startup process using zprof
 # Define an environment variable ZSH_DEBUG and assin 1 to it if want to
 # profile.
@@ -523,8 +521,3 @@ if has zprof; then
   zprof | less
   exit
 fi
-
-# TIMEATEND=$(date +%s%3N)
-# STARTUPTIME=$(bc <<< "${TIMEATEND} - ${TIMEATSTART}")
-# echo "startup time: ${STARTUPTIME} ms" >&2
-# unset TIMEATSTART TIMEATEND STARTUPTIME
