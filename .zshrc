@@ -2,6 +2,15 @@
 
 # TIMEATSTART=$(date +%s%3N)
 
+# Profiling of zsh startup process using zprof
+# Define an environment variable ZSH_DEBUG and assin 1 to it if want to
+# profile.
+#
+# How to usage
+# $ export ZSH_DEBUG=1
+# $ zsh
+# # or
+# $ ZSH_DEBUG=1 zsh
 if [[ "${ZSH_DEBUG}" -eq 1 ]]; then
   zmodload zsh/zprof && zprof
 fi
@@ -321,14 +330,27 @@ if [[ "${-}" == *l* ]]; then
   fi
   # }}}
 
+  #######################################
+  # Enable ssh-agent wisely. Cache ssh-agent output and load it as necessary.
+  # This is to prevent duplicate ssh-agent start.
+  # Global:
+  #   None
+  # Arguments:
+  #   None
+  # Return:
+  #   None
+  #######################################
   __enable_ssh_agent() {
     export -i SSH_KEY_LIFE_TIME_SEC=3600
     export SSH_AGENT_ENV=~/.ssh/ssh-agent.env
 
+    # When no existing ssh-agent process
     if ! pgrep -x -u "${USER}" ssh-agent > /dev/null 2>&1; then
+      # Start ssh-agent process and cache the output
       ssh-agent -t ${SSH_KEY_LIFE_TIME_SEC} > "${SSH_AGENT_ENV}"
     fi
 
+    # When not loading ssh-agent process information
     if [[ -f "${SSH_AGENT_ENV}" && ! -v SSH_AUTH_SOCK && ! -v SSH_AGENT_PID ]]; then
       source "${SSH_AGENT_ENV}" > /dev/null 2>&1
     fi
