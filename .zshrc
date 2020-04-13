@@ -260,6 +260,25 @@ __run-help-tmux-pane() {
   fi
 }
 
+# Current date and time.
+alias datetime="date +'%Y%m%d%H%M%S'"
+
+# Date only version of datetime.
+alias date2="datetime | cut -c -8"
+
+#######################################
+# Make a directory which it's name is current date and time.
+# Global:
+#   None
+# Arguments:
+#   None
+# Return:
+#   None
+#######################################
+__mkdir_with_current_time() {
+  mkdir "$(datetime)"
+}
+alias mkdir-datetime='__mkdir_with_current_time'
 
 # {{{ Process for login shell
 if [[ "${-}" == *l* ]]; then
