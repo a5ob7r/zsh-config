@@ -26,12 +26,14 @@ fi
 __add_directory_path_to_path_with_duplicate_check() {
   local -r DIRPATH="${1}"
 
-  # Validate a directory path and trim any backslashes from the tail.
-  local -r PATHDIR="$(unsetopt mark_dirs; echo ${DIRPATH}(N-/) | sed -E 's/\/*$//')"
+  # Trim any backslashes from the tail.
+  setopt local_options no_mark_dirs 2> /dev/null
+  local -r PATHDIR=$(sed -E 's/\/*$//' <<< ${DIRPATH})
 
-  if [[ -z "${path[(r)$PATHDIR]}" ]]; then
+  if [[ -z "${path[(r)${PATHDIR}]}" ]]; then
     path=( \
-      "${PATHDIR}" \
+      # Validate a directory path
+      "${PATHDIR}"(N-/) \
       "${path[@]}" \
     )
   fi
