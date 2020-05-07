@@ -383,6 +383,9 @@ if [[ "${-}" == *l* ]]; then
 
   case ${OSTYPE} in
     linux* )
+      export TERMINAL='alacritty'
+      export BROWSER='firefox'
+
       # unzip-iconv
       export ZIPINFOOPT='-OCP932'
       export UNZIPOPT='-OCP932'
@@ -542,6 +545,22 @@ zinit wait lucid light-mode for \
 zinit light-mode for \
   pick"async.zsh" src"pure.zsh" \
     sindresorhus/pure
+# }}}
+
+
+# {{{ Per OS
+case ${OSTYPE} in
+  linux* )
+    alias open='xdg-open'
+
+    __open_file_on_background() {
+      open "${1}" &
+    }
+    alias op='__open_file_on_background'
+    ;;
+  darwin* )
+    ;;
+esac
 # }}}
 
 
