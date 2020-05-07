@@ -296,6 +296,11 @@ if [[ "${-}" == *l* ]]; then
   # prevent adding duplication path
   typeset -U path PATH
 
+  add2path ~/.node_modules/bin
+  add2path ~/.local/bin
+  add2path ~/.cargo/bin
+  add2path ~/.cabal/bin
+  add2path ~/.ghcup/bin
   add2path ~/bin
   # }}}
 
