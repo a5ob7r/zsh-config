@@ -285,6 +285,35 @@ __mkdir_with_current_time() {
 }
 alias mkdir-datetime='__mkdir_with_current_time'
 
+#######################################
+# Is inside git repository.
+# Global:
+#   None
+# Arguments:
+#   None
+# Return:
+#   True or False
+#######################################
+__is_inside_git_repository() {
+  [[ "$(git rev-parse --is-inside-work-tree 2> /dev/null)" == true ]]
+}
+
+#######################################
+# Show git status if in git repository.
+# Global:
+#   None
+# Arguments:
+#   PREFIX: Prefix messages
+# Return:
+#   None
+#######################################
+__git_status() {
+  __is_inside_git_repository || return
+
+  [[ "${#@}" -gt 0 ]] && echo "${1}"
+  git status -sb 2> /dev/null
+}
+
 # {{{ Process for login shell
 if [[ "${-}" == *l* ]]; then
   # {{{ basic
@@ -471,6 +500,7 @@ source ~/.local/share/fzf/shell/completion.zsh 2> /dev/null
 # execute whenever the current working directory is changed
 chpwd() {
   l
+  __git_status ""
 }
 
 setopt correct
