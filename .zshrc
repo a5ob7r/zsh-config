@@ -583,12 +583,11 @@ zinit light-mode for \
 # {{{ Per OS
 case ${OSTYPE} in
   linux* )
-    alias open='xdg-open'
-
     __open_file_on_background() {
-      open "${1}" &
+      xdg-open "${1}" &
     }
     alias op='__open_file_on_background'
+    alias open='xdg-open'
     ;;
   darwin* )
     ;;
