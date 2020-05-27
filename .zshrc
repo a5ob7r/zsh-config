@@ -572,19 +572,17 @@ ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
 
 source ~/.zinit/bin/zinit.zsh
 
-zinit wait lucid light-mode for \
-  blockf \
-    zsh-users/zsh-completions \
-  atinit"zicompinit; zicdreplay" \
-    zdharma/fast-syntax-highlighting \
-  compile"{src/*.zsh,src/strategies/*.zsh}" atload"_zsh_autosuggest_start" \
-    zsh-users/zsh-autosuggestions \
-  compile"src/*.sh" \
-    b4b4r07/enhancd \
-  atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" \
-    trapd00r/LS_COLORS
-
 zinit light-mode for \
+  wait lucid blockf \
+    zsh-users/zsh-completions \
+  wait lucid atinit"zicompinit; zicdreplay" \
+    zdharma/fast-syntax-highlighting \
+  wait lucid compile"{src/*.zsh,src/strategies/*.zsh}" atload"_zsh_autosuggest_start" \
+    zsh-users/zsh-autosuggestions \
+  wait lucid compile"src/*.sh" \
+    b4b4r07/enhancd \
+  wait lucid atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" \
+    trapd00r/LS_COLORS \
   pick"async.zsh" src"pure.zsh" \
     sindresorhus/pure
 # }}}
