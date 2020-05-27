@@ -1,5 +1,15 @@
 # zshrc
 
+# Zinit module to compile sourced files automatically
+# Need to build a module if wanna use it.
+#
+# $ zinit module build
+#
+if [[ -f ~/.zinit/bin/zmodules/Src/zdharma/zplugin.so ]]; then
+  module_path+=( ~/.zinit/bin/zmodules/Src )
+  zmodload zdharma/zplugin
+fi
+
 # Profiling of zsh startup process using zprof
 # Define an environment variable ZSH_DEBUG and assin 1 to it if want to
 # profile.
