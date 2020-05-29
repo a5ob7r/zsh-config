@@ -488,6 +488,10 @@ elif has git; then
   alias g='git'
 fi
 
+if has tig; then
+  alias tiga='tig --all'
+fi
+
 if has volt; then
   alias v='volt'
   alias vb='volt build'
