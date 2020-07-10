@@ -490,6 +490,7 @@ fi
 
 if has docker-compose; then
   alias dkcp='docker-compose'
+  alias dkcpe='dkcp exec'
 fi
 
 if has tmux; then
@@ -515,7 +516,7 @@ if has pipenv; then
   alias p='pipenv'
 fi
 
-alias cdg='__cd_to_git_repository'
+alias cg='__cd_to_git_repository'
 alias cdh='cd ~'
 alias ..='cd ../'
 alias ...='cd ../../'
@@ -604,6 +605,8 @@ case ${OSTYPE} in
     }
     alias op='__open_file_on_background'
     alias open='xdg-open'
+    alias ff='firefox'
+    alias xc='xclip -selection clipboard -filter'
     ;;
   darwin* )
     ;;
