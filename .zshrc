@@ -456,6 +456,7 @@ if [[ "${-}" == *l* ]]; then
   export ZSH_AUTOSUGGEST_USE_ASYNC=''
   export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
   export PURE_PROMPT_SYMBOL=λ
+  export ENHANCD_COMMAND=c
 fi
 # }}}
 
