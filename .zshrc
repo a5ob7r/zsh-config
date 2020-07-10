@@ -545,6 +545,7 @@ setopt list_packed
 setopt magic_equal_subst
 setopt mark_dirs
 setopt print_eight_bit
+setopt print_exit_value
 setopt prompt_subst
 setopt pushd_ignore_dups
 setopt share_history
