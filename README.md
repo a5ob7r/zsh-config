@@ -4,7 +4,7 @@
 
 ```sh
 $ cd path/to/zsh-config
-$ make link
+$ ln -sv $PWD/.zshrc ~/
 ```
 
 ## Install local zsh completions
@@ -20,6 +20,5 @@ $ zinit creinstall "${PWD}/completions"
 These configs can load user local zsh configs.
 
 ```sh
-$ : > ~/.zprofile.local
 $ : > ~/.zshrc.local
 ```
