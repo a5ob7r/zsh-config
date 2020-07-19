@@ -24,6 +24,19 @@ if [[ "${ZSH_DEBUG}" -eq 1 ]]; then
 fi
 
 #######################################
+# Trim all slashes from string tail.
+# Global:
+#   None
+# Arguments:
+#   STRING: A target string.
+# Return:
+#   A trimmed string.
+#######################################
+trim_tail_slashes() {
+  sed -E 's/\/*$//' <<< "${1}"
+}
+
+#######################################
 # Add command path to a environment variable "path" and prevent from reorder
 # them
 # Global:
@@ -38,7 +51,7 @@ __add_directory_path_to_path_with_duplicate_check() {
 
   # Trim any backslashes from the tail.
   setopt local_options no_mark_dirs 2> /dev/null
-  local -r PATHDIR=$(sed -E 's/\/*$//' <<< ${DIRPATH})
+  local -r PATHDIR=$(trim_tail_slashes ${DIRPATH})
 
   if [[ -z "${path[(r)${PATHDIR}]}" ]]; then
     path=( \
