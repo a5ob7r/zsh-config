@@ -20,5 +20,5 @@ $ zinit creinstall "${PWD}/completions"
 These configs can load user local zsh configs.
 
 ```sh
-$ : > ~/.zshrc.local
+$ : >> ~/.zshrc.local
 ```
