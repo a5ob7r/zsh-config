@@ -536,6 +536,7 @@ alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias shinit='exec ${SHELL}'
+alias zshinit='zshcompiles && exec ${SHELL}'
 
 # Auto-completion
 source ~/.local/share/fzf/shell/completion.zsh 2> /dev/null
