@@ -449,10 +449,55 @@ if [[ "${-}" == *l* ]]; then
     fi
   }
 
+  #######################################
+  # Default terminal name.
+  # Global:
+  #   None
+  # Arguments:
+  #   None
+  # Return:
+  #   Terninal name
+  #######################################
+  __default_terminal() {
+    local -r TERMINALS=( \
+      'alacritty' \
+      'st' \
+      'urxvt' \
+      'xterm' \
+    )
+
+    for terminal in ${TERMINALS[@]}; do
+      has "${terminal}" && { echo "${terminal}"; return }
+    done
+  }
+
+  #######################################
+  # Default browser name.
+  # Global:
+  #   None
+  # Arguments:
+  #   None
+  # Return:
+  #   Browser name
+  #######################################
+  __default_browser() {
+    local -r BROWSERS=( \
+      'firefoxdeveloperedition' \
+      'firefox-developer-edition' \
+      'firefox' \
+      'google-chrome' \
+      'chromium' \
+    )
+
+    for browser in ${BROWSERS[@]}; do
+      has "${browser}" && { echo "${browser}"; return }
+    done
+  }
+
   case ${OSTYPE} in
     linux* )
-      export TERMINAL='alacritty'
-      export BROWSER='firefox'
+      export TERMINAL="$(__default_terminal)"
+      export BROWSER="$(__default_browser)"
 
       # unzip-iconv
       export ZIPINFOOPT='-OCP932'
