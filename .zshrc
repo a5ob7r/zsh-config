@@ -214,36 +214,8 @@ zshcompiles() {
   for zc in "${ZSH_CONFIGS[@]}"; do zsh_compile "${zc}"; done
 }
 
-__fzf_use_tmux__() {
-  [ -n "${TMUX_PANE}" ] && [ "${FZF_TMUX:-0}" != 0 ] && [ ${LINES:-40} -gt 15 ]
-}
-
 __fzfcmd() {
-  __fzf_use_tmux__ &&
-    echo "fzf-tmux -d${FZF_TMUX_HEIGHT:-40%}" || echo "fzf"
-}
-
-__fsel() {
-  local cmd="find . -mindepth 1 -maxdepth 1 -print | cut -b 3-"
-  local FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse $FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS"
-  setopt localoptions pipefail 2> /dev/null
-
-  eval "$cmd" |
-    $(__fzfcmd) --multi |
-    while read -r item; do echo -n "${(q)item} "; done
-
-  local ret=$?
-  echo
-
-  return $ret
-}
-
-fzf-file-widget() {
-  LBUFFER="${LBUFFER}$(__fsel)"
-  local ret=$?
-  zle redisplay
-  typeset -f zle-line-init >/dev/null && zle zle-line-init
-  return $ret
+  echo 'fzf'
 }
 
 fzf-history-widget() {
@@ -613,8 +585,6 @@ bindkey -M menuselect 'l' vi-forward-char
 
 zle     -N   fzf-history-widget
 bindkey '^R' fzf-history-widget
-zle     -N   fzf-file-widget
-bindkey '^T' fzf-file-widget
 
 zle -N __run-help-tmux-pane
 bindkey '^[h' __run-help-tmux-pane
