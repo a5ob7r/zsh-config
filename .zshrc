@@ -214,7 +214,7 @@ zshcompiles() {
   for zc in "${ZSH_CONFIGS[@]}"; do zsh_compile "${zc}"; done
 }
 
-__fzfcmd() {
+__fzf_wrapper() {
   echo 'fzf'
 }
 
@@ -222,7 +222,7 @@ fzf-history-widget() {
   local selected num
   setopt localoptions noglobsubst noposixbuiltins pipefail 2> /dev/null
   selected=( $(fc -rl 1 |
-    FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} $FZF_DEFAULT_OPTS -n2..,.. --tiebreak=index --bind=ctrl-r:toggle-sort $FZF_CTRL_R_OPTS --query=${(qqq)LBUFFER} +m" $(__fzfcmd)) )
+    FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} $FZF_DEFAULT_OPTS -n2..,.. --tiebreak=index --bind=ctrl-r:toggle-sort $FZF_CTRL_R_OPTS --query=${(qqq)LBUFFER} +m" $(__fzf_wrapper)) )
   local ret=$?
   if [ -n "$selected" ]; then
     num=$selected[1]
@@ -236,7 +236,7 @@ fzf-history-widget() {
 }
 
 __cd_to_git_repository() {
-  local -r REPO="$(ghq list | $(__fzfcmd))"
+  local -r REPO="$(ghq list | $(__fzf_wrapper))"
   [[ -n "${REPO}" ]] || return 1
 
   local -r GHQ_ROOT="$(ghq root)"
@@ -244,7 +244,7 @@ __cd_to_git_repository() {
 }
 
 fdkrmi() {
-  local -ra IMAGES=( $(docker images | "$(__fzfcmd)" --multi --header-lines=1 | awk '{print $3}') )
+  local -ra IMAGES=( $(docker images | "$(__fzf_wrapper)" --multi --header-lines=1 | awk '{print $3}') )
 
   [[ -n "${IMAGES[*]}" ]] || return 1
 
@@ -254,7 +254,7 @@ fdkrmi() {
 }
 
 fdkrm() {
-  local -ra CONTAINERS=( $(docker container ls -a | "$(__fzfcmd)" --multi --header-lines=1 | awk '{print $1}') )
+  local -ra CONTAINERS=( $(docker container ls -a | "$(__fzf_wrapper)" --multi --header-lines=1 | awk '{print $1}') )
 
   [[ -n "${CONTAINERS[*]}" ]] || return 1
 
