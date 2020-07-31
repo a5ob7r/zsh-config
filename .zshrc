@@ -219,20 +219,14 @@ __fzf_wrapper() {
 }
 
 fzf-history-widget() {
-  local selected num
-  setopt localoptions noglobsubst noposixbuiltins pipefail 2> /dev/null
-  selected=( $(fc -rl 1 |
-    FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} $FZF_DEFAULT_OPTS -n2..,.. --tiebreak=index --bind=ctrl-r:toggle-sort $FZF_CTRL_R_OPTS --query=${(qqq)LBUFFER} +m" $(__fzf_wrapper)) )
-  local ret=$?
-  if [ -n "$selected" ]; then
-    num=$selected[1]
-    if [ -n "$num" ]; then
-      zle vi-fetch-history -n $num
-    fi
-  fi
+  setopt localoptions pipefail 2> /dev/null
+
+  local -r FZF_OPTS="${FZF_DEFAULT_OPTS} --no-multi --nth=2..,.. --tiebreak=index --bind=ctrl-r:toggle-sort --query=${(qqq)LBUFFER}"
+  local -r NUM=$(fc -rl 1 | FZF_DEFAULT_OPTS="${FZF_OPTS}" $(__fzf_wrapper) | cut -d ' ' -f 1)
+  local -r EXIT_CODE="${?}"
+  [[ -n "${NUM}" ]] && zle vi-fetch-history -n "${NUM}"
   zle redisplay
-  typeset -f zle-line-init >/dev/null && zle zle-line-init
-  return $ret
+  return "${EXIT_CODE}"
 }
 
 __cd_to_git_repository() {
