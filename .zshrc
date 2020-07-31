@@ -620,7 +620,7 @@ case ${OSTYPE} in
     alias op='__open_file_on_background'
     alias open='xdg-open'
     alias ff='firefox'
-    alias xc='xclip -selection clipboard -filter'
+    alias xc='xclip -selection clipboard -filter -rmlastnl && echo'
     ;;
   darwin* )
     ;;
