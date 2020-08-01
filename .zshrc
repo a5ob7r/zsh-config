@@ -670,9 +670,7 @@ esac
 # }}}
 
 
-if [[ -f ~/.zshrc.local ]]; then
-  source ~/.zshrc.local
-fi
+source ~/.zshrc.local 2> /dev/null
 
 if has zprof; then
   zprof | less
