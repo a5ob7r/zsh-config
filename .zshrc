@@ -581,7 +581,7 @@ alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias shinit='exec ${SHELL}'
-alias zshinit='zshcompiles && exec ${SHELL}'
+alias zshinit='zshcompiles > /dev/null 2>&1 && shinit'
 
 # execute whenever the current working directory is changed
 chpwd() {
