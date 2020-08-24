@@ -543,37 +543,15 @@ else
   alias lg='l -l'
 fi
 
-if has docker; then
-  alias dk='docker'
-fi
-
-if has docker-compose; then
-  alias dkcp='docker-compose'
-  alias dkcpe='dkcp exec'
-fi
-
-if has tmux; then
-  alias t='tmux'
-fi
-
-if has hub; then
-  alias g='hub'
-elif has git; then
-  alias g='git'
-fi
-
-if has tig; then
-  alias tiga='tig --all'
-fi
-
-if has volt; then
-  alias v='volt'
-  alias vb='volt build'
-fi
-
-if has pipenv; then
-  alias p='pipenv'
-fi
+alias dk='docker'
+alias dkcp='docker-compose'
+alias dkcpe='dkcp exec'
+alias t='tmux'
+alias g='git'
+alias tiga='tig --all'
+alias v='volt'
+alias vb='volt build'
+alias p='pipenv'
 
 alias cg='__cd_to_git_repository'
 alias cdh='cd ~'
