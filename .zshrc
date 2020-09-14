@@ -349,6 +349,24 @@ oceanic_next() {
   clear
 }
 
+#######################################
+# Run a process in the background and no output to stdout and stderr.
+# Global:
+#   None
+# Arguments:
+#   ARGS: Command name and the arguments.
+# Return:
+#   None
+#######################################
+__run_in_background() {
+  # A way to run a command in the background and not to output some strings to
+  # stdout and stderr is to run `cmd > /dev/null 2>&1`. But this way outputs to
+  # stdout and stderr to show, that moving a process into the background and
+  # completing a process, to a parent shell. So to prevent this problem use sub
+  # shell and redirects the stdout and stderr to /dev/null.
+  (eval "${*}" &) > /dev/null 2>&1
+}
+
 # {{{ Process for login shell
 if [[ "${-}" == *l* ]]; then
   [ "${TERM}" = "linux" ] && oceanic_next
@@ -634,15 +652,13 @@ zinit light-mode for \
 # {{{ Per OS
 case ${OSTYPE} in
   linux* )
-    __open_file_on_background() {
-      xdg-open "${1}" &
-    }
-    alias op='__open_file_on_background'
     alias open='xdg-open'
+    alias op='__run_in_background open'
     alias ff='firefox'
     alias xc='xclip -selection clipboard -filter -rmlastnl && echo'
     ;;
   darwin* )
+    alias op='open'
     ;;
 esac
 # }}}
