@@ -512,6 +512,12 @@ if [[ "${-}" == *l* ]]; then
     done
   }
 
+  __start_dropbox() {
+    pgrep dropbox && return 1
+    has dropbox-cli || return 1
+    dropbox-cli start && dropbox-cli lansync n
+  }
+
   case ${OSTYPE} in
     linux* )
       export TERMINAL="$(__default_terminal)"
@@ -522,6 +528,7 @@ if [[ "${-}" == *l* ]]; then
       export UNZIPOPT='-OCP932'
 
       __enable_ssh_agent
+      __run_in_background __start_dropbox
       ;;
     darwin* )
       ;;
