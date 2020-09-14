@@ -1,4 +1,4 @@
-# zshrc
+# ~/.zshrc
 
 # Zinit module to compile sourced files automatically
 # Need to build a module if wanna use it.
@@ -656,6 +656,9 @@ case ${OSTYPE} in
     alias op='__run_in_background open'
     alias ff='firefox'
     alias xc='xclip -selection clipboard -filter -rmlastnl && echo'
+    alias lb='lsblk -o NAME,FSTYPE,FSVER,FSSIZE,FSUSED,FSAVAIL,FSUSE%,PARTTYPENAME,MOUNTPOINT'
+    alias ip='ip -color=auto'
+    alias x='startx'
     ;;
   darwin* )
     alias op='open'
