@@ -652,7 +652,8 @@ zinit light-mode for \
   wait lucid atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" \
     trapd00r/LS_COLORS \
   pick"async.zsh" src"pure.zsh" \
-    sindresorhus/pure
+    sindresorhus/pure \
+  ;
 # }}}
 
 
