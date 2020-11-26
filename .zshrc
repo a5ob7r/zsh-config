@@ -641,9 +641,6 @@ bindkey -M menuselect 'l' vi-forward-char
 zle     -N   fzf-history-widget
 bindkey '^R' fzf-history-widget
 
-zle -N __run-help-tmux-pane
-bindkey '^[h' __run-help-tmux-pane
-
 
 # {{{ zinit
 declare -A ZINIT
