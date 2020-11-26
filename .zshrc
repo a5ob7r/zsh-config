@@ -557,21 +557,29 @@ if gnui; then
   alias rm='rm --verbose'
   alias rmdir='rmdir --verbose'
 
-  alias ll='ls -1'
-  alias la='ls -lAh'
+  alias __ls='ls -hvFB'
+  alias la='__ls -A'
+  alias l='la -1'
+  alias ll='la -o'
+  alias lg='la -l'
   alias gr="grep -F -irn --exclude-dir='.git'"
 else
   # BSD
-  alias ls='ls -GFh'
-  alias l='ls -1A'
-  alias ll='l -o'
-  alias lg='l -l'
+  alias ls='ls -G'
+
+  alias __ls='ls -Fh'
+  alias la='__ls -A'
+  alias l='la -1'
+  alias ll='la -o'
+  alias lg='la -l'
 fi
 
 # define alias of colorful and detail ls
 if has exa; then
-  alias l='exa -aF1'
-  alias ll='exa -aFl'
+  alias __exa='exa -F'
+  alias la='__exa -a'
+  alias l='la -1'
+  alias ll='la -l'
   alias lg='ll -g'
 fi
 
