@@ -557,7 +557,15 @@ if gnui; then
   alias rm='rm --verbose'
   alias rmdir='rmdir --verbose'
 
+  alias ll='ls -1'
+  alias la='ls -lAh'
   alias gr="grep -F -irn --exclude-dir='.git'"
+else
+  # BSD
+  alias ls='ls -GFh'
+  alias l='ls -1A'
+  alias ll='l -o'
+  alias lg='l -l'
 fi
 
 # define alias of colorful and detail ls
@@ -565,16 +573,6 @@ if has exa; then
   alias l='exa -aF1'
   alias ll='exa -aFl'
   alias lg='ll -g'
-elif gnui ls; then
-  # when GNU LS(= coreutils) is installed
-  alias ll='ls -1'
-  alias la='ls -lAh'
-else
-  # BSD LS
-  alias ls='ls -GFh'
-  alias l='ls -1A'
-  alias ll='l -o'
-  alias lg='l -l'
 fi
 
 alias dk='docker'
