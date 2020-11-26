@@ -546,7 +546,17 @@ fi
 
 
 if gnui; then
+  alias chmod='chmod --verbose'
+  alias chown='chown --verbose'
+  alias diff='diff --color=auto'
   alias grep='grep --color=auto'
+  alias ln='ln --verbose'
+  alias ls='ls --color=auto'
+  alias mkdir='mkdir --verbose --parents'
+  alias mv='mv --verbose'
+  alias rm='rm --verbose'
+  alias rmdir='rmdir --verbose'
+
   alias gr="grep -F -irn --exclude-dir='.git'"
 fi
 
@@ -557,7 +567,6 @@ if has exa; then
   alias lg='ll -g'
 elif gnui ls; then
   # when GNU LS(= coreutils) is installed
-  alias ls='ls --color=auto'
   alias ll='ls -1'
   alias la='ls -lAh'
 else
