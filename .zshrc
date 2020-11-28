@@ -24,6 +24,113 @@ if [[ "${ZSH_DEBUG}" -eq 1 ]]; then
 fi
 
 #######################################
+# Functional programming's style `filter` and `map`. This reads input from
+# stdin.
+# Global:
+#   None
+# Arguments:
+#   pred: Predicate.
+#   yield: Yielder.
+# Return:
+#   Filtered and transformed list.
+#######################################
+filter_map() {
+  local -r pred="${1}"
+  local -r yield="${2}"
+
+  pred_f() {
+    eval "${pred}"
+  }
+
+  yield_f() {
+    eval "${yield}"
+  }
+
+  cat - \
+    | while read subj; do
+        # Prevent this function to return not 0 when the last pred_f in the
+        # loop returns not 0.
+        if pred_f "${subj}"; then yield_f "${subj}"; fi
+      done
+}
+
+#######################################
+# Functional programming's style `filter` and `map`. This reads input from
+# arguments.
+# Global:
+#   None
+# Arguments:
+#   pred: Predicate.
+#   yield: Yielder.
+#   follow args: Input list.
+# Return:
+#   Filtered and transformed list.
+#######################################
+filter_map_() {
+  local -r pred="${1}"
+  local -r yield="${2}"
+  shift 2
+
+  while [[ ${#} -gt 0 ]]; do
+    echo "${1}"
+    shift
+  done | filter_map "${pred}" "${yield}"
+}
+
+#######################################
+# Functional programming's style `map`. This reads input from stdin.
+# Global:
+#   None
+# Arguments:
+#   yield: Yielder.
+# Return:
+#   Transformed list.
+#######################################
+map() {
+  cat - | filter_map 'true' "${1}"
+}
+
+#######################################
+# Functional programming's style `map`. This reads input from arguments.
+# Global:
+#   None
+# Arguments:
+#   yield: Yielder.
+# Return:
+#   Transformed list.
+#######################################
+map_() {
+  filter_map_ 'true' "${1}" ${@[2,$]}
+}
+
+#######################################
+# Functional programming's style `filter`. This reads input from stdin.
+# Global:
+#   None
+# Arguments:
+#   pred: Predicate.
+# Return:
+#   Filtered list.
+#######################################
+filter() {
+  cat - | filter_map "${1}" 'echo ${1}'
+}
+
+#######################################
+# Functional programming's style `filter`. This reads input from arguments.
+# Global:
+#   None
+# Arguments:
+#   pred: Predicate.
+#   follow args: Input list.
+# Return:
+#   Filtered list.
+#######################################
+filter_() {
+  filter_map_ "${1}" 'echo ${1}' ${@[2,$]}
+}
+
+#######################################
 # Trim all slashes from string tail.
 # Global:
 #   None
@@ -132,7 +239,7 @@ alias gnui='__is_gnu_coreutils_installed'
 #   Path directories
 #######################################
 __list_path() {
-  tr ' ' '\n' <<< "${path}"
+  map_ 'echo "${1}"' "${path[@]}"
 }
 
 alias path='__list_path'
