@@ -565,7 +565,7 @@ if [[ "${-}" == *l* ]]; then
   # history
   export HISTFILE=~/.zsh_history
   export HISTSIZE=100000
-  export SAVEHIST=100000
+  export SAVEHIST=1000000
 
   # spelling correction prompt
   export SPROMPT="zsh: correct: %F{red}%R%f -> %F{green}%r%f [No/Yes/Abort/Edit]? "
