@@ -1,0 +1,27 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - name: Install zsh for linux
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install -y --no-install-recommends zsh
+
+      - name: Install zsh for macOS
+        if: matrix.os == 'macos-latest'
+        run: brew install zsh
+
+      - uses: actions/checkout@v2
+
+      - name: Create symbolic link from ~/.zshrc to .zshrc on repository
+        run: ln -sfv ${PWD}/.zshrc ~/
+
+      - name: Run zsh
+        run: zsh -exilc 'exit'
