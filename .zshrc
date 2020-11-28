@@ -138,6 +138,54 @@ __list_path() {
 alias path='__list_path'
 
 #######################################
+# List all executables on $path.
+# Global:
+#   path
+# Arguments:
+#   None
+# Return:
+#   List all executable paths
+#######################################
+__list_executable_on_path() {
+  find "${path[@]}" -type f,l -perm /111 2>/dev/null || true
+}
+
+alias executables='__list_executable_on_path'
+
+#######################################
+# Filter all executables with fuzzy finder.
+# Global:
+#   path
+# Arguments:
+#   None
+# Return:
+#   A executable path
+#######################################
+__absolute_command_path() {
+  executables | $(__fzf_wrapper)
+}
+
+#######################################
+# Widget for __absolute_command_path
+# Global:
+#   path
+# Arguments:
+#   None
+# Return:
+#   None
+#######################################
+__absolute_command_path_widget() {
+  setopt localoptions pipefail 2> /dev/null
+
+  local -r FZF_OPTS="${FZF_DEFAULT_OPTS} --no-multi --tiebreak=end --bind=ctrl-r:toggle-sort --query=${(qqq)LBUFFER}"
+  LBUFFER=$(FZF_DEFAULT_OPTS="${FZF_OPTS}" __absolute_command_path)
+  local -r EXIT_CODE="${?}"
+
+  zle redisplay
+  return "${EXIT_CODE}"
+}
+
+#######################################
 # Measure zsh start up time
 # Global:
 #   None
@@ -640,6 +688,9 @@ bindkey -M menuselect 'l' vi-forward-char
 
 zle     -N   fzf-history-widget
 bindkey '^R' fzf-history-widget
+
+zle -N __absolute_command_path_widget
+bindkey '^x^p' __absolute_command_path_widget
 
 
 # {{{ zinit
