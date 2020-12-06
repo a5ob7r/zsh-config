@@ -10,16 +10,12 @@ if [[ -f ~/.zinit/bin/zmodules/Src/zdharma/zplugin.so ]]; then
   zmodload zdharma/zplugin
 fi
 
-# Profiling of zsh startup process using zprof
-# Define an environment variable ZSH_DEBUG and assin 1 to it if want to
-# profile.
+# Profiling of zsh startup process using zprof. Define an environment variable
+# ZPROF if want to profile.
 #
 # How to usage
-# $ export ZSH_DEBUG=1
-# $ zsh
-# # or
-# $ ZSH_DEBUG=1 zsh
-if [[ "${ZSH_DEBUG}" -eq 1 ]]; then
+# $ ZPROF= zsh
+if (( ${+ZPROF} )); then
   zmodload zsh/zprof && zprof
 fi
 
