@@ -59,7 +59,7 @@ unsetopt BEEP
 # }}}
 # }}}
 
-
+# Functions {{{
 #######################################
 # Functional programming's style `filter` and `map`. This reads input from
 # stdin.
@@ -558,6 +558,7 @@ __run_in_background() {
   # shell and redirects the stdout and stderr to /dev/null.
   (eval "${*}" &) > /dev/null 2>&1
 }
+# }}}
 
 # {{{ Process for login shell
 if [[ "${-}" == *l* ]]; then
@@ -735,7 +736,7 @@ if [[ "${-}" == *l* ]]; then
 fi
 # }}}
 
-
+# Aliases {{{
 if gnui; then
   alias chmod='chmod --verbose'
   alias chown='chown --verbose'
@@ -791,6 +792,7 @@ alias ...='cd ../../'
 alias ....='cd ../../../'
 alias shinit='exec ${SHELL}'
 alias zshinit='zshcompiles > /dev/null 2>&1 && shinit'
+# }}}
 
 # execute whenever the current working directory is changed
 chpwd() {
@@ -798,11 +800,13 @@ chpwd() {
   __git_status ""
 }
 
-
+# Zstyle {{{
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z-_}={A-Za-z_-}'
 zstyle ':completion:*' menu select
+# }}}
 
+# Bindings {{{
 zmodload zsh/complist
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
@@ -814,7 +818,7 @@ bindkey '^R' fzf-history-widget
 
 zle -N __absolute_command_path_widget
 bindkey '^x^p' __absolute_command_path_widget
-
+# }}}
 
 # {{{ zinit
 declare -A ZINIT
@@ -842,7 +846,6 @@ zinit light-mode for \
   ;
 # }}}
 
-
 # {{{ Per OS
 case ${OSTYPE} in
   linux* )
@@ -867,3 +870,5 @@ if has zprof; then
   zprof | less
   exit
 fi
+
+# vim: set foldmethod=marker :
