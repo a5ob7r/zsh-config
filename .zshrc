@@ -1,5 +1,14 @@
 # ~/.zshrc
 
+# Profiling of zsh startup process using zprof. Define an environment variable
+# ZPROF if want to profile.
+#
+# How to usage
+# $ ZPROF= zsh
+if (( ${+ZPROF} )); then
+  zmodload zsh/zprof && zprof
+fi
+
 # Zinit module to compile sourced files automatically
 # Need to build a module if wanna use it.
 #
@@ -8,15 +17,6 @@
 if [[ -f ~/.zinit/bin/zmodules/Src/zdharma/zplugin.so ]]; then
   module_path+=( ~/.zinit/bin/zmodules/Src )
   zmodload zdharma/zplugin
-fi
-
-# Profiling of zsh startup process using zprof. Define an environment variable
-# ZPROF if want to profile.
-#
-# How to usage
-# $ ZPROF= zsh
-if (( ${+ZPROF} )); then
-  zmodload zsh/zprof && zprof
 fi
 
 # ZSHOPTIONS {{{
@@ -558,6 +558,12 @@ __run_in_background() {
   # shell and redirects the stdout and stderr to /dev/null.
   (eval "${*}" &) > /dev/null 2>&1
 }
+
+# execute whenever the current working directory is changed
+chpwd() {
+  l
+  __git_status ""
+}
 # }}}
 
 # {{{ Process for login shell
@@ -794,12 +800,6 @@ alias shinit='exec ${SHELL}'
 alias zshinit='zshcompiles > /dev/null 2>&1 && shinit'
 # }}}
 
-# execute whenever the current working directory is changed
-chpwd() {
-  l
-  __git_status ""
-}
-
 # Zstyle {{{
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z-_}={A-Za-z_-}'
@@ -862,7 +862,6 @@ case ${OSTYPE} in
     ;;
 esac
 # }}}
-
 
 source ~/.zshrc.local 2> /dev/null
 
