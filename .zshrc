@@ -19,6 +19,47 @@ if (( ${+ZPROF} )); then
   zmodload zsh/zprof && zprof
 fi
 
+# ZSHOPTIONS {{{
+# Completion {{{
+setopt LIST_PACKED
+# }}}
+
+# Expansion and Globbing {{{
+setopt EXTENDED_GLOB
+setopt MAGIC_EQUAL_SUBST
+setopt MARK_DIRS
+# }}}
+
+# History {{{
+setopt EXTENDED_HISTORY
+setopt HIST_EXPAND
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_VERIFY
+setopt SHARE_HISTORY
+# }}}
+
+# Input/Output {{{
+setopt CORRECT
+setopt IGNORE_EOF
+setopt PRINT_EIGHT_BIT
+setopt PRINT_EXIT_VALUE
+
+unsetopt FLOW_CONTROL
+# }}}
+
+# Prompting {{{
+setopt PROMPT_SUBST
+# }}}
+
+# Zle {{{
+setopt EMACS
+
+unsetopt BEEP
+# }}}
+# }}}
+
+
 #######################################
 # Functional programming's style `filter` and `map`. This reads input from
 # stdin.
@@ -757,25 +798,6 @@ chpwd() {
   __git_status ""
 }
 
-setopt correct
-setopt emacs
-setopt extended_glob
-setopt extended_history
-setopt hist_expand
-setopt hist_expire_dups_first
-setopt hist_ignore_dups
-setopt hist_verify
-setopt ignore_eof
-setopt list_packed
-setopt magic_equal_subst
-setopt mark_dirs
-setopt print_eight_bit
-setopt print_exit_value
-setopt prompt_subst
-setopt share_history
-
-unsetopt beep
-unsetopt flow_control
 
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z-_}={A-Za-z_-}'
