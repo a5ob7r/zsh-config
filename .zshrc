@@ -768,7 +768,7 @@ fi
 
 # define alias of colorful and detail ls
 if has exa; then
-  alias __exa='exa -F'
+  alias __exa="exa -F --ignore-glob='.*~'"
   alias la='__exa -a'
   alias l='la -1'
   alias ll='la -l'
