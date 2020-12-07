@@ -520,7 +520,7 @@ __run_in_background() {
 
 # {{{ Process for login shell
 if [[ "${-}" == *l* ]]; then
-  [ "${TERM}" = "linux" ] && oceanic_next
+  [[ "${TERM}" == "linux" ]] && oceanic_next
 
   # {{{ basic
   export LANG=en_US.UTF-8
