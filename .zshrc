@@ -314,26 +314,6 @@ __absolute_command_path() {
 }
 
 #######################################
-# Widget for __absolute_command_path
-# Global:
-#   path
-# Arguments:
-#   None
-# Return:
-#   None
-#######################################
-__absolute_command_path_widget() {
-  setopt localoptions pipefail 2> /dev/null
-
-  local -r FZF_OPTS="${FZF_DEFAULT_OPTS} --no-multi --tiebreak=end --bind=ctrl-r:toggle-sort --query=${(qqq)LBUFFER}"
-  LBUFFER=$(FZF_DEFAULT_OPTS="${FZF_OPTS}" __absolute_command_path)
-  local -r EXIT_CODE="${?}"
-
-  zle redisplay
-  return "${EXIT_CODE}"
-}
-
-#######################################
 # Measure zsh start up time
 # Global:
 #   None
@@ -412,17 +392,6 @@ zshcompiles() {
 
 __fzf_wrapper() {
   echo 'fzf'
-}
-
-fzf-history-widget() {
-  setopt localoptions pipefail 2> /dev/null
-
-  local -r FZF_OPTS="${FZF_DEFAULT_OPTS} --no-multi --nth=2..,.. --tiebreak=index --bind=ctrl-r:toggle-sort --query=${(qqq)LBUFFER}"
-  local -r NUM=$(fc -rl 1 | FZF_DEFAULT_OPTS="${FZF_OPTS}" $(__fzf_wrapper) | cut -d ' ' -f 1)
-  local -r EXIT_CODE="${?}"
-  [[ -n "${NUM}" ]] && zle vi-fetch-history -n "${NUM}"
-  zle redisplay
-  return "${EXIT_CODE}"
 }
 
 __cd_to_git_repository() {
@@ -567,6 +536,39 @@ __run_in_background() {
 chpwd() {
   l
   __git_status ""
+}
+# }}}
+
+# Widgets {{{
+fzf-history-widget() {
+  setopt localoptions pipefail 2> /dev/null
+
+  local -r FZF_OPTS="${FZF_DEFAULT_OPTS} --no-multi --nth=2..,.. --tiebreak=index --bind=ctrl-r:toggle-sort --query=${(qqq)LBUFFER}"
+  local -r NUM=$(fc -rl 1 | FZF_DEFAULT_OPTS="${FZF_OPTS}" $(__fzf_wrapper) | cut -d ' ' -f 1)
+  local -r EXIT_CODE="${?}"
+  [[ -n "${NUM}" ]] && zle vi-fetch-history -n "${NUM}"
+  zle redisplay
+  return "${EXIT_CODE}"
+}
+
+#######################################
+# Widget for __absolute_command_path
+# Global:
+#   path
+# Arguments:
+#   None
+# Return:
+#   None
+#######################################
+__absolute_command_path_widget() {
+  setopt localoptions pipefail 2> /dev/null
+
+  local -r FZF_OPTS="${FZF_DEFAULT_OPTS} --no-multi --tiebreak=end --bind=ctrl-r:toggle-sort --query=${(qqq)LBUFFER}"
+  LBUFFER=$(FZF_DEFAULT_OPTS="${FZF_OPTS}" __absolute_command_path)
+  local -r EXIT_CODE="${?}"
+
+  zle redisplay
+  return "${EXIT_CODE}"
 }
 # }}}
 
