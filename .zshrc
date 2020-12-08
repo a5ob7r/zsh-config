@@ -824,6 +824,7 @@ zle -N __absolute_command_path_widget
 bindkey '^x^p' __absolute_command_path_widget
 # }}}
 
+# Plugins {{{
 # {{{ zinit
 declare -A ZINIT
 ZINIT[COMPINIT_OPTS]=-C
@@ -848,6 +849,11 @@ zinit light-mode for \
   pick"async.zsh" src"pure.zsh" \
     sindresorhus/pure \
   ;
+# }}}
+
+# sindresorhus/pure {{{
+zstyle :prompt:pure:git:stash show yes
+# }}}
 # }}}
 
 # {{{ Per OS
