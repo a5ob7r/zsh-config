@@ -1,4 +1,6 @@
+#
 # ~/.zshrc
+#
 
 # zprof {{{
 # Profiling of zsh startup process using zprof. Define an environment variable
@@ -572,7 +574,7 @@ __absolute_command_path_widget() {
 }
 # }}}
 
-# {{{ Process for login shell
+# Login shell {{{
 if [[ "${-}" == *l* ]]; then
   [[ "${TERM}" == "linux" ]] && oceanic_next
 
@@ -812,7 +814,7 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z-_}={A-Za-z_-}'
 zstyle ':completion:*' menu select
 # }}}
 
-# Bindings {{{
+# Key bindings {{{
 zmodload zsh/complist
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
@@ -858,7 +860,7 @@ zstyle :prompt:pure:git:stash show yes
 # }}}
 # }}}
 
-# {{{ Per OS
+# Per OS {{{
 case ${OSTYPE} in
   linux* )
     alias open='xdg-open'
