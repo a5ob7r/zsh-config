@@ -1,14 +1,17 @@
 # ~/.zshrc
 
+# zprof {{{
 # Profiling of zsh startup process using zprof. Define an environment variable
 # ZPROF if want to profile.
 #
-# How to usage
 # $ ZPROF= zsh
+#
 if (( ${+ZPROF} )); then
   zmodload zsh/zprof && zprof
 fi
+# }}}
 
+# zinit module {{{
 # Zinit module to compile sourced files automatically
 # Need to build a module if wanna use it.
 #
@@ -18,6 +21,7 @@ if [[ -f ~/.zinit/bin/zmodules/Src/zdharma/zplugin.so ]]; then
   module_path+=( ~/.zinit/bin/zmodules/Src )
   zmodload zdharma/zplugin
 fi
+# }}}
 
 # ZSHOPTIONS {{{
 # Completion {{{
@@ -865,9 +869,11 @@ esac
 
 source ~/.zshrc.local 2> /dev/null
 
+# zprof {{{
 if has zprof; then
   zprof | less
   exit
 fi
+# }}}
 
 # vim: set foldmethod=marker :
