@@ -648,6 +648,7 @@ if [[ "${-}" == *l* ]]; then
   fi
   # }}}
 
+  # Functions {{{
   #######################################
   # Enable ssh-agent wisely. Cache ssh-agent output and load it as necessary.
   # This is to prevent duplicate ssh-agent start.
@@ -724,7 +725,9 @@ if [[ "${-}" == *l* ]]; then
     has dropbox-cli || return 1
     dropbox-cli start && dropbox-cli lansync n
   }
+  # }}}
 
+  # Per OS {{{
   case ${OSTYPE} in
     linux* )
       export TERMINAL="$(__default_terminal)"
@@ -740,13 +743,15 @@ if [[ "${-}" == *l* ]]; then
     darwin* )
       ;;
   esac
+  # }}}
 
   export path
 
-  # Plugin configures
+  # Plugin configures {{{
   export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
   export PURE_PROMPT_SYMBOL=λ
   export ENHANCD_COMMAND=c
+  # }}}
 fi
 # }}}
 
