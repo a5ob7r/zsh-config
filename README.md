@@ -1,23 +1,18 @@
-# My Zsh Configures
+# My Zsh Configs
 
 ## Setup
 
 ```sh
-$ cd path/to/zsh-config
-$ ln -sv $PWD/.zshrc ~/
+$ ln -sv $PWD/.zshrc ~
 ```
 
-## Install local zsh completions
+## Local completions
 
 ```sh
-# cd to your local completions directory
-$ cd ~/.local/share/zsh/completions
-$ zinit creinstall "${PWD}/completions"
+$ zinit creinstall ~/.local/share/zsh/completions
 ```
 
-## Local rcs
-
-These configs can load user local zsh configs.
+## Local zshrc
 
 ```sh
 $ : >> ~/.zshrc.local
