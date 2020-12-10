@@ -801,6 +801,7 @@ alias tiga='tig --all'
 alias v='volt'
 alias vb='volt build'
 alias p='pipenv'
+alias fzfd='FZF_DEFAULT_COMMAND="find . -type d" fzf'
 
 alias cg='__cd_to_git_repository'
 alias cdh='cd ~'
@@ -809,6 +810,8 @@ alias ...='cd ../../'
 alias ....='cd ../../../'
 alias shinit='exec ${SHELL}'
 alias zshinit='zshcompiles > /dev/null 2>&1 && shinit'
+alias q='exit'
+alias :q='q'
 # }}}
 
 # Zstyle {{{
