@@ -752,6 +752,7 @@ fi
 if gnui; then
   alias chmod='chmod --verbose'
   alias chown='chown --verbose'
+  alias cp='cp --verbose'
   alias diff='diff --color=auto'
   alias grep='grep --color=auto'
   alias ln='ln --verbose'
