@@ -882,7 +882,9 @@ case ${OSTYPE} in
 esac
 # }}}
 
+# Others {{{
 source ~/.zshrc.local 2> /dev/null
+# }}}
 
 # zprof {{{
 if has zprof; then
