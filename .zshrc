@@ -59,8 +59,6 @@ setopt PROMPT_SUBST
 # }}}
 
 # Zle {{{
-setopt EMACS
-
 unsetopt BEEP
 # }}}
 # }}}
@@ -820,6 +818,8 @@ zstyle ':completion:*' menu select
 # }}}
 
 # Key bindings {{{
+bindkey -e
+
 zmodload zsh/complist
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
