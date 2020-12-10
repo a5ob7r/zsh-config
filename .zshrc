@@ -525,8 +525,9 @@ __run_in_background() {
   # shell and redirects the stdout and stderr to /dev/null.
   (eval "${*}" &) > /dev/null 2>&1
 }
+# }}}
 
-# execute whenever the current working directory is changed
+# Hook functions {{{
 chpwd() {
   l
   __git_status ""
