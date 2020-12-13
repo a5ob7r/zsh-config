@@ -48,7 +48,6 @@ setopt SHARE_HISTORY
 # Input/Output {{{
 setopt CORRECT
 setopt IGNORE_EOF
-setopt PRINT_EIGHT_BIT
 setopt PRINT_EXIT_VALUE
 
 unsetopt FLOW_CONTROL
