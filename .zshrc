@@ -193,7 +193,7 @@ trim_tail_slashes() {
 # Return:
 #   None
 #######################################
-__add_directory_path_to_path_with_duplicate_check() {
+add2path() {
   local -r DIRPATH="${1}"
 
   # Trim any backslashes from the tail.
@@ -208,8 +208,6 @@ __add_directory_path_to_path_with_duplicate_check() {
     )
   fi
 }
-
-alias add2path='__add_directory_path_to_path_with_duplicate_check'
 
 #######################################
 # Search whether or not a command can call from a shell prompt.
@@ -233,11 +231,9 @@ alias add2path='__add_directory_path_to_path_with_duplicate_check'
 # Return:
 #   0 or 1: Whether or not a command can call
 #######################################
-__exists_command() {
+has() {
   (( ${+commands[${1}]} )) || whence ${1} > /dev/null
 }
-
-alias has='__exists_command'
 
 #######################################
 # Search that whether or not a command is made by GNU
@@ -248,11 +244,9 @@ alias has='__exists_command'
 # Return:
 #   0 or 1: Whether or not a command is made by GNU
 #######################################
-__is_gnu_coreutils() {
+gnu() {
   ${1} --version 2>&1 | grep -q GNU
 }
-
-alias gnu='__is_gnu_coreutils'
 
 #######################################
 # Search that whether or not GNU coreutils is installed
@@ -263,11 +257,9 @@ alias gnu='__is_gnu_coreutils'
 # Return:
 #   0 or 1: Whether or not GNU coreutils is installed
 #######################################
-__is_gnu_coreutils_installed() {
+gnui() {
   has dircolors
 }
-
-alias gnui='__is_gnu_coreutils_installed'
 
 #######################################
 # List up path directories per line
@@ -278,11 +270,9 @@ alias gnui='__is_gnu_coreutils_installed'
 # Return:
 #   Path directories
 #######################################
-__list_path() {
+path() {
   map_ 'echo "${1}"' "${path[@]}"
 }
-
-alias path='__list_path'
 
 #######################################
 # List all executables on $path.
@@ -293,11 +283,9 @@ alias path='__list_path'
 # Return:
 #   List all executable paths
 #######################################
-__list_executable_on_path() {
+executables() {
   find "${path[@]}" -type f,l -perm /111 2>/dev/null || true
 }
-
-alias executables='__list_executable_on_path'
 
 #######################################
 # Filter all executables with fuzzy finder.
@@ -440,10 +428,9 @@ __run-help-tmux-pane() {
 # Return:
 #   None
 #######################################
-__mkdir_with_current_time() {
+mkdir-datetime() {
   mkdir "$(datetime)"
 }
-alias mkdir-datetime='__mkdir_with_current_time'
 
 #######################################
 # Is inside git repository.
