@@ -769,12 +769,16 @@ if has exa; then
   alias lg='ll -g'
 fi
 
+alias e="${EDITOR}"
+alias v=vim
+alias vw=view
 alias dk='docker'
 alias dkcp='docker-compose'
 alias dkcpe='dkcp exec'
 alias t='tmux'
 alias g='git'
 alias tiga='tig --all'
+alias a=tiga
 alias v='volt'
 alias vb='volt build'
 alias p='pipenv'
@@ -789,6 +793,9 @@ alias shinit='exec ${SHELL}'
 alias zshinit='zshcompiles > /dev/null 2>&1 && shinit'
 alias q='exit'
 alias :q='q'
+
+# void loop
+alias vloop='while [[ 1 ]] {}'
 
 # Current date and time.
 alias datetime="date +'%Y%m%d%H%M%S'"
@@ -860,6 +867,7 @@ case ${OSTYPE} in
     alias lb='lsblk -o NAME,FSTYPE,FSVER,FSSIZE,FSUSED,FSAVAIL,FSUSE%,PARTTYPENAME,MOUNTPOINT'
     alias ip='ip -color=auto'
     alias x='startx'
+    alias xr=xrandr
     ;;
   darwin* )
     alias op='open'
