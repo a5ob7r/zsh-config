@@ -577,6 +577,8 @@ if [[ "${-}" == *l* ]]; then
   # }}}
 
   # {{{ man
+  export MANOPT='--nj'
+
   # colorized man with less
   export LESS_TERMCAP_mb=$'\E[01;31m'      # Begins blinking.
   export LESS_TERMCAP_md=$'\E[01;31m'      # Begins bold.
