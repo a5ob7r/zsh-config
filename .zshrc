@@ -615,10 +615,6 @@ if [[ "${-}" == *l* ]]; then
     add2path "${GOPATH}/bin"
   fi
 
-  if has volt; then
-    export VOLTPATH=~/.vim/volt
-  fi
-
   if has pipenv; then
     export PIPENV_VENV_IN_PROJECT=1
   fi
@@ -779,8 +775,6 @@ alias t='tmux'
 alias g='git'
 alias tiga='tig --all'
 alias a=tiga
-alias v='volt'
-alias vb='volt build'
 alias p='pipenv'
 alias fzfd='FZF_DEFAULT_COMMAND="find . -type d" fzf'
 
