@@ -571,9 +571,6 @@ if [[ "${-}" == *l* ]]; then
   [[ "${TERM}" == "linux" ]] && oceanic_next
 
   # {{{ basic
-  export LANG=en_US.UTF-8
-  export LC_TIME="C"
-
   export EDITOR=vim
   export VISUAL=vim
   export PAGER=less
