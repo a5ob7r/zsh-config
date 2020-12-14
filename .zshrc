@@ -568,8 +568,6 @@ __absolute_command_path_widget() {
 
 # Login shell {{{
 if [[ "${-}" == *l* ]]; then
-  [[ "${TERM}" == "linux" ]] && oceanic_next
-
   # {{{ basic
   export EDITOR=vim
   export VISUAL=vim
@@ -635,6 +633,10 @@ if [[ "${-}" == *l* ]]; then
   if has pipenv; then
     export PIPENV_VENV_IN_PROJECT=1
   fi
+
+  export path
+
+  [[ "${TERM}" == "linux" ]] && oceanic_next
   # }}}
 
   # Functions {{{
@@ -733,8 +735,6 @@ if [[ "${-}" == *l* ]]; then
       ;;
   esac
   # }}}
-
-  export path
 
   # Plugin configures {{{
   export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
