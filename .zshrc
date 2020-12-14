@@ -571,11 +571,6 @@ if [[ "${-}" == *l* ]]; then
   add2path ~/bin
   # }}}
 
-  # {{{ less
-  # default less option
-  export LESS='-ij10FMRX'
-  # }}}
-
   # {{{ man
   export MANOPT='--nj'
 
@@ -599,7 +594,9 @@ if [[ "${-}" == *l* ]]; then
   export SPROMPT="zsh: correct: %F{red}%R%f -> %F{green}%r%f [No/Yes/Abort/Edit]? "
   # }}}
 
-  # {{{ fzf
+  # {{{ other
+  export LESS='-ij10FMRX'
+
   if has fzf; then
     export FZF_DEFAULT_OPTS='--reverse --height=40%'
 
@@ -607,9 +604,7 @@ if [[ "${-}" == *l* ]]; then
       export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
     fi
   fi
-  # }}}
 
-  # {{{ other
   if has go; then
     export GOPATH=~/go
     add2path "${GOPATH}/bin"
