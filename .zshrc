@@ -711,10 +711,6 @@ if [[ "${-}" == *l* ]]; then
       export TERMINAL="$(__default_terminal)"
       export BROWSER="$(__default_browser)"
 
-      # unzip-iconv
-      export ZIPINFOOPT='-OCP932'
-      export UNZIPOPT='-OCP932'
-
       __enable_ssh_agent
       __run_in_background __start_dropbox
       ;;
