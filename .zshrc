@@ -511,6 +511,19 @@ __run_in_background() {
   # shell and redirects the stdout and stderr to /dev/null.
   (eval "${*}" &) > /dev/null 2>&1
 }
+
+#######################################
+# Setup zstyle's completion list-colors with `LS_COLORS`.
+# Global:
+#   LS_COLORS: Color configs for ls
+# Arguments:
+#   None
+# Return:
+#   None
+#######################################
+setup_completion_list_colors() {
+  zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+}
 # }}}
 
 # Hook functions {{{
@@ -793,9 +806,10 @@ alias date2="datetime | cut -c -8"
 # }}}
 
 # Zstyle {{{
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z-_}={A-Za-z_-}'
 zstyle ':completion:*' menu select
+
+setup_completion_list_colors
 # }}}
 
 # Key bindings {{{
@@ -834,7 +848,7 @@ zinit light-mode for \
     zsh-users/zsh-autosuggestions \
   wait lucid compile"src/*.sh" \
     b4b4r07/enhancd \
-  wait lucid atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" \
+  wait lucid atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" atload'setup_completion_list_colors' \
     trapd00r/LS_COLORS \
   pick"async.zsh" src"pure.zsh" \
     sindresorhus/pure \
