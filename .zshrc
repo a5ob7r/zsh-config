@@ -567,7 +567,7 @@ __absolute_command_path_widget() {
 # }}}
 
 # Login shell {{{
-if [[ "${-}" == *l* ]]; then
+if [[ -o LOGIN || "${0}" == '-*' ]]; then
   # {{{ basic
   export EDITOR=vim
   export VISUAL=vim
