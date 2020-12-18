@@ -798,6 +798,7 @@ alias :q='q'
 
 # void loop
 alias vloop='while [[ 1 ]] {}'
+alias vloop2='yes > /dev/null'
 
 # Current date and time.
 alias datetime="date +'%Y%m%d%H%M%S'"
@@ -850,8 +851,8 @@ zinit light-mode for \
     b4b4r07/enhancd \
   wait lucid atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" atload'setup_completion_list_colors' \
     trapd00r/LS_COLORS \
-  pick"async.zsh" src"pure.zsh" \
-    sindresorhus/pure \
+  pick"async.zsh" src"pure.zsh" ver'faster_is_inside_container_check' \
+    a5ob7r/pure \
   ;
 # }}}
 
