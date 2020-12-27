@@ -764,15 +764,6 @@ else
   alias lg='la -l'
 fi
 
-# define alias of colorful and detail ls
-if has exa; then
-  alias __exa="exa -F --ignore-glob='.*~'"
-  alias la='__exa -a'
-  alias l='la -1'
-  alias ll='la -l'
-  alias lg='ll -g'
-fi
-
 alias e="${EDITOR}"
 alias v=vim
 alias vw=view
