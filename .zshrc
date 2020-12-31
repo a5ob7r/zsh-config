@@ -728,7 +728,7 @@ if [[ -o LOGIN || "${0}" == '-*' ]]; then
   # Plugin configures {{{
   export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
   export PURE_PROMPT_SYMBOL=λ
-  export ENHANCD_COMMAND=c
+  export ENHANCD_COMMAND=ce
   # }}}
 fi
 # }}}
@@ -779,7 +779,7 @@ alias fzfd='FZF_DEFAULT_COMMAND="find . -type d" fzf'
 alias viman='MANPAGER="vim -M +MANPAGER -c \"set nolist\" -" command man'
 alias m=viman
 
-alias cg='__cd_to_git_repository'
+alias c='__cd_to_git_repository'
 alias cdh='cd ~'
 alias ..='cd ../'
 alias ...='cd ../../'
