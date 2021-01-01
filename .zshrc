@@ -787,6 +787,9 @@ alias ....='cd ../../../'
 alias shinit='exec ${SHELL}'
 alias zshinit='zshcompiles > /dev/null 2>&1 && shinit'
 alias q='exit'
+alias qq='q'
+alias qqq='q'
+alias quit='q'
 alias :q='q'
 
 # void loop
