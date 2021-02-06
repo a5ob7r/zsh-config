@@ -573,6 +573,10 @@ if [[ -o LOGIN || "${0}" == '-*' ]]; then
   export VISUAL=vim
   export PAGER=less
 
+  export XDG_CONFIG_HOME=~/.config
+  export XDG_CACHE_HOME=~/.cache
+  export XDG_DATA_HOME=~/.local/share
+
   # prevent adding duplication path
   typeset -U path PATH
 
