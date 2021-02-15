@@ -732,7 +732,6 @@ if [[ -o LOGIN || "${0}" == '-*' ]]; then
   # Plugin configures {{{
   export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
   export PURE_PROMPT_SYMBOL=λ
-  export ENHANCD_COMMAND=ce
   # }}}
 fi
 # }}}
@@ -847,8 +846,6 @@ zinit light-mode for \
     zdharma/fast-syntax-highlighting \
   wait lucid compile"{src/*.zsh,src/strategies/*.zsh}" atload"_zsh_autosuggest_start" \
     zsh-users/zsh-autosuggestions \
-  wait lucid compile"src/*.sh" \
-    b4b4r07/enhancd \
   wait lucid atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" atload'setup_completion_list_colors' \
     trapd00r/LS_COLORS \
   pick"async.zsh" src"pure.zsh" \
