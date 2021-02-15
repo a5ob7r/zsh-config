@@ -26,6 +26,10 @@ fi
 # }}}
 
 # ZSHOPTIONS {{{
+# Changing Directories {{{
+setopt AUTO_CD
+# }}}
+
 # Completion {{{
 setopt LIST_PACKED
 # }}}
