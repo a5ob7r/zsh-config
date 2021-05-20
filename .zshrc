@@ -513,7 +513,7 @@ __run_in_background() {
   # stdout and stderr to show, that moving a process into the background and
   # completing a process, to a parent shell. So to prevent this problem use sub
   # shell and redirects the stdout and stderr to /dev/null.
-  (eval "${*}" &) > /dev/null 2>&1
+  (eval "${*}" &) &> /dev/null
 }
 
 #######################################
@@ -656,14 +656,14 @@ if [[ -o LOGIN || "${0}" == '-*' ]]; then
     export SSH_AGENT_ENV=~/.ssh/ssh-agent.env
 
     # When no existing ssh-agent process
-    if ! pgrep -x -u "${USER}" ssh-agent > /dev/null 2>&1; then
+    if ! pgrep -x -u "${USER}" ssh-agent &> /dev/null; then
       # Start ssh-agent process and cache the output
       ssh-agent -t ${SSH_KEY_LIFE_TIME_SEC} > "${SSH_AGENT_ENV}"
     fi
 
     # When not loading ssh-agent process information
     if [[ -f "${SSH_AGENT_ENV}" && ! -v SSH_AUTH_SOCK && ! -v SSH_AGENT_PID ]]; then
-      source "${SSH_AGENT_ENV}" > /dev/null 2>&1
+      source "${SSH_AGENT_ENV}" &> /dev/null
     fi
   }
 
@@ -792,7 +792,7 @@ alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias shinit='exec ${SHELL}'
-alias zshinit='zshcompiles > /dev/null 2>&1 && shinit'
+alias zshinit='zshcompiles &> /dev/null && shinit'
 alias q='exit'
 alias qq='q'
 alias qqq='q'
