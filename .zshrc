@@ -602,6 +602,21 @@ if [[ -o LOGIN || "${0}" == '-*' ]]; then
   export LESS_TERMCAP_so=$'\E[00;47;30m'   # Begins standout-mode.
   export LESS_TERMCAP_ue=$'\E[0m'          # Ends underline.
   export LESS_TERMCAP_us=$'\E[01;32m'      # Begins underline.
+
+  if has vim; then
+    # Maybe fail to open man page with vim as pager due to no filetype plugin
+    # of vim loaded. Then, there are two ways to resolve this problem.
+    #
+    # 1. Overwrite the environment variable `MANPAGER` with empty string.
+    #   e.g.
+    #   $ MANPAGER= man some_command
+    #
+    # 2. Config vimrc to load filetype plugin.
+    #   e.g.
+    #   "in vimrc
+    #   filetype plugin on
+    export MANPAGER='vim -M +MANPAGER -c "set nolist" -'
+  fi
   # }}}
 
   # {{{ zsh
