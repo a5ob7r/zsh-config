@@ -90,12 +90,11 @@ filter_map() {
     eval "${yield}"
   }
 
-  cat - \
-    | while read subj; do
-        # Prevent this function to return not 0 when the last pred_f in the
-        # loop returns not 0.
-        if pred_f "${subj}"; then yield_f "${subj}"; fi
-      done
+  while read subj; do
+    # Prevent this function to return not 0 when the last pred_f in the
+    # loop returns not 0.
+    if pred_f "${subj}"; then yield_f "${subj}"; fi
+  done <&0
 }
 
 #######################################
@@ -131,7 +130,7 @@ filter_map_() {
 #   Transformed list.
 #######################################
 map() {
-  cat - | filter_map 'true' "${1}"
+  filter_map 'true' "${1}" <&0
 }
 
 #######################################
@@ -157,7 +156,7 @@ map_() {
 #   Filtered list.
 #######################################
 filter() {
-  cat - | filter_map "${1}" 'echo ${1}'
+  filter_map "${1}" 'echo ${1}' <&0
 }
 
 #######################################
