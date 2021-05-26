@@ -844,6 +844,9 @@ bindkey '^R' fzf-history-widget
 
 zle -N __absolute_command_path_widget
 bindkey '^x^p' __absolute_command_path_widget
+
+# Delete a forward char with a `delete` key.
+bindkey '^[[3~' delete-char
 # }}}
 
 # Plugins {{{
