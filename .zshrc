@@ -531,6 +531,22 @@ __run_in_background() {
 setup_completion_list_colors() {
   zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 }
+
+#######################################
+# Return whether current shell is login one or not.
+# Global:
+#   None
+# Arguments:
+#   None
+# Return:
+#   See above.
+#
+# NOTE: Really need to extract this as a function? It may be enough to just be
+# inline.
+#######################################
+is_login_shell() {
+  [[ -o LOGIN ]]
+}
 # }}}
 
 # Hook functions {{{
@@ -574,7 +590,7 @@ __absolute_command_path_widget() {
 # }}}
 
 # Login shell {{{
-if [[ -o LOGIN || "${0}" == '-*' ]]; then
+if is_login_shell; then
   # {{{ basic
   export EDITOR=vim
   export VISUAL=vim
