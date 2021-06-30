@@ -57,6 +57,10 @@ setopt PRINT_EXIT_VALUE
 unsetopt FLOW_CONTROL
 # }}}
 
+# Job Control {{{
+setopt LONG_LIST_JOBS
+# }}}
+
 # Prompting {{{
 setopt PROMPT_SUBST
 # }}}
