@@ -635,7 +635,10 @@ if is_login_shell; then
     #   e.g.
     #   "in vimrc
     #   filetype plugin on
-    export MANPAGER='vim -M +MANPAGER -c "set nolist" -'
+    #
+    # NOTE: Supress `Vim: Reading from stdin...` message using `--not-a-term`.
+    # https://github.com/vim/vim/commit/234d16286a2733adedef56784c17415ae169b9ad
+    export MANPAGER='vim -M +MANPAGER -c "set nolist" --not-a-term -'
   fi
   # }}}
 
