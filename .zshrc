@@ -547,6 +547,28 @@ setup_completion_list_colors() {
 is_login_shell() {
   [[ -o LOGIN ]]
 }
+
+#######################################
+# Map a keybinding to a function using ZLE.
+#
+# 1. Create user defined widget.
+# 2. Bind a key combination to the widget.
+#
+# Global:
+#   None
+# Arguments:
+#   keys: key combinations
+#   fun: function name
+# Return:
+#   None
+#######################################
+bind_key2fun () {
+  local -r keys="$1"
+  local -r fun="$2"
+
+  zle -N "$fun"
+  bindkey "$keys" "$fun"
+}
 # }}}
 
 # Hook functions {{{
@@ -862,11 +884,8 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 
-zle     -N   fzf-history-widget
-bindkey '^R' fzf-history-widget
-
-zle -N __absolute_command_path_widget
-bindkey '^x^p' __absolute_command_path_widget
+bind_key2fun '^R' fzf-history-widget
+bind_key2fun '^x^p' __absolute_command_path_widget
 
 # Delete a forward char with a `delete` key.
 bindkey '^[[3~' delete-char
