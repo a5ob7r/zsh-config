@@ -609,6 +609,14 @@ __absolute_command_path_widget() {
   zle redisplay
   return "${EXIT_CODE}"
 }
+
+__strip_head () {
+  setopt localoptions extended_glob
+
+  # e.g. sudo ls path -> ls path
+  LBUFFER="${LBUFFER#* ##}"
+  zle redisplay
+}
 # }}}
 
 # Login shell {{{
@@ -886,6 +894,7 @@ bindkey -M menuselect 'l' vi-forward-char
 
 bind_key2fun '^R' fzf-history-widget
 bind_key2fun '^x^p' __absolute_command_path_widget
+bind_key2fun '^X^A' __strip_head
 
 # Delete a forward char with a `delete` key.
 bindkey '^[[3~' delete-char
