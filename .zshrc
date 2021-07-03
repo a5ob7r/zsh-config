@@ -617,6 +617,29 @@ __strip_head () {
   LBUFFER="${LBUFFER#* ##}"
   zle redisplay
 }
+
+# NOTE: This only supports newer or Linux's apropos version.
+# TODO: Support apropos on macOS. The version is too old.
+# apropos's output on Linux(or newer version)
+# $ man -k .
+# command (1)    - Some descriptions
+#
+# apropos's output on macOS(or older version)
+# $ man -k .
+# command(1)         - Some descriptions
+# command(1), cmd    - Some descriptions
+__fuzzy_select_manual () {
+  local -r query=$(command man -k . | fzf +m --tiebreak=begin --query="$LBUFFER" --preview='command man {1}{2}')
+  local -r exit_code="$?"
+
+  [[ "$exit_code" == 0 ]] && {
+    local -ra q=(${(@s: :)query})
+    command man "${q[1]}${q[2]}"
+  }
+
+  zle redisplay
+  return "$exit_code"
+}
 # }}}
 
 # Login shell {{{
@@ -895,6 +918,7 @@ bindkey -M menuselect 'l' vi-forward-char
 bind_key2fun '^R' fzf-history-widget
 bind_key2fun '^x^p' __absolute_command_path_widget
 bind_key2fun '^X^A' __strip_head
+bind_key2fun '^X^M' __fuzzy_select_manual
 
 # Delete a forward char with a `delete` key.
 bindkey '^[[3~' delete-char
