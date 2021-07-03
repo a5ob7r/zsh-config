@@ -570,21 +570,35 @@ bind_key2fun () {
   bindkey "$keys" "$fun"
 }
 
-manual_description2entry() {
+manual_description2query() {
   setopt localoptions extended_glob
 
   local -r query="${1/ ##-*/}"
 
+  # Valid patterns
+  # - Linux
+  #   - '1' 'cmd'
+  #   - 'cmd(1)'
+  #   - 'cmd.1'
+  # - macOS
+  #   - '1' 'cmd'
   case "$query" in
     *,* )
       # This format may cause on macOS.
-      # i.g. alacritty(1), alacritty-graphics(1)
-      _normalize_query "${query/,*/}"
+      # i.g. command(1), commandor(1)
+      manual_description2query "${query/,*/}"
       ;;
-      *\ \(* )
-      # This format may cause on Linux.
-      # i.g. alacritty (1)
-      echo "${query/ /}"
+    *\ \(* )
+      # i.g. command (1)
+      # NOTE: Assume `queries`'s length is 2 and first element is command name,
+      # second element is section number.
+      local -ra queries=(${(@s: :)query})
+      echo "${queries[2]//[()]/} ${queries[1]}"
+      ;;
+    *\(* )
+      # This format may cause on macOS.
+      # i.g. command(1)
+      manual_description2query "${query/\(/ (}"
       ;;
     * )
       echo "$query"
@@ -641,12 +655,18 @@ __strip_head () {
 }
 
 __fuzzy_select_manual () {
-  local -r query=$(command man -k . | fzf +m --tiebreak=begin --query="$LBUFFER" --preview="$(which manual_description2entry); command man \$(manual_description2entry {})")
+  local -r query=$(command man -k . | fzf +m --tiebreak=begin --query="$LBUFFER" --preview="$(which manual_description2query); command man \$(manual_description2query {})")
   local -r exit_code="$?"
 
-  [[ "$exit_code" == 0 ]] && {
-    command man "$(manual_description2entry "$query")"
-  }
+  if [[ -n $query ]]; then
+    local -ra queries=($(manual_description2query "$query"))
+
+    if [[ "${#queries[@]}" == 2 ]]; then
+      command man "${queries[@]}"
+    else
+      echo "Expected values are that first element is section number, second element is command name. But actual values are `${queries[@]}`" >&2
+    fi
+  fi
 
   zle redisplay
   return "$exit_code"
