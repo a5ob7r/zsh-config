@@ -569,6 +569,28 @@ bind_key2fun () {
   zle -N "$fun"
   bindkey "$keys" "$fun"
 }
+
+manual_description2entry() {
+  setopt localoptions extended_glob
+
+  local -r query="${1/ ##-*/}"
+
+  case "$query" in
+    *,* )
+      # This format may cause on macOS.
+      # i.g. alacritty(1), alacritty-graphics(1)
+      _normalize_query "${query/,*/}"
+      ;;
+      *\ \(* )
+      # This format may cause on Linux.
+      # i.g. alacritty (1)
+      echo "${query/ /}"
+      ;;
+    * )
+      echo "$query"
+      ;;
+  esac
+}
 # }}}
 
 # Hook functions {{{
@@ -618,23 +640,12 @@ __strip_head () {
   zle redisplay
 }
 
-# NOTE: This only supports newer or Linux's apropos version.
-# TODO: Support apropos on macOS. The version is too old.
-# apropos's output on Linux(or newer version)
-# $ man -k .
-# command (1)    - Some descriptions
-#
-# apropos's output on macOS(or older version)
-# $ man -k .
-# command(1)         - Some descriptions
-# command(1), cmd    - Some descriptions
 __fuzzy_select_manual () {
-  local -r query=$(command man -k . | fzf +m --tiebreak=begin --query="$LBUFFER" --preview='command man {1}{2}')
+  local -r query=$(command man -k . | fzf +m --tiebreak=begin --query="$LBUFFER" --preview="$(which manual_description2entry); command man \$(manual_description2entry {})")
   local -r exit_code="$?"
 
   [[ "$exit_code" == 0 ]] && {
-    local -ra q=(${(@s: :)query})
-    command man "${q[1]}${q[2]}"
+    command man "$(manual_description2entry "$query")"
   }
 
   zle redisplay
