@@ -605,6 +605,13 @@ manual_description2query() {
       ;;
   esac
 }
+
+# Show GitHub contributions, which is called `kusa` by Japanese.
+kusa () {
+  local -r username="$(command git config user.name)"
+
+  curl "https://github-contributions-api.deno.dev/${username}.term"
+}
 # }}}
 
 # Hook functions {{{
