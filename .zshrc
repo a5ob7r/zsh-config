@@ -617,7 +617,26 @@ __strip_head () {
   setopt localoptions extended_glob
 
   # e.g. sudo ls path -> ls path
-  LBUFFER="${LBUFFER#* ##}"
+  # | is cursor position
+  case "$LBUFFER" in
+    # sudo ls path|
+    # sudo |ls path
+    # sudo    |    ls path
+    *\ * )
+      LBUFFER="${LBUFFER#* }"
+      LBUFFER="${LBUFFER## ##}"
+      RBUFFER="${RBUFFER## ##}"
+      ;;
+    # sudo| ls path
+    # s|udo ls path
+    # s|udo     ls path
+    * )
+      LBUFFER=''
+      RBUFFER="${RBUFFER#* }"
+      RBUFFER="${RBUFFER## ##}"
+      ;;
+  esac
+
   zle redisplay
 }
 
