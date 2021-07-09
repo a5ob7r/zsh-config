@@ -612,6 +612,20 @@ kusa () {
 
   curl "https://github-contributions-api.deno.dev/${username}.term"
 }
+
+#######################################
+# Wrap text with two arguments.
+# Global:
+#   None
+# Arguments:
+#   left: Left delimiter.
+#   right: Right delimiter.
+# Return:
+#   Wrapped text with arguments.
+#######################################
+wrap() {
+  echo -n "$1$(<&0)$2"
+}
 # }}}
 
 # Hook functions {{{
