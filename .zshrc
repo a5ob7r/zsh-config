@@ -71,7 +71,6 @@ unsetopt BEEP
 # }}}
 
 # Functions {{{
-#######################################
 # Functional programming's style `filter` and `map`. This reads input from
 # stdin.
 # Global:
@@ -81,7 +80,6 @@ unsetopt BEEP
 #   yield: Yielder.
 # Return:
 #   Filtered and transformed list.
-#######################################
 filter_map() {
   local -r pred="${1}"
   local -r yield="${2}"
@@ -101,7 +99,6 @@ filter_map() {
   done <&0
 }
 
-#######################################
 # Functional programming's style `filter` and `map`. This reads input from
 # arguments.
 # Global:
@@ -112,7 +109,6 @@ filter_map() {
 #   follow args: Input list.
 # Return:
 #   Filtered and transformed list.
-#######################################
 filter_map_() {
   local -r pred="${1}"
   local -r yield="${2}"
@@ -124,7 +120,6 @@ filter_map_() {
   done | filter_map "${pred}" "${yield}"
 }
 
-#######################################
 # Functional programming's style `map`. This reads input from stdin.
 # Global:
 #   None
@@ -132,12 +127,10 @@ filter_map_() {
 #   yield: Yielder.
 # Return:
 #   Transformed list.
-#######################################
 map() {
   filter_map 'true' "${1}" <&0
 }
 
-#######################################
 # Functional programming's style `map`. This reads input from arguments.
 # Global:
 #   None
@@ -145,12 +138,10 @@ map() {
 #   yield: Yielder.
 # Return:
 #   Transformed list.
-#######################################
 map_() {
   filter_map_ 'true' "${1}" ${@[2,$]}
 }
 
-#######################################
 # Functional programming's style `filter`. This reads input from stdin.
 # Global:
 #   None
@@ -158,12 +149,10 @@ map_() {
 #   pred: Predicate.
 # Return:
 #   Filtered list.
-#######################################
 filter() {
   filter_map "${1}" 'echo ${1}' <&0
 }
 
-#######################################
 # Functional programming's style `filter`. This reads input from arguments.
 # Global:
 #   None
@@ -172,12 +161,10 @@ filter() {
 #   follow args: Input list.
 # Return:
 #   Filtered list.
-#######################################
 filter_() {
   filter_map_ "${1}" 'echo ${1}' ${@[2,$]}
 }
 
-#######################################
 # Trim all slashes from string tail.
 # Global:
 #   None
@@ -185,12 +172,10 @@ filter_() {
 #   STRING: A target string.
 # Return:
 #   A trimmed string.
-#######################################
 trim_tail_slashes() {
   sed -E 's/\/*$//' <<< "${1}"
 }
 
-#######################################
 # Add command path to a environment variable "path" and prevent from reorder
 # them
 # Global:
@@ -199,7 +184,6 @@ trim_tail_slashes() {
 #   DIRPATH: A command directory path
 # Return:
 #   None
-#######################################
 add2path() {
   local -r DIRPATH="${1}"
 
@@ -216,7 +200,6 @@ add2path() {
   fi
 }
 
-#######################################
 # Search whether or not a command can call from a shell prompt.
 #
 # This function can search not only commands on PATH but also shell functions
@@ -237,12 +220,10 @@ add2path() {
 #   1: A command name
 # Return:
 #   0 or 1: Whether or not a command can call
-#######################################
 has() {
   (( ${+commands[${1}]} )) || whence ${1} > /dev/null
 }
 
-#######################################
 # Search that whether or not a command is made by GNU
 # Global:
 #   None
@@ -250,12 +231,10 @@ has() {
 #   1: A command name
 # Return:
 #   0 or 1: Whether or not a command is made by GNU
-#######################################
 gnu() {
   ${1} --version 2>&1 | grep -q GNU
 }
 
-#######################################
 # Search that whether or not GNU coreutils is installed
 # Global:
 #   None
@@ -263,12 +242,10 @@ gnu() {
 #   None
 # Return:
 #   0 or 1: Whether or not GNU coreutils is installed
-#######################################
 gnui() {
   has dircolors
 }
 
-#######################################
 # List up path directories per line
 # Global:
 #   path: Command "path"
@@ -276,12 +253,10 @@ gnui() {
 #   None
 # Return:
 #   Path directories
-#######################################
 path() {
   echo "${PATH//:/\n}"
 }
 
-#######################################
 # List all executables on $path.
 # Global:
 #   path
@@ -289,12 +264,10 @@ path() {
 #   None
 # Return:
 #   List all executable paths
-#######################################
 executables() {
   find "${path[@]}" -type f,l -perm /111 2>/dev/null || true
 }
 
-#######################################
 # Filter all executables with fuzzy finder.
 # Global:
 #   path
@@ -302,12 +275,10 @@ executables() {
 #   None
 # Return:
 #   A executable path
-#######################################
 __absolute_command_path() {
   executables | $(__fzf_wrapper)
 }
 
-#######################################
 # Measure zsh start up time
 # Global:
 #   None
@@ -315,7 +286,6 @@ __absolute_command_path() {
 #   NB_TIMES: Number of times to measure
 # Return:
 #   Measured times of zsh start up
-#######################################
 zshtimes() {
   local -ir NB_TIMES=${1}
 
@@ -325,7 +295,6 @@ zshtimes() {
   done
 }
 
-#######################################
 # Measure zsh start up time and calculate mean time
 # Global:
 #   None
@@ -333,7 +302,6 @@ zshtimes() {
 #   NB_TIMES: Number of times to measure
 # Return:
 #   Measured times of zsh start up and mean time
-#######################################
 zshtimes-stat() {
   local -ir NB_TIMES=${1}
 
@@ -341,7 +309,6 @@ zshtimes-stat() {
     | tee >(cut -d ' ' -f 9 | awk '{s += $1; c += 1} END {printf "\n  AVG: %f second\n", s/c}')
 }
 
-#######################################
 # Zcompile zsh user configures
 # Global:
 #   None
@@ -349,7 +316,6 @@ zshtimes-stat() {
 #   None
 # Return:
 #   Compiled zsh user configure names
-#######################################
 zshcompiles() {
   local -ra ZSH_CONFIGS=( \
     ~/.zshenv \
@@ -426,7 +392,6 @@ __run-help-tmux-pane() {
   fi
 }
 
-#######################################
 # Make a directory which it's name is current date and time.
 # Global:
 #   None
@@ -434,12 +399,10 @@ __run-help-tmux-pane() {
 #   None
 # Return:
 #   None
-#######################################
 mkdir-datetime() {
   mkdir "$(datetime)"
 }
 
-#######################################
 # Is inside git repository.
 # Global:
 #   None
@@ -447,12 +410,10 @@ mkdir-datetime() {
 #   None
 # Return:
 #   True or False
-#######################################
 __is_inside_git_repository() {
   [[ "$(git rev-parse --is-inside-work-tree 2> /dev/null)" == true ]]
 }
 
-#######################################
 # Show git status if in git repository.
 # Global:
 #   None
@@ -460,7 +421,6 @@ __is_inside_git_repository() {
 #   PREFIX: Prefix messages
 # Return:
 #   None
-#######################################
 __git_status() {
   __is_inside_git_repository || return
 
@@ -468,7 +428,6 @@ __git_status() {
   git status -sb 2> /dev/null
 }
 
-#######################################
 # Apply Oceanic-Nect color scheme for Linux Console.
 # Global:
 #   None
@@ -476,7 +435,6 @@ __git_status() {
 #   None
 # Return:
 #   None
-#######################################
 oceanic_next() {
   # Oceanic Next
   /bin/echo -e "
@@ -501,7 +459,6 @@ oceanic_next() {
   clear
 }
 
-#######################################
 # Run a process in the background and no output to stdout and stderr.
 # Global:
 #   None
@@ -509,7 +466,6 @@ oceanic_next() {
 #   ARGS: Command name and the arguments.
 # Return:
 #   None
-#######################################
 __run_in_background() {
   # A way to run a command in the background and not to output some strings to
   # stdout and stderr is to run `cmd > /dev/null 2>&1`. But this way outputs to
@@ -519,7 +475,6 @@ __run_in_background() {
   (eval "${*}" &) &> /dev/null
 }
 
-#######################################
 # Setup zstyle's completion list-colors with `LS_COLORS`.
 # Global:
 #   LS_COLORS: Color configs for ls
@@ -527,12 +482,10 @@ __run_in_background() {
 #   None
 # Return:
 #   None
-#######################################
 setup_completion_list_colors() {
   zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 }
 
-#######################################
 # Return whether current shell is login one or not.
 # Global:
 #   None
@@ -543,12 +496,10 @@ setup_completion_list_colors() {
 #
 # NOTE: Really need to extract this as a function? It may be enough to just be
 # inline.
-#######################################
 is_login_shell() {
   [[ -o LOGIN ]]
 }
 
-#######################################
 # Map a keybinding to a function using ZLE.
 #
 # 1. Create user defined widget.
@@ -561,7 +512,6 @@ is_login_shell() {
 #   fun: function name
 # Return:
 #   None
-#######################################
 bind_key2fun () {
   local -r keys="$1"
   local -r fun="$2"
@@ -613,7 +563,6 @@ kusa () {
   curl "https://github-contributions-api.deno.dev/${username}.term"
 }
 
-#######################################
 # Wrap text with two arguments.
 # Global:
 #   None
@@ -622,7 +571,6 @@ kusa () {
 #   right: Right delimiter.
 # Return:
 #   Wrapped text with arguments.
-#######################################
 wrap() {
   echo -n "$1$(<&0)$2"
 }
@@ -647,7 +595,6 @@ fzf-history-widget() {
   return "${EXIT_CODE}"
 }
 
-#######################################
 # Widget for __absolute_command_path
 # Global:
 #   path
@@ -655,7 +602,6 @@ fzf-history-widget() {
 #   None
 # Return:
 #   None
-#######################################
 __absolute_command_path_widget() {
   setopt localoptions pipefail 2> /dev/null
 
@@ -693,7 +639,6 @@ __fuzzy_select_manual () {
   return "$exit_code"
 }
 
-#######################################
 # Fixed version of backward-kill-word which is recognize also `/` as word
 # separators.
 # Global:
@@ -704,7 +649,6 @@ __fuzzy_select_manual () {
 #   None
 #
 # NOTE: Maybe this should be global config.
-#######################################
 backward_kill_word_and_dir() {
   local WORDCHARS=${WORDCHARS/\/}
   zle backward-kill-word
