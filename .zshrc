@@ -692,6 +692,23 @@ __fuzzy_select_manual () {
   zle redisplay
   return "$exit_code"
 }
+
+#######################################
+# Fixed version of backward-kill-word which is recognize also `/` as word
+# separators.
+# Global:
+#   WORDCHARS: See ZSHPARAM(1)
+# Arguments:
+#   None
+# Return:
+#   None
+#
+# NOTE: Maybe this should be global config.
+#######################################
+backward_kill_word_and_dir() {
+  local WORDCHARS=${WORDCHARS/\/}
+  zle backward-kill-word
+}
 # }}}
 
 # Login shell {{{
@@ -971,6 +988,7 @@ bind_key2fun '^R' fzf-history-widget
 bind_key2fun '^x^p' __absolute_command_path_widget
 bind_key2fun '^X^A' __strip_head
 bind_key2fun '^X^M' __fuzzy_select_manual
+bind_key2fun '^[h' backward_kill_word_and_dir
 
 # Delete a forward char with a `delete` key.
 bindkey '^[[3~' delete-char
