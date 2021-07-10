@@ -354,12 +354,52 @@ __fzf_wrapper() {
   echo 'fzf'
 }
 
-__cd_to_git_repository() {
-  local -r REPO="$(ghq list | $(__fzf_wrapper))"
-  [[ -n "${REPO}" ]] || return 1
+# Join arguments as filesystem path.
+join_path () {
+  setopt LOCAL_OPTIONS EXTENDED_GLOB
 
-  local -r GHQ_ROOT="$(ghq root)"
-  cd "${GHQ_ROOT}/${REPO}" || return 1
+  local joined="${1%%\/##}"
+  shift
+
+  while [[ $# != 0 ]]; do
+    local p="$1"
+    shift
+
+    p="${p##\/##}"
+    p="${p%%\/##}"
+    joined="${joined}/${p}"
+  done
+
+  echo "$joined"
+}
+
+# Shell function version of xargs, but this can get one argument from stdin
+# like a xargs passed `-x -n 1` options. So this name is `xarg` but not
+# `xargs`.
+#
+# NOTE: This can run shell function and builtin command because this is shell
+# function but not `xargs` which is standalone executable.
+xarg () {
+  # Close stdin file descriptor explicitly to suppress a error message from
+  # zinit. The error messaage is like this.
+  #
+  #   @zinit-scheduler:4: failed to close file descriptor 22: bad file descriptor
+  #
+  "$@" "$(<&0)" 0>&-
+}
+
+# Read path from stdin and change directory to the path which is joined with
+# prefix. The prefixes are passed as function arguments.
+cd_stdin() {
+  xarg join_path "$@" | xarg builtin cd
+}
+
+__cd_to_git_repository() {
+  setopt LOCAL_OPTIONS PIPE_FAIL
+
+  ghq list \
+    | fzf --no-multi --tiebreak=end,length,index \
+    | cd_stdin "$(ghq root)"
 }
 
 fdkrmi() {
