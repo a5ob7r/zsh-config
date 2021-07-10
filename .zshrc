@@ -685,18 +685,30 @@ __strip_head () {
 }
 
 __fuzzy_select_manual () {
-  local -r query=$(command man -k . | fzf +m --tiebreak=begin --query="$LBUFFER" --preview="$(which manual_description2query); command man \$(manual_description2query {})")
-  local -r exit_code="$?"
+  local exit_code
 
-  if [[ -n $query ]]; then
-    local -ra queries=($(manual_description2query "$query"))
+  command man -k . \
+    | { fzf \
+          --no-multi \
+          --tiebreak=begin,length \
+          --query="$LBUFFER" \
+          --preview="$(which manual_description2query); command man \$(manual_description2query {})"
+        exit_code="$?"
+      } \
+    | read -r query \
+    ;
 
-    if [[ "${#queries[@]}" == 2 ]]; then
+  local -ra queries=($(manual_description2query "$query"))
+  case "${#queries[@]}" in
+    2 )
       command man "${queries[@]}"
-    else
+      ;;
+    0 )
+      ;;
+    * )
       echo "Expected values are that first element is section number, second element is command name. But actual values are `${queries[@]}`" >&2
-    fi
-  fi
+      ;;
+  esac
 
   zle redisplay
   return "$exit_code"
