@@ -616,24 +616,28 @@ __absolute_command_path_widget() {
 __strip_head () {
   setopt localoptions extended_glob
 
+  # Assume that head character of all command line buffer is not whitespaces or
+  # newline. This is normalization for following case match.
+  LBUFFER="${LBUFFER##[[:IFS:]]##}"
+
   # e.g. sudo ls path -> ls path
   # | is cursor position
   case "$LBUFFER" in
     # sudo ls path|
-    # sudo |ls path
     # sudo    |    ls path
-    *\ * )
-      LBUFFER="${LBUFFER#* }"
-      LBUFFER="${LBUFFER## ##}"
-      RBUFFER="${RBUFFER## ##}"
+    *[[:IFS:]]* )
+      LBUFFER="${LBUFFER##[^[:IFS:]]##}"
+      LBUFFER="${LBUFFER##[[:IFS:]]##}"
+      RBUFFER="${RBUFFER##[[:IFS:]]##}"
       ;;
     # sudo| ls path
-    # s|udo ls path
     # s|udo     ls path
+    # |   sudo ls path
     * )
       LBUFFER=''
-      RBUFFER="${RBUFFER#* }"
-      RBUFFER="${RBUFFER## ##}"
+      RBUFFER="${RBUFFER##[[:IFS:]]##}"
+      RBUFFER="${RBUFFER##[^[:IFS:]]##}"
+      RBUFFER="${RBUFFER##[[:IFS:]]##}"
       ;;
   esac
 
