@@ -624,15 +624,26 @@ chpwd() {
 # }}}
 
 # Widgets {{{
-fzf-history-widget() {
-  setopt localoptions pipefail 2> /dev/null
+__fuzzy_history_select() {
+  setopt LOCAL_OPTIONS PIPE_FAIL
+  local -i num
 
-  local -r FZF_OPTS="${FZF_DEFAULT_OPTS} --no-multi --nth=2..,.. --tiebreak=index --bind=ctrl-r:toggle-sort --query=${(qqq)LBUFFER}"
-  local -r NUM=$(fc -rl 1 | FZF_DEFAULT_OPTS="${FZF_OPTS}" $(__fzf_wrapper) | cut -d ' ' -f 1)
-  local -r EXIT_CODE="${?}"
-  [[ -n "${NUM}" ]] && zle vi-fetch-history -n "${NUM}"
+  fc -rl 1 \
+    | fzf \
+        --no-multi \
+        --nth=2..,.. \
+        --tiebreak=index \
+        --query="$LBUFFER" \
+    | read -Ee \
+    | read -d ' ' num \
+    ;
+
+  local -ri exit_code="$?"
+
+  [[ -n "$num" ]] && zle vi-fetch-history -n "$num"
   zle redisplay
-  return "${EXIT_CODE}"
+
+  return "$exit_code"
 }
 
 # Widget for __absolute_command_path
@@ -1003,7 +1014,7 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 
-bind_key2fun '^R' fzf-history-widget
+bind_key2fun '^R' __fuzzy_history_select
 bind_key2fun '^x^p' __absolute_command_path_widget
 bind_key2fun '^X^A' __strip_head
 bind_key2fun '^X^M' __fuzzy_select_manual
