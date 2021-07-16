@@ -626,9 +626,8 @@ chpwd() {
 # Widgets {{{
 __fuzzy_history_select() {
   setopt LOCAL_OPTIONS PIPE_FAIL
-  local -i num
 
-  fc -rl 1 \
+  history -r 1 \
     | fzf \
         --no-multi \
         --nth=2..,.. \
