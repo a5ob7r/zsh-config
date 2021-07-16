@@ -398,7 +398,11 @@ __cd_to_git_repository() {
   setopt LOCAL_OPTIONS PIPE_FAIL
 
   ghq list \
-    | fzf --no-multi --tiebreak=end,length,index \
+    | fzf \
+        --no-multi \
+        --tiebreak=end,length,index \
+        --query="$*" \
+        --select-1 \
     | cd_stdin "$(ghq root)"
 }
 
