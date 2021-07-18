@@ -276,7 +276,7 @@ executables() {
 # Return:
 #   A executable path
 __absolute_command_path() {
-  executables | $(__fzf_wrapper)
+  executables | fuzzyfinder
 }
 
 # Measure zsh start up time
@@ -350,8 +350,26 @@ zshcompiles() {
   for zc in "${ZSH_CONFIGS[@]}"; do zsh_compile "${zc}"; done
 }
 
-__fzf_wrapper() {
-  echo 'fzf'
+# Proxy for fuzzy finder. Override this function or unset this and add a fuzzy
+# finder executable which the name is `fuzzyfinder` to a directory on `PATH` if
+# want to use another fuzzy finder.
+fuzzyfinder () {
+  local -ra ffs=( \
+    sk-tmux \
+    sk \
+    fzf-tmux \
+    fzf \
+  )
+
+  for ff in "${ffs[@]}"; do
+    if has "$ff"; then
+      "$ff" "$@"
+      return 0
+    fi
+  done
+
+  echo "Not found expected fuzzy finders: ${ffs[@]}" >&2
+  return 1
 }
 
 # Join arguments as filesystem path.
@@ -398,7 +416,7 @@ __cd_to_git_repository() {
   setopt LOCAL_OPTIONS PIPE_FAIL
 
   ghq list \
-    | fzf \
+    | fuzzyfinder \
         --no-multi \
         --tiebreak=end,length,index \
         --query="$*" \
@@ -407,7 +425,7 @@ __cd_to_git_repository() {
 }
 
 fdkrmi() {
-  local -ra IMAGES=( $(docker images | "$(__fzf_wrapper)" --multi --header-lines=1 | awk '{print $3}') )
+  local -ra IMAGES=( $(docker images | fuzzyfinder --multi --header-lines=1 | awk '{print $3}') )
 
   [[ -n "${IMAGES[*]}" ]] || return 1
 
@@ -417,7 +435,7 @@ fdkrmi() {
 }
 
 fdkrm() {
-  local -ra CONTAINERS=( $(docker container ls -a | "$(__fzf_wrapper)" --multi --header-lines=1 | awk '{print $1}') )
+  local -ra CONTAINERS=( $(docker container ls -a | fuzzyfinder --multi --header-lines=1 | awk '{print $1}') )
 
   [[ -n "${CONTAINERS[*]}" ]] || return 1
 
@@ -618,7 +636,7 @@ __fuzzy_history_select() {
   setopt LOCAL_OPTIONS PIPE_FAIL
 
   history -r 1 \
-    | fzf \
+    | fuzzyfinder \
         --no-multi \
         --nth=2..,.. \
         --tiebreak=index \
@@ -688,7 +706,7 @@ __fuzzy_select_manual () {
   local exit_code
 
   command man -k . \
-    | { fzf \
+    | { fuzzyfinder \
           --no-multi \
           --tiebreak=begin,length \
           --query="$LBUFFER" \
