@@ -530,20 +530,6 @@ setup_completion_list_colors() {
   zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 }
 
-# Return whether current shell is login one or not.
-# Global:
-#   None
-# Arguments:
-#   None
-# Return:
-#   See above.
-#
-# NOTE: Really need to extract this as a function? It may be enough to just be
-# inline.
-is_login_shell() {
-  [[ -o LOGIN ]]
-}
-
 # Map a keybinding to a function using ZLE.
 #
 # 1. Create user defined widget.
@@ -745,7 +731,7 @@ backward_kill_word_and_dir() {
 # }}}
 
 # Login shell {{{
-if is_login_shell; then
+if [[ -o LOGIN ]]; then
   # {{{ basic
   export EDITOR=vim
   export VISUAL=vim
