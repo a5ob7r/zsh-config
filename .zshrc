@@ -611,6 +611,10 @@ kusa () {
   curl "https://github-contributions-api.deno.dev/${username}.term"
 }
 
+ipinfo () {
+  curl ipinfo.io
+}
+
 # Wrap text with two arguments.
 # Global:
 #   None
