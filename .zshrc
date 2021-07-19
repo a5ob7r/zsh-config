@@ -642,6 +642,40 @@ wrap() {
   echo -n "$1$(<&0)$2"
 }
 
+# Template generator for sub command proxy.
+subcommand_wrapper_def () {
+  local -r cmd="$1"
+
+  echo "$cmd" '() {
+    local cmd="$0"
+
+    local -r sub="$1"
+    local -r sub_command="${cmd}-${sub}"
+
+    if has "$sub_command"; then
+      shift
+      "$sub_command" "${@}"
+    else
+      command "$cmd" "${@}"
+    fi
+  }'
+}
+
+# Generate proxy command for user defined custom command. If want to add custom
+# sub command `sub` to `cmd` call `generate_subcommand_wrapper cmd` and add
+# something command named `cmd-sub`. It is allowed as a standalone executable,
+# a shell function and an alias. By this we can call the sub command with
+# `cmd sub`.
+#
+# NOTE: What? Do you think that it is enough to call `cmd-sub` directly? Me
+# too. Maybe need to add something useful to argue merit.
+# NOTE: This system is inspired by `git`.
+generate_subcommand_wrapper () {
+  local -r cmd="$1"
+
+  has "$cmd" && eval "$(subcommand_wrapper_def "$cmd")"
+}
+
 # Proxy function for ls on chpwd.
 __chpwd_ls () {
   l
