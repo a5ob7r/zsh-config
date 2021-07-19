@@ -465,29 +465,9 @@ mkdir-datetime() {
   mkdir "$(datetime)"
 }
 
-# Is inside git repository.
-# Global:
-#   None
-# Arguments:
-#   None
-# Return:
-#   True or False
-__is_inside_git_repository() {
+# Whether or not current working directory is git root.
+__is_at_git_root () {
   [[ "$(git rev-parse --is-inside-work-tree 2> /dev/null)" == true ]]
-}
-
-# Show git status if in git repository.
-# Global:
-#   None
-# Arguments:
-#   PREFIX: Prefix messages
-# Return:
-#   None
-__git_status() {
-  __is_inside_git_repository || return
-
-  [[ "${#@}" -gt 0 ]] && echo "${1}"
-  git status -sb 2> /dev/null
 }
 
 # Apply Oceanic-Nect color scheme for Linux Console.
@@ -626,12 +606,25 @@ ipinfo () {
 wrap() {
   echo -n "$1$(<&0)$2"
 }
+
+# Proxy function for ls on chpwd.
+__chpwd_ls () {
+  l
+}
+
+# Proxy function for git status on chpwd.
+__chpwd_git_status () {
+  if __is_at_git_root; then
+    echo
+    git status --short --branch
+  fi
+}
 # }}}
 
 # Hook functions {{{
 chpwd() {
-  l
-  __git_status ""
+  __chpwd_ls
+  __chpwd_git_status
 }
 # }}}
 
