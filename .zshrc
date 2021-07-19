@@ -1070,6 +1070,7 @@ alias ...='cd ../../'
 alias ....='cd ../../../'
 alias shinit='exec ${SHELL}'
 alias zshinit='zshcompiles &> /dev/null && shinit'
+alias z=zshinit
 alias q='exit'
 alias qq='q'
 alias qqq='q'
@@ -1084,6 +1085,8 @@ alias vloop2='yes > /dev/null'
 alias datetime="date +'%Y%m%d%H%M%S'"
 # Date only version of datetime.
 alias date2="datetime | cut -c -8"
+
+alias hl='haskellorls --color=auto --extra-color --icons -ABFhvo'
 # }}}
 
 # Zstyle {{{
