@@ -459,24 +459,36 @@ __cd_to_git_repository() {
   return "$exit_code"
 }
 
-fdkrmi() {
-  local -ra IMAGES=( $(docker images | fuzzyfinder --multi --header-lines=1 | awk '{print $3}') )
+docker-rmif () {
+  local -a images
 
-  [[ -n "${IMAGES[*]}" ]] || return 1
+  docker images --all \
+    | fuzzyfinder \
+        --multi \
+        --header-lines=1 \
+    | while read; do echo "${${(z)REPLY}[3]}"; done \
+    | { images=($(<&0)) } \
+    ;
 
-  for image in "${IMAGES[@]}"; do
-    docker rmi "${image}"
-  done
+  if [[ "${#images[@]}" != 0 ]]; then
+    docker rmi "$@" "${images[@]}"
+  fi
 }
 
-fdkrm() {
-  local -ra CONTAINERS=( $(docker container ls -a | fuzzyfinder --multi --header-lines=1 | awk '{print $1}') )
+docker-rmf () {
+  local -a containers
 
-  [[ -n "${CONTAINERS[*]}" ]] || return 1
+  docker container ls --all \
+    | fuzzyfinder \
+        --multi \
+        --header-lines=1 \
+    | while read; do echo "${${(z)REPLY}[1]}"; done \
+    | { containers=($(<&0)) } \
+    ;
 
-  for container in "${CONTAINERS[@]}"; do
-    docker rm "${container}"
-  done
+  if [[ "${#containers[@]}" != 0 ]]; then
+    docker rm "$@" "${containers[@]}"
+  fi
 }
 
 __run-help-tmux-pane() {
@@ -675,6 +687,8 @@ generate_subcommand_wrapper () {
 
   has "$cmd" && eval "$(subcommand_wrapper_def "$cmd")"
 }
+
+generate_subcommand_wrapper docker
 
 # Proxy function for ls on chpwd.
 __chpwd_ls () {
