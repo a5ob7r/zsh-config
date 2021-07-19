@@ -703,18 +703,18 @@ __strip_head () {
 }
 
 __fuzzy_select_manual () {
-  local exit_code
+  setopt LOCAL_OPTIONS PIPE_FAIL
 
-  command man -k . \
-    | { fuzzyfinder \
-          --no-multi \
-          --tiebreak=begin,length \
-          --query="$LBUFFER" \
-          --preview="$(which manual_description2query); command man \$(manual_description2query {})"
-        exit_code="$?"
-      } \
+  apropos . \
+    | fuzzyfinder \
+        --no-multi \
+        --tiebreak=begin,length \
+        --query="$LBUFFER" \
+        --preview="$(which manual_description2query); command man \$(manual_description2query {})" \
     | read -r query \
     ;
+
+  local -i exit_code="$?"
 
   local -ra queries=($(manual_description2query "$query"))
   case "${#queries[@]}" in
@@ -722,9 +722,11 @@ __fuzzy_select_manual () {
       command man "${queries[@]}"
       ;;
     0 )
+      exit_code=2
       ;;
     * )
       echo "Expected values are that first element is section number, second element is command name. But actual values are `${queries[@]}`" >&2
+      exit_code=2
       ;;
   esac
 
