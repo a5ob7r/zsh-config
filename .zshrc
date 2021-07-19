@@ -437,13 +437,26 @@ cd_stdin() {
 __cd_to_git_repository() {
   setopt LOCAL_OPTIONS PIPE_FAIL
 
+  local repo
+
+  # NOTE: Must split a selector step and cd one from single pipe line if no
+  # guard about no selection on fuzzy finder because maybe cause cd to ghq root
+  # unintentionally.
   ghq list \
     | fuzzyfinder \
         --no-multi \
         --tiebreak=end,length,index \
         --query="$*" \
         --select-1 \
-    | cd_stdin "$(ghq root)"
+    | { repo="$(<&0)" }
+
+  local -ri exit_code="$?"
+
+  if [[ ${#repo} != 0 ]]; then
+    join_path "$(ghq root)" "$repo" | xarg builtin cd
+  fi
+
+  return "$exit_code"
 }
 
 fdkrmi() {
