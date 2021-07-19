@@ -985,8 +985,7 @@ alias tiga='tig --all'
 alias a=tiga
 alias p='pipenv'
 alias fzfd='FZF_DEFAULT_COMMAND="find . -type d" fzf'
-alias viman='MANPAGER="vim -M +MANPAGER -c \"set nolist\" -" command man'
-alias m=viman
+alias m=man
 
 alias c='__cd_to_git_repository'
 alias cdh='cd ~'
