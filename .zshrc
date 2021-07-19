@@ -71,6 +71,28 @@ unsetopt BEEP
 # }}}
 
 # Functions {{{
+warning () {
+  local prefix='' suffix=''
+
+  if [[ -t 2 ]]; then
+    prefix='\033[33m'
+    suffix='\033[0m'
+  fi
+
+  echo "${prefix}${1}${suffix}" >&2
+}
+
+error () {
+  local prefix='' suffix=''
+
+  if [[ -t 2 ]]; then
+    prefix='\033[31m'
+    suffix='\033[0m'
+  fi
+
+  echo "${prefix}${1}${suffix}" >&2
+}
+
 # Functional programming's style `filter` and `map`. This reads input from
 # stdin.
 # Global:
@@ -368,7 +390,7 @@ fuzzyfinder () {
     fi
   done
 
-  echo "Not found expected fuzzy finders: ${ffs[@]}" >&2
+  error "Not found expected fuzzy finders: ${ffs[@]}"
   return 1
 }
 
@@ -722,7 +744,7 @@ __fuzzy_select_manual () {
       exit_code=2
       ;;
     * )
-      echo "Expected values are that first element is section number, second element is command name. But actual values are `${queries[@]}`" >&2
+      error "Expected values are that first element is section number, second element is command name. But actual values are `${queries[@]}`"
       exit_code=2
       ;;
   esac
