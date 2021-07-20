@@ -308,34 +308,33 @@ __absolute_command_path() {
   executables | fuzzyfinder
 }
 
-# Measure zsh start up time
-# Global:
-#   None
-# Arguments:
-#   NB_TIMES: Number of times to measure
-# Return:
-#   Measured times of zsh start up
-zshtimes() {
-  local -ir NB_TIMES=${1}
+# Swap stdout and stderr.
+stdswap () {
+  "$@" 3>&2 2>&1 1>&3 3>&-
+}
 
-  repeat "${NB_TIMES}"; do
+# Measure zsh start up time.
+zshtimes() {
+  local -ri n="$1"
+
+  repeat "$n"; do
     sleep 1
-    time (zsh -ic exit 2> /dev/null)
+    time zsh -ic exit 2> /dev/null
   done
 }
 
-# Measure zsh start up time and calculate mean time
-# Global:
-#   None
-# Arguments:
-#   NB_TIMES: Number of times to measure
-# Return:
-#   Measured times of zsh start up and mean time
+# Measure zsh start up time and calculate mean time.
 zshtimes-stat() {
-  local -ir NB_TIMES=${1}
+  local -ri n="$1"
 
-  zshtimes "${NB_TIMES}" 2>&1 \
-    | tee >(cut -d ' ' -f 9 | awk '{s += $1; c += 1} END {printf "\n  AVG: %f second\n", s/c}')
+  stdswap zshtimes "$n" \
+    | tee >(
+        local -F ave=0
+        while read; do
+          ave+="${${(z)REPLY}[7]}";
+        done
+        printf "\n  AVG: %f (s)\n" "$((ave / n))"
+      )
 }
 
 # Zcompile zsh user configures
