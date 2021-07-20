@@ -71,6 +71,28 @@ unsetopt BEEP
 # }}}
 
 # Functions {{{
+is_linux () {
+  case "$OSTYPE" in
+    linux* )
+      return 0
+      ;;
+    * )
+      return 1
+      ;;
+  esac
+}
+
+is_macos () {
+  case "$OSTYPE" in
+    darwin* )
+      return 0
+      ;;
+    * )
+      return 1
+      ;;
+  esac
+}
+
 warning () {
   local prefix='' suffix=''
 
@@ -1062,17 +1084,13 @@ if [[ -o LOGIN ]]; then
   # }}}
 
   # Per OS {{{
-  case ${OSTYPE} in
-    linux* )
-      export TERMINAL="$(__default_terminal)"
-      export BROWSER="$(__default_browser)"
+  if is_linux; then
+    export TERMINAL="$(__default_terminal)"
+    export BROWSER="$(__default_browser)"
 
-      __enable_ssh_agent
-      __run_in_background __start_dropbox
-      ;;
-    darwin* )
-      ;;
-  esac
+    __enable_ssh_agent
+    __run_in_background __start_dropbox
+  fi
   # }}}
 
   # Plugin configures {{{
@@ -1140,6 +1158,19 @@ alias qq='q'
 alias qqq='q'
 alias quit='q'
 alias :q='q'
+
+if is_linux; then
+  alias open='xdg-open'
+  alias op='__run_in_background open'
+  alias ff='firefox'
+  alias xc='xclip -selection clipboard -filter -rmlastnl && echo'
+  alias lb='lsblk -o NAME,FSTYPE,FSVER,FSSIZE,FSUSED,FSAVAIL,FSUSE%,PARTTYPENAME,MOUNTPOINT'
+  alias ip='ip -color=auto'
+  alias x='startx'
+  alias xr=xrandr
+elif is_macos; then
+  alias op='open'
+fi
 
 # void loop
 alias vloop='while [[ 1 ]] {}'
@@ -1210,24 +1241,6 @@ zinit light-mode for \
 # sindresorhus/pure {{{
 zstyle :prompt:pure:git:stash show yes
 # }}}
-# }}}
-
-# Per OS {{{
-case ${OSTYPE} in
-  linux* )
-    alias open='xdg-open'
-    alias op='__run_in_background open'
-    alias ff='firefox'
-    alias xc='xclip -selection clipboard -filter -rmlastnl && echo'
-    alias lb='lsblk -o NAME,FSTYPE,FSVER,FSSIZE,FSUSED,FSAVAIL,FSUSE%,PARTTYPENAME,MOUNTPOINT'
-    alias ip='ip -color=auto'
-    alias x='startx'
-    alias xr=xrandr
-    ;;
-  darwin* )
-    alias op='open'
-    ;;
-esac
 # }}}
 
 # Others {{{
