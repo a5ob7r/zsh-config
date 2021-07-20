@@ -654,6 +654,68 @@ wrap() {
   echo -n "$1$(<&0)$2"
 }
 
+ghq-exist () {
+  local -i verbose=0
+  local query=''
+
+  while [[ $# > 0 ]]; do
+    case "$1" in
+      -v | --verbose )
+        verbose=1
+        shift
+        ;;
+      * )
+        query="$1"
+        shift
+        ;;
+    esac
+  done
+
+  __print () {
+    if [[ "$verbose" == 0 ]]; then
+      return 0
+    fi
+
+    echo "$@"
+  }
+
+  __info () {
+    __print "$@" >&2
+  }
+
+  local -a repos
+  command ghq list --full-path --exact "$query" | { repos=($(<&0)) }
+
+  case "${#repos}" in
+    0 )
+      error 'Not found matching repository.'
+      return 1
+      ;;
+    1 )
+      __info 'Exist unique repository.'
+      __print "${repos[1]}"
+      return 0
+      ;;
+    * )
+      warning "Found some ambiguous repositories."
+      __print "${(F)repos}"
+      return 1
+      ;;
+  esac
+}
+
+ghq-cd () {
+  local -r query="$1"
+
+  local -a repos
+  ghq-exist --verbose "$query" | { repos=($(<&0)) }
+
+  if [[ "${#repos[@]}" == 1 ]]; then
+    # NOTE: `cd ''` means `cd .`.
+    builtin cd "${repos[1]}"
+  fi
+}
+
 # Template generator for sub command proxy.
 subcommand_wrapper_def () {
   local -r cmd="$1"
@@ -689,6 +751,8 @@ generate_subcommand_wrapper () {
 }
 
 generate_subcommand_wrapper docker
+generate_subcommand_wrapper ghq
+
 
 # Proxy function for ls on chpwd.
 __chpwd_ls () {
