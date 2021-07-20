@@ -1185,6 +1185,7 @@ alias hl='haskellorls --color=auto --extra-color --icons -ABFhvo'
 # }}}
 
 # Zstyle {{{
+zstyle ':completion:*' completer _expand _complete _match _approximate _list
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z-_}={A-Za-z_-}'
 zstyle ':completion:*' menu select
 
