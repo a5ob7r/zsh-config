@@ -209,36 +209,21 @@ filter_() {
   filter_map_ "${1}" 'echo ${1}' ${@[2,$]}
 }
 
-# Trim all slashes from string tail.
-# Global:
-#   None
-# Arguments:
-#   STRING: A target string.
-# Return:
-#   A trimmed string.
-trim_tail_slashes() {
-  sed -E 's/\/*$//' <<< "${1}"
-}
-
-# Add command path to a environment variable "path" and prevent from reorder
-# them
-# Global:
-#   path: Command "path"
-# Arguments:
-#   DIRPATH: A command directory path
-# Return:
-#   None
+# Add directory path to a environment variable "path", which is array form of
+# `PATH`, if it passes through some validations.
 add2path() {
-  local -r DIRPATH="${1}"
+  setopt LOCAL_OPTIONS NO_MARK_DIRS EXTENDED_GLOB
 
-  # Trim any backslashes from the tail.
-  setopt local_options no_mark_dirs 2> /dev/null
-  local -r PATHDIR=$(trim_tail_slashes ${DIRPATH})
+  # Strip any tail slashes.
+  local -r candidate="${1%%/##}"
 
-  if [[ -z "${path[(r)${PATHDIR}]}" ]]; then
+  # Add the path if no duplication. This can be achieved by `-U` option of
+  # `typeset` but it moves the duplicated path to head of `path`.
+  if [[ -z "${path[(r)${candidate}]}" ]]; then
+    # Validates the directory path existance. This substitutes empty string if
+    # no directory existance on the path.
     path=( \
-      # Validate a directory path
-      "${PATHDIR}"(N-/) \
+      "$candidate"(N-/) \
       "${path[@]}" \
     )
   fi
