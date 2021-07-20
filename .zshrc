@@ -79,7 +79,7 @@ warning () {
     suffix='\033[0m'
   fi
 
-  echo "${prefix}${1}${suffix}" >&2
+  echo "${prefix}${@}${suffix}" >&2
 }
 
 error () {
@@ -90,7 +90,7 @@ error () {
     suffix='\033[0m'
   fi
 
-  echo "${prefix}${1}${suffix}" >&2
+  echo "${prefix}${@}${suffix}" >&2
 }
 
 # Functional programming's style `filter` and `map`. This reads input from
