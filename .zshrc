@@ -586,17 +586,6 @@ __run_in_background() {
   (eval "${*}" &) &> /dev/null
 }
 
-# Setup zstyle's completion list-colors with `LS_COLORS`.
-# Global:
-#   LS_COLORS: Color configs for ls
-# Arguments:
-#   None
-# Return:
-#   None
-setup_completion_list_colors() {
-  zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-}
-
 # Map a keybinding to a function using ZLE.
 #
 # 1. Create user defined widget.
@@ -1188,8 +1177,26 @@ alias hl='haskellorls --color=auto --extra-color --icons -ABFhvo'
 zstyle ':completion:*' completer _expand _complete _match _approximate _list
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z-_}={A-Za-z_-}'
 zstyle ':completion:*' menu select
-
-setup_completion_list_colors
+zstyle ':completion:*' list-colors \
+  'fi=' \
+  'di=01;34' \
+  'ln=01;36' \
+  'pi=33' \
+  'so=01;35' \
+  'bd=01;33' \
+  'cd=01;33' \
+  'mi=' \
+  'or=' \
+  'ex=01;32' \
+  'do=01;35' \
+  'su=37;41' \
+  'sg=30;43' \
+  'st=37;44' \
+  'ow=34;42' \
+  'tw=30;42' \
+  'ca=30;41' \
+  'mh=' \
+  ;
 # }}}
 
 # Key bindings {{{
@@ -1232,7 +1239,7 @@ zinit light-mode for \
     zdharma/fast-syntax-highlighting \
   wait lucid compile"{src/*.zsh,src/strategies/*.zsh}" atload"_zsh_autosuggest_start" \
     zsh-users/zsh-autosuggestions \
-  wait lucid atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" atload'setup_completion_list_colors' \
+  wait lucid atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" atload'zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"' \
     trapd00r/LS_COLORS \
   pick"async.zsh" src"pure.zsh" \
     sindresorhus/pure \
