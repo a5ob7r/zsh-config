@@ -524,31 +524,24 @@ __is_at_git_root () {
 }
 
 # Apply Oceanic-Nect color scheme for Linux Console.
-# Global:
-#   None
-# Arguments:
-#   None
-# Return:
-#   None
 oceanic_next() {
-  # Oceanic Next
-  /bin/echo -e "
-  \e]P0121c21
-  \e]P1e44754
-  \e]P289bd82
-  \e]P3f7bd51
-  \e]P45486c0
-  \e]P5b77eb8
-  \e]P650a5a4
-  \e]P7ffffff
-  \e]P852606b
-  \e]P9e44754
-  \e]PA89bd82
-  \e]PBf7bd51
-  \e]PC5486c0
-  \e]PDb77eb8
-  \e]PE50a5a4
-  \e]PFffffff
+  echo -e "
+  \033]P0121c21
+  \033]P1e44754
+  \033]P289bd82
+  \033]P3f7bd51
+  \033]P45486c0
+  \033]P5b77eb8
+  \033]P650a5a4
+  \033]P7ffffff
+  \033]P852606b
+  \033]P9e44754
+  \033]PA89bd82
+  \033]PBf7bd51
+  \033]PC5486c0
+  \033]PDb77eb8
+  \033]PE50a5a4
+  \033]PFffffff
   "
   # get rid of artifacts
   clear
