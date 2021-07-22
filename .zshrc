@@ -1107,18 +1107,18 @@ fi
 alias e="${EDITOR}"
 alias v=vim
 alias vw=view
-alias dk='docker'
-alias dkcp='docker-compose'
+alias dk=docker
+alias dkcp=docker-compose
 alias dkcpe='dkcp exec'
-alias g='git'
+alias g=git
 alias t=tig
 alias tiga='tig --all'
 alias a=tiga
-alias p='pipenv'
+alias p=pipenv
 alias fzfd='FZF_DEFAULT_COMMAND="find . -type d" fzf'
 alias m=man
 
-alias c='__cd_to_git_repository'
+alias c=__cd_to_git_repository
 alias cdh='cd ~'
 alias ..='cd ../'
 alias ...='cd ../../'
@@ -1126,23 +1126,23 @@ alias ....='cd ../../../'
 alias shinit='exec ${SHELL}'
 alias zshinit='zshcompiles &> /dev/null && shinit'
 alias z=zshinit
-alias q='exit'
-alias qq='q'
-alias qqq='q'
-alias quit='q'
-alias :q='q'
+alias q=exit
+alias qq=q
+alias qqq=q
+alias quit=q
+alias :q=q
 
 if is_linux; then
-  alias open='xdg-open'
+  alias open=xdg-open
   alias op='__run_in_background open'
-  alias ff='firefox'
+  alias ff=firefox
   alias xc='xclip -selection clipboard -filter -rmlastnl && echo'
   alias lb='lsblk -o NAME,FSTYPE,FSVER,FSSIZE,FSUSED,FSAVAIL,FSUSE%,PARTTYPENAME,MOUNTPOINT'
   alias ip='ip -color=auto'
-  alias x='startx'
+  alias x=startx
   alias xr=xrandr
 elif is_macos; then
-  alias op='open'
+  alias op=open
 fi
 
 # void loop
