@@ -125,21 +125,21 @@ error () {
 # Return:
 #   Filtered and transformed list.
 filter_map() {
-  local -r pred="${1}"
-  local -r yield="${2}"
+  local -r pred="$1"
+  local -r yield="$2"
 
   pred_f() {
-    eval "${pred}"
+    eval "$pred"
   }
 
   yield_f() {
-    eval "${yield}"
+    eval "$yield"
   }
 
   while read subj; do
     # Prevent this function to return not 0 when the last pred_f in the
     # loop returns not 0.
-    if pred_f "${subj}"; then yield_f "${subj}"; fi
+    if pred_f "$subj"; then yield_f "$subj"; fi
   done <&0
 }
 
@@ -154,14 +154,14 @@ filter_map() {
 # Return:
 #   Filtered and transformed list.
 filter_map_() {
-  local -r pred="${1}"
-  local -r yield="${2}"
+  local -r pred="$1"
+  local -r yield="$2"
   shift 2
 
-  while [[ ${#} -gt 0 ]]; do
-    echo "${1}"
+  while [[ "$#" -gt 0 ]]; do
+    echo "$1"
     shift
-  done | filter_map "${pred}" "${yield}"
+  done | filter_map "$pred" "$yield"
 }
 
 # Functional programming's style `map`. This reads input from stdin.
@@ -172,7 +172,7 @@ filter_map_() {
 # Return:
 #   Transformed list.
 map() {
-  filter_map 'true' "${1}" <&0
+  filter_map 'true' "$1" <&0
 }
 
 # Functional programming's style `map`. This reads input from arguments.
@@ -183,7 +183,7 @@ map() {
 # Return:
 #   Transformed list.
 map_() {
-  filter_map_ 'true' "${1}" ${@[2,$]}
+  filter_map_ 'true' "$1" ${@[2,$]}
 }
 
 # Functional programming's style `filter`. This reads input from stdin.
@@ -194,7 +194,7 @@ map_() {
 # Return:
 #   Filtered list.
 filter() {
-  filter_map "${1}" 'echo ${1}' <&0
+  filter_map "$1" 'echo "$1"' <&0
 }
 
 # Functional programming's style `filter`. This reads input from arguments.
@@ -206,7 +206,7 @@ filter() {
 # Return:
 #   Filtered list.
 filter_() {
-  filter_map_ "${1}" 'echo ${1}' ${@[2,$]}
+  filter_map_ "$1" 'echo "$1"' ${@[2,$]}
 }
 
 # Add directory path to a environment variable "path", which is array form of
@@ -250,7 +250,7 @@ add2path() {
 # Return:
 #   0 or 1: Whether or not a command can call
 has() {
-  (( ${+commands[${1}]} )) || whence ${1} > /dev/null
+  (( ${+commands["$1"]} )) || whence "$1" > /dev/null
 }
 
 # Search that whether or not a command is made by GNU
@@ -261,7 +261,7 @@ has() {
 # Return:
 #   0 or 1: Whether or not a command is made by GNU
 gnu() {
-  ${1} --version 2>&1 | grep -q GNU
+  "$1" --version 2>&1 | grep -q GNU
 }
 
 # Search that whether or not GNU coreutils is installed
@@ -363,19 +363,19 @@ zshcompiles() {
   #######################################
   zsh_compile() {
     local -ra CONFIGS=( \
-      "${1}" \
+      "$1" \
       "${1}.local" \
     )
 
     for c in "${CONFIGS[@]}"; do
-      if [[ -f "${c}" ]]; then
-        zcompile "${c}"
+      if [[ -f "$c" ]]; then
+        zcompile "$c"
         echo "Compiled: ${c}"
       fi
     done
   }
 
-  for zc in "${ZSH_CONFIGS[@]}"; do zsh_compile "${zc}"; done
+  for zc in "${ZSH_CONFIGS[@]}"; do zsh_compile "$zc"; done
 }
 
 # Proxy for fuzzy finder. Override this function or unset this and add a fuzzy
@@ -500,10 +500,10 @@ docker-rmf () {
 __run-help-tmux-pane() {
   local -r CMD="${(qqq)LBUFFER}"
 
-  if [[ -n "${TMUX_PANE}" ]]; then
+  if [[ -n "$TMUX_PANE" ]]; then
     tmux split-window "man ${CMD}"
   else
-    man "${CMD}"
+    man "$CMD"
   fi
 }
 
@@ -567,7 +567,7 @@ __run_in_background() {
   # stdout and stderr to show, that moving a process into the background and
   # completing a process, to a parent shell. So to prevent this problem use sub
   # shell and redirects the stdout and stderr to /dev/null.
-  (eval "${*}" &) &> /dev/null
+  (eval "$*" &) &> /dev/null
 }
 
 # Map a keybinding to a function using ZLE.
@@ -646,14 +646,14 @@ ipinfo () {
 # Return:
 #   Wrapped text with arguments.
 wrap() {
-  echo -n "$1$(<&0)$2"
+  echo -n "${1}$(<&0)${2}"
 }
 
 ghq-exist () {
   local -i verbose=0
   local query=''
 
-  while [[ $# > 0 ]]; do
+  while [[ "$#" > 0 ]]; do
     case "$1" in
       -v | --verbose )
         verbose=1
@@ -693,7 +693,7 @@ ghq-exist () {
       ;;
     * )
       warning "Found some ambiguous repositories."
-      __print "${(F)repos}"
+      __print "${(F)repos[@]}"
       return 1
       ;;
   esac
@@ -723,9 +723,9 @@ subcommand_wrapper_def () {
 
     if has "$sub_command"; then
       shift
-      "$sub_command" "${@}"
+      "$sub_command" "$@"
     else
-      command "$cmd" "${@}"
+      command "$cmd" "$@"
     fi
   }'
 }
@@ -803,11 +803,11 @@ __absolute_command_path_widget() {
   setopt localoptions pipefail 2> /dev/null
 
   local -r FZF_OPTS="${FZF_DEFAULT_OPTS} --no-multi --tiebreak=end --bind=ctrl-r:toggle-sort --query=${(qqq)LBUFFER}"
-  LBUFFER=$(FZF_DEFAULT_OPTS="${FZF_OPTS}" __absolute_command_path)
-  local -r EXIT_CODE="${?}"
+  LBUFFER=$(FZF_DEFAULT_OPTS="$FZF_OPTS" __absolute_command_path)
+  local -r EXIT_CODE="$?"
 
   zle redisplay
-  return "${EXIT_CODE}"
+  return "$EXIT_CODE"
 }
 
 __strip_head () {
@@ -884,7 +884,7 @@ __fuzzy_select_manual () {
 #
 # NOTE: Maybe this should be global config.
 backward_kill_word_and_dir() {
-  local WORDCHARS=${WORDCHARS/\/}
+  local WORDCHARS="${WORDCHARS/\/}"
   zle backward-kill-word
 }
 # }}}
@@ -974,7 +974,7 @@ if [[ -o LOGIN ]]; then
 
   export path
 
-  [[ "${TERM}" == "linux" ]] && oceanic_next
+  [[ "$TERM" == "linux" ]] && oceanic_next
   # }}}
 
   # Functions {{{
@@ -993,14 +993,14 @@ if [[ -o LOGIN ]]; then
     export SSH_AGENT_ENV=~/.ssh/ssh-agent.env
 
     # When no existing ssh-agent process
-    if ! pgrep -x -u "${USER}" ssh-agent &> /dev/null; then
+    if ! pgrep -x -u "$USER" ssh-agent &> /dev/null; then
       # Start ssh-agent process and cache the output
-      ssh-agent -t ${SSH_KEY_LIFE_TIME_SEC} > "${SSH_AGENT_ENV}"
+      ssh-agent -t "$SSH_KEY_LIFE_TIME_SEC" > "$SSH_AGENT_ENV"
     fi
 
     # When not loading ssh-agent process information
-    if [[ -f "${SSH_AGENT_ENV}" && ! -v SSH_AUTH_SOCK && ! -v SSH_AGENT_PID ]]; then
-      source "${SSH_AGENT_ENV}" &> /dev/null
+    if [[ -f "$SSH_AGENT_ENV" && ! -v SSH_AUTH_SOCK && ! -v SSH_AGENT_PID ]]; then
+      source "$SSH_AGENT_ENV" &> /dev/null
     fi
   }
 
@@ -1022,7 +1022,7 @@ if [[ -o LOGIN ]]; then
     )
 
     for terminal in ${TERMINALS[@]}; do
-      has "${terminal}" && { echo "${terminal}"; return }
+      has "$terminal" && { echo "$terminal"; return }
     done
   }
 
@@ -1045,7 +1045,7 @@ if [[ -o LOGIN ]]; then
     )
 
     for browser in ${BROWSERS[@]}; do
-      has "${browser}" && { echo "${browser}"; return }
+      has "$browser" && { echo "$browser"; return }
     done
   }
 
@@ -1104,7 +1104,7 @@ else
   alias lg='la -l'
 fi
 
-alias e="${EDITOR}"
+alias e="$EDITOR"
 alias v=vim
 alias vw=view
 alias dk=docker
@@ -1123,7 +1123,7 @@ alias cdh='cd ~'
 alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
-alias shinit='exec ${SHELL}'
+alias shinit='exec "$SHELL"'
 alias zshinit='zshcompiles &> /dev/null && shinit'
 alias z=zshinit
 alias q=exit
@@ -1219,13 +1219,13 @@ source ~/.zinit/bin/zinit.zsh
 zinit light-mode for \
   wait lucid blockf \
     zsh-users/zsh-completions \
-  wait lucid atinit"zicompinit; zicdreplay" \
+  wait lucid atinit'zicompinit; zicdreplay' \
     zdharma/fast-syntax-highlighting \
-  wait lucid compile"{src/*.zsh,src/strategies/*.zsh}" atload"_zsh_autosuggest_start" \
+  wait lucid compile'{src/*.zsh,src/strategies/*.zsh}' atload'_zsh_autosuggest_start' \
     zsh-users/zsh-autosuggestions \
-  wait lucid atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" has"dircolors" atload'zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"' \
+  wait lucid atclone'dircolors -b LS_COLORS > c.zsh' atpull'%atclone' pick'c.zsh' has'dircolors' atload'zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"' \
     trapd00r/LS_COLORS \
-  pick"async.zsh" src"pure.zsh" \
+  pick'async.zsh' src'pure.zsh' \
     sindresorhus/pure \
   ;
 # }}}
