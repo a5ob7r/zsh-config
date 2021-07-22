@@ -283,7 +283,7 @@ gnui() {
 # Return:
 #   Path directories
 path() {
-  echo "${PATH//:/\n}"
+  echo "${(F)path[@]}"
 }
 
 # List all executables on $path.
