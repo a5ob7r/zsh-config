@@ -286,15 +286,10 @@ path() {
   echo "${(F)path[@]}"
 }
 
-# List all executables on $path.
-# Global:
-#   path
-# Arguments:
-#   None
-# Return:
-#   List all executable paths
-executables() {
-  find "${path[@]}" -type f,l -perm /111 2>/dev/null || true
+# List full pathes of all executables on $path.
+executables () {
+  setopt LOCAL_OPTIONS EXTENDED_GLOB
+  which "${^path[@]%%/##}"/*(N-*) || true
 }
 
 # Filter all executables with fuzzy finder.
