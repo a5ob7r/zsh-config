@@ -292,17 +292,6 @@ executables () {
   which "${^path[@]%%/##}"/*(N-*) || true
 }
 
-# Filter all executables with fuzzy finder.
-# Global:
-#   path
-# Arguments:
-#   None
-# Return:
-#   A executable path
-__absolute_command_path() {
-  executables | fuzzyfinder
-}
-
 # Swap stdout and stderr.
 stdswap () {
   "$@" 3>&2 2>&1 1>&3 3>&-
@@ -780,22 +769,26 @@ __fuzzy_history_select() {
   return "$exit_code"
 }
 
-# Widget for __absolute_command_path
-# Global:
-#   path
-# Arguments:
-#   None
-# Return:
-#   None
-__absolute_command_path_widget() {
-  setopt localoptions pipefail 2> /dev/null
+# All executables fuzzy selector.
+__fuzzy_executables_select () {
+  setopt LOCAL_OPTIONS PIPE_FAIL 2> /dev/null
 
-  local -r FZF_OPTS="${FZF_DEFAULT_OPTS} --no-multi --tiebreak=end --bind=ctrl-r:toggle-sort --query=${(qqq)LBUFFER}"
-  LBUFFER=$(FZF_DEFAULT_OPTS="$FZF_OPTS" __absolute_command_path)
-  local -r EXIT_CODE="$?"
+  executables \
+    | fuzzyfinder \
+        --no-multi \
+        --query="${LBUFFER}${RBUFFER}" \
+    | read cmd \
+    ;
+
+  local -ri exit_code="$?"
+
+  if [[ "$exit_code" == 0 ]]; then
+    LBUFFER="$cmd"
+    RBUFFER=''
+  fi
 
   zle redisplay
-  return "$EXIT_CODE"
+  return "$exit_code"
 }
 
 __strip_head () {
@@ -1183,7 +1176,7 @@ bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 
 bind_key2fun '^R' __fuzzy_history_select
-bind_key2fun '^x^p' __absolute_command_path_widget
+bind_key2fun '^x^p' __fuzzy_executables_select
 bind_key2fun '^X^A' __strip_head
 bind_key2fun '^X^M' __fuzzy_select_manual
 bind_key2fun '^[h' backward_kill_word_and_dir
