@@ -1138,9 +1138,11 @@ alias vloop='while [[ 1 ]] {}'
 alias vloop2='yes > /dev/null'
 
 # Current date and time.
-alias datetime="date +'%Y%m%d%H%M%S'"
+zmodload zsh/datetime
+
+alias datetime="strftime '%Y%m%d%H%M%S'"
 # Date only version of datetime.
-alias date2="datetime | cut -c -8"
+alias date2="strftime '%Y%m%d'"
 
 alias hl='haskellorls --color=auto --extra-color --icons -ABFhvo'
 # }}}
