@@ -410,7 +410,7 @@ cd_stdin() {
   xarg join_path "$@" | xarg builtin cd
 }
 
-__cd_to_git_repository() {
+ghq-cdf () {
   setopt LOCAL_OPTIONS PIPE_FAIL
 
   local repo
@@ -418,7 +418,7 @@ __cd_to_git_repository() {
   # NOTE: Must split a selector step and cd one from single pipe line if no
   # guard about no selection on fuzzy finder because maybe cause cd to ghq root
   # unintentionally.
-  ghq list \
+  ghq list --full-path \
     | fuzzyfinder \
         --no-multi \
         --tiebreak=end,length,index \
@@ -429,7 +429,7 @@ __cd_to_git_repository() {
   local -ri exit_code="$?"
 
   if [[ ${#repo} != 0 ]]; then
-    join_path "$(ghq root)" "$repo" | xarg builtin cd
+    builtin cd "$repo"
   fi
 
   return "$exit_code"
@@ -1088,7 +1088,7 @@ alias p=pipenv
 alias fzfd='FZF_DEFAULT_COMMAND="find . -type d" fzf'
 alias m=man
 
-alias c=__cd_to_git_repository
+alias c='ghq cdf'
 alias cdh='cd ~'
 alias ..='cd ../'
 alias ...='cd ../../'
