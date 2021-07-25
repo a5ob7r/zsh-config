@@ -1183,12 +1183,9 @@ declare -A ZINIT
 ZINIT[COMPINIT_OPTS]=-C
 ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
 
-! [[ -d ~/.zinit ]] \
-  && sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
+! [[ -d ~/.zinit ]] && curl -fsSL 'https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh' | sh
 
-source ~/.zinit/bin/zinit.zsh
-
-zinit light-mode for \
+source ~/.zinit/bin/zinit.zsh &>/dev/null && zinit light-mode for \
   wait lucid blockf \
     zsh-users/zsh-completions \
   wait lucid atinit'zicompinit; zicdreplay' \
