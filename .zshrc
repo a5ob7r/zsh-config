@@ -711,7 +711,6 @@ generate_subcommand_wrapper () {
 generate_subcommand_wrapper docker
 generate_subcommand_wrapper ghq
 
-
 # Proxy function for ls on chpwd.
 __chpwd_ls () {
   l
