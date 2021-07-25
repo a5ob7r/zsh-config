@@ -1175,7 +1175,6 @@ bindkey '^D' delete-char
 # }}}
 
 # Plugins {{{
-# {{{ zinit
 declare -A ZINIT
 ZINIT[COMPINIT_OPTS]=-C
 ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
@@ -1194,14 +1193,9 @@ zinit light-mode for \
     zsh-users/zsh-autosuggestions \
   wait lucid atclone'dircolors -b LS_COLORS > c.zsh' atpull'%atclone' pick'c.zsh' has'dircolors' atload'zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"' \
     trapd00r/LS_COLORS \
-  pick'async.zsh' src'pure.zsh' \
+  pick'async.zsh' src'pure.zsh' atload'zstyle :prompt:pure:git:stash show yes' \
     sindresorhus/pure \
   ;
-# }}}
-
-# sindresorhus/pure {{{
-zstyle :prompt:pure:git:stash show yes
-# }}}
 # }}}
 
 # Others {{{
