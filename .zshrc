@@ -410,63 +410,6 @@ cd_stdin() {
   xarg join_path "$@" | xarg builtin cd
 }
 
-ghq-cdf () {
-  setopt LOCAL_OPTIONS PIPE_FAIL
-
-  local repo
-
-  # NOTE: Must split a selector step and cd one from single pipe line if no
-  # guard about no selection on fuzzy finder because maybe cause cd to ghq root
-  # unintentionally.
-  ghq list --full-path \
-    | fuzzyfinder \
-        --no-multi \
-        --tiebreak=end,length,index \
-        --query="$*" \
-        --select-1 \
-    | { repo="$(<&0)" }
-
-  local -ri exit_code="$?"
-
-  if [[ ${#repo} != 0 ]]; then
-    builtin cd "$repo"
-  fi
-
-  return "$exit_code"
-}
-
-docker-rmif () {
-  local -a images
-
-  docker images --all \
-    | fuzzyfinder \
-        --multi \
-        --header-lines=1 \
-    | while read; do echo "${${(z)REPLY}[3]}"; done \
-    | { images=($(<&0)) } \
-    ;
-
-  if [[ "${#images[@]}" != 0 ]]; then
-    docker rmi "$@" "${images[@]}"
-  fi
-}
-
-docker-rmf () {
-  local -a containers
-
-  docker container ls --all \
-    | fuzzyfinder \
-        --multi \
-        --header-lines=1 \
-    | while read; do echo "${${(z)REPLY}[1]}"; done \
-    | { containers=($(<&0)) } \
-    ;
-
-  if [[ "${#containers[@]}" != 0 ]]; then
-    docker rm "$@" "${containers[@]}"
-  fi
-}
-
 __run-help-tmux-pane() {
   local -r CMD="${(qqq)LBUFFER}"
 
@@ -612,6 +555,94 @@ wrap() {
   echo -n "${1}$(<&0)${2}"
 }
 
+# Template generator for sub command proxy.
+subcommand_wrapper_def () {
+  local -r cmd="$1"
+
+  echo "$cmd" '() {
+    local cmd="$0"
+
+    local -r sub="$1"
+    local -r sub_command="${cmd}-${sub}"
+
+    if has "$sub_command"; then
+      shift
+      "$sub_command" "$@"
+    else
+      command "$cmd" "$@"
+    fi
+  }'
+}
+
+# Generate proxy command for user defined custom command. If want to add custom
+# sub command `sub` to `cmd` call `generate_subcommand_wrapper cmd` and add
+# something command named `cmd-sub`. It is allowed as a standalone executable,
+# a shell function and an alias. By this we can call the sub command with
+# `cmd sub`.
+#
+# NOTE: What? Do you think that it is enough to call `cmd-sub` directly? Me
+# too. Maybe need to add something useful to argue merit.
+# NOTE: This system is inspired by `git`.
+generate_subcommand_wrapper () {
+  local -r cmd="$1"
+
+  has "$cmd" && eval "$(subcommand_wrapper_def "$cmd")"
+}
+
+# Proxy function for ls on chpwd.
+__chpwd_ls () {
+  l
+}
+
+# Proxy function for git status on chpwd.
+__chpwd_git_status () {
+  if __is_at_git_root; then
+    echo
+    git status --short --branch
+  fi
+}
+# }}}
+
+# Custom subcommands {{{
+# docker {{{
+generate_subcommand_wrapper docker
+
+docker-rmif () {
+  local -a images
+
+  docker images --all \
+    | fuzzyfinder \
+        --multi \
+        --header-lines=1 \
+    | while read; do echo "${${(z)REPLY}[3]}"; done \
+    | { images=($(<&0)) } \
+    ;
+
+  if [[ "${#images[@]}" != 0 ]]; then
+    docker rmi "$@" "${images[@]}"
+  fi
+}
+
+docker-rmf () {
+  local -a containers
+
+  docker container ls --all \
+    | fuzzyfinder \
+        --multi \
+        --header-lines=1 \
+    | while read; do echo "${${(z)REPLY}[1]}"; done \
+    | { containers=($(<&0)) } \
+    ;
+
+  if [[ "${#containers[@]}" != 0 ]]; then
+    docker rm "$@" "${containers[@]}"
+  fi
+}
+# }}}
+
+# ghq {{{
+generate_subcommand_wrapper ghq
+
 ghq-exist () {
   local -i verbose=0
   local query=''
@@ -674,55 +705,31 @@ ghq-cd () {
   fi
 }
 
-# Template generator for sub command proxy.
-subcommand_wrapper_def () {
-  local -r cmd="$1"
+ghq-cdf () {
+  setopt LOCAL_OPTIONS PIPE_FAIL
 
-  echo "$cmd" '() {
-    local cmd="$0"
+  local repo
 
-    local -r sub="$1"
-    local -r sub_command="${cmd}-${sub}"
+  # NOTE: Must split a selector step and cd one from single pipe line if no
+  # guard about no selection on fuzzy finder because maybe cause cd to ghq root
+  # unintentionally.
+  ghq list --full-path \
+    | fuzzyfinder \
+        --no-multi \
+        --tiebreak=end,length,index \
+        --query="$*" \
+        --select-1 \
+    | { repo="$(<&0)" }
 
-    if has "$sub_command"; then
-      shift
-      "$sub_command" "$@"
-    else
-      command "$cmd" "$@"
-    fi
-  }'
-}
+  local -ri exit_code="$?"
 
-# Generate proxy command for user defined custom command. If want to add custom
-# sub command `sub` to `cmd` call `generate_subcommand_wrapper cmd` and add
-# something command named `cmd-sub`. It is allowed as a standalone executable,
-# a shell function and an alias. By this we can call the sub command with
-# `cmd sub`.
-#
-# NOTE: What? Do you think that it is enough to call `cmd-sub` directly? Me
-# too. Maybe need to add something useful to argue merit.
-# NOTE: This system is inspired by `git`.
-generate_subcommand_wrapper () {
-  local -r cmd="$1"
-
-  has "$cmd" && eval "$(subcommand_wrapper_def "$cmd")"
-}
-
-generate_subcommand_wrapper docker
-generate_subcommand_wrapper ghq
-
-# Proxy function for ls on chpwd.
-__chpwd_ls () {
-  l
-}
-
-# Proxy function for git status on chpwd.
-__chpwd_git_status () {
-  if __is_at_git_root; then
-    echo
-    git status --short --branch
+  if [[ ${#repo} != 0 ]]; then
+    builtin cd "$repo"
   fi
+
+  return "$exit_code"
 }
+# }}}
 # }}}
 
 # Hook functions {{{
