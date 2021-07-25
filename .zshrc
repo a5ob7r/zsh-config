@@ -854,6 +854,9 @@ backward_kill_word_and_dir() {
   local WORDCHARS="${WORDCHARS/\/}"
   zle backward-kill-word
 }
+
+# Proxy to call `exit` from as ZLE.
+__quit () { exit }
 # }}}
 
 # Login shell {{{
@@ -1166,6 +1169,7 @@ bind_key2fun '^x^p' __fuzzy_executables_select
 bind_key2fun '^X^A' __strip_head
 bind_key2fun '^X^M' __fuzzy_select_manual
 bind_key2fun '^[h' backward_kill_word_and_dir
+bind_key2fun '^X^E' __quit
 
 # Delete a forward char with a `delete` key.
 bindkey '^[[3~' delete-char
