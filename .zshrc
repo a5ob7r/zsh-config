@@ -72,25 +72,11 @@ unsetopt BEEP
 
 # Functions {{{
 is_linux () {
-  case "$OSTYPE" in
-    linux* )
-      return 0
-      ;;
-    * )
-      return 1
-      ;;
-  esac
+  [[ "$OSTYPE" =~ '^linux.*' ]]
 }
 
 is_macos () {
-  case "$OSTYPE" in
-    darwin* )
-      return 0
-      ;;
-    * )
-      return 1
-      ;;
-  esac
+  [[ "$OSTYPE" =~ '^darwin.*' ]]
 }
 
 warning () {
