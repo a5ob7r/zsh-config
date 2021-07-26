@@ -71,6 +71,12 @@ unsetopt BEEP
 # }}}
 
 # Functions {{{
+autoload -Uz \
+  add-zsh-hook \
+  cdr \
+  chpwd_recent_dirs \
+  ;
+
 is_linux () {
   [[ "$OSTYPE" =~ '^linux.*' ]]
 }
@@ -601,6 +607,25 @@ __chpwd_git_status () {
     git status --short --branch
   fi
 }
+
+cdrf () {
+  setopt LOCAL_OPTIONS PIPE_FAIL
+
+  cdr -l \
+    | fuzzyfinder \
+        --nth='2..' \
+        --no-multi \
+        --tiebreak='end,index' \
+        --query="${*}" \
+    | read -r -d ' ' idx \
+    ;
+
+  local -ri exit_code="$?"
+
+  [[ -n "$idx" ]] && cdr "$idx"
+
+  return "$exit_code"
+}
 # }}}
 
 # Custom subcommands {{{
@@ -733,10 +758,9 @@ ghq-cdf () {
 # }}}
 
 # Hook functions {{{
-chpwd() {
-  __chpwd_ls
-  __chpwd_git_status
-}
+add-zsh-hook chpwd __chpwd_ls
+add-zsh-hook chpwd __chpwd_git_status
+add-zsh-hook chpwd chpwd_recent_dirs
 # }}}
 
 # Widgets {{{
@@ -1136,6 +1160,7 @@ alias hl='haskellorls --color=auto --extra-color --icons -ABFhvo'
 # }}}
 
 # Zstyle {{{
+zstyle ':chpwd:*' recent-dirs-max 0
 zstyle ':completion:*' completer _expand _complete _match _approximate _list
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z-_}={A-Za-z_-}'
 zstyle ':completion:*' menu select
