@@ -107,100 +107,6 @@ error () {
   echo "${prefix}${@}${suffix}" >&2
 }
 
-# Functional programming's style `filter` and `map`. This reads input from
-# stdin.
-# Global:
-#   None
-# Arguments:
-#   pred: Predicate.
-#   yield: Yielder.
-# Return:
-#   Filtered and transformed list.
-filter_map() {
-  local -r pred="$1"
-  local -r yield="$2"
-
-  pred_f() {
-    eval "$pred"
-  }
-
-  yield_f() {
-    eval "$yield"
-  }
-
-  while read subj; do
-    # Prevent this function to return not 0 when the last pred_f in the
-    # loop returns not 0.
-    if pred_f "$subj"; then yield_f "$subj"; fi
-  done <&0
-}
-
-# Functional programming's style `filter` and `map`. This reads input from
-# arguments.
-# Global:
-#   None
-# Arguments:
-#   pred: Predicate.
-#   yield: Yielder.
-#   follow args: Input list.
-# Return:
-#   Filtered and transformed list.
-filter_map_() {
-  local -r pred="$1"
-  local -r yield="$2"
-  shift 2
-
-  while [[ "$#" -gt 0 ]]; do
-    echo "$1"
-    shift
-  done | filter_map "$pred" "$yield"
-}
-
-# Functional programming's style `map`. This reads input from stdin.
-# Global:
-#   None
-# Arguments:
-#   yield: Yielder.
-# Return:
-#   Transformed list.
-map() {
-  filter_map 'true' "$1" <&0
-}
-
-# Functional programming's style `map`. This reads input from arguments.
-# Global:
-#   None
-# Arguments:
-#   yield: Yielder.
-# Return:
-#   Transformed list.
-map_() {
-  filter_map_ 'true' "$1" ${@[2,$]}
-}
-
-# Functional programming's style `filter`. This reads input from stdin.
-# Global:
-#   None
-# Arguments:
-#   pred: Predicate.
-# Return:
-#   Filtered list.
-filter() {
-  filter_map "$1" 'echo "$1"' <&0
-}
-
-# Functional programming's style `filter`. This reads input from arguments.
-# Global:
-#   None
-# Arguments:
-#   pred: Predicate.
-#   follow args: Input list.
-# Return:
-#   Filtered list.
-filter_() {
-  filter_map_ "$1" 'echo "$1"' ${@[2,$]}
-}
-
 # Add directory path to a environment variable "path", which is array form of
 # `PATH`, if it passes through some validations.
 add2path() {
@@ -410,12 +316,6 @@ xarg () {
   "$@" "$(<&0)" 0>&-
 }
 
-# Read path from stdin and change directory to the path which is joined with
-# prefix. The prefixes are passed as function arguments.
-cd_stdin() {
-  xarg join_path "$@" | xarg builtin cd
-}
-
 __run-help-tmux-pane() {
   local -r CMD="${(qqq)LBUFFER}"
 
@@ -424,17 +324,6 @@ __run-help-tmux-pane() {
   else
     man "$CMD"
   fi
-}
-
-# Make a directory which it's name is current date and time.
-# Global:
-#   None
-# Arguments:
-#   None
-# Return:
-#   None
-mkdir-datetime() {
-  mkdir "$(datetime)"
 }
 
 # Whether or not current working directory is git root.
