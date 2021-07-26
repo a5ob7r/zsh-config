@@ -757,12 +757,6 @@ ghq-cdf () {
 # }}}
 # }}}
 
-# Hook functions {{{
-add-zsh-hook chpwd __chpwd_ls
-add-zsh-hook chpwd __chpwd_git_status
-add-zsh-hook chpwd chpwd_recent_dirs
-# }}}
-
 # Widgets {{{
 __fuzzy_history_select() {
   setopt LOCAL_OPTIONS PIPE_FAIL
@@ -1231,6 +1225,10 @@ source ~/.zinit/bin/zinit.zsh &>/dev/null && zinit light-mode for \
 # }}}
 
 # Others {{{
+add-zsh-hook chpwd __chpwd_ls
+add-zsh-hook chpwd __chpwd_git_status
+add-zsh-hook chpwd chpwd_recent_dirs
+#
 source ~/.zshrc.local 2> /dev/null
 # }}}
 
