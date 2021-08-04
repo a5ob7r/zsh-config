@@ -354,19 +354,8 @@ oceanic_next() {
 }
 
 # Run a process in the background and no output to stdout and stderr.
-# Global:
-#   None
-# Arguments:
-#   ARGS: Command name and the arguments.
-# Return:
-#   None
-__run_in_background() {
-  # A way to run a command in the background and not to output some strings to
-  # stdout and stderr is to run `cmd > /dev/null 2>&1`. But this way outputs to
-  # stdout and stderr to show, that moving a process into the background and
-  # completing a process, to a parent shell. So to prevent this problem use sub
-  # shell and redirects the stdout and stderr to /dev/null.
-  (eval "$*" &) &> /dev/null
+runb () {
+  "$@" &> /dev/null &|
 }
 
 # Map a keybinding to a function using ZLE.
@@ -1014,7 +1003,7 @@ if [[ -o LOGIN ]]; then
     export BROWSER="$(__default_browser)"
 
     __enable_ssh_agent
-    __run_in_background __start_dropbox
+    runb __start_dropbox
   fi
   # }}}
 
@@ -1086,7 +1075,7 @@ alias :q=q
 
 if is_linux; then
   alias open=xdg-open
-  alias op='__run_in_background open'
+  alias op='runb open'
   alias ff=firefox
   alias xc='xclip -selection clipboard -filter -rmlastnl && echo'
   alias lb='lsblk -o NAME,FSTYPE,FSVER,FSSIZE,FSUSED,FSAVAIL,FSUSE%,PARTTYPENAME,MOUNTPOINT'
