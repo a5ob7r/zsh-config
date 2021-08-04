@@ -663,6 +663,59 @@ ghq-cdf () {
 
   return "$exit_code"
 }
+
+ghq-update () {
+  local -a queries=()
+  local -i all=0
+
+  help () {
+    echo -n "\
+Update ('fetch' in fact) repositories.
+
+Usage:
+  ghq update [-a | --all] [[query]...]
+
+Options:
+  -a, --all     Update all repositories under ghq control.
+  -h, --help    Show this message.
+"
+  }
+
+  while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+      -a | --all )
+        all=1
+        shift
+        ;;
+      -h | --help )
+        help
+        return
+        ;;
+      * )
+        queries+=("$1")
+        shift
+        ;;
+    esac
+  done
+
+  if (( all )); then
+    queries=($(ghq list))
+  fi
+
+  for query in "${queries[@]}"; (
+    if ghq-cd -q "$query"; then
+      if [[ -d .git/refs/remotes/upstream ]]; then
+        echo "  update: ${query} (upstream)"
+        command git fetch upstream
+      else
+        echo "  update: ${query}"
+        command git fetch
+      fi
+    else
+      error "Not found a unique repository in local to match '${query}'"
+    fi
+  )
+}
 # }}}
 # }}}
 
