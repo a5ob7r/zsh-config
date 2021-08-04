@@ -926,6 +926,10 @@ if [[ -o LOGIN ]]; then
     export PIPENV_VENV_IN_PROJECT=1
   fi
 
+  if has rustc; then
+    export RUSTFLAGS='-C target-cpu=native'
+  fi
+
   export path
 
   [[ "$TERM" == "linux" ]] && oceanic_next
