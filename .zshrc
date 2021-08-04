@@ -234,7 +234,6 @@ zshcompiles() {
     ~/.zlogin \
   )
 
-  #######################################
   # Zcompile zsh user configure and local it
   # Global:
   #   None
@@ -242,7 +241,6 @@ zshcompiles() {
   #   1: Zsh configure path
   # Return:
   #   Compiled zsh user configure names
-  #######################################
   zsh_compile() {
     local -ra CONFIGS=( \
       "$1" \
@@ -934,7 +932,6 @@ if [[ -o LOGIN ]]; then
   # }}}
 
   # Functions {{{
-  #######################################
   # Enable ssh-agent wisely. Cache ssh-agent output and load it as necessary.
   # This is to prevent duplicate ssh-agent start.
   # Global:
@@ -943,7 +940,6 @@ if [[ -o LOGIN ]]; then
   #   None
   # Return:
   #   None
-  #######################################
   __enable_ssh_agent() {
     export -i SSH_KEY_LIFE_TIME_SEC=3600
     export SSH_AGENT_ENV=~/.ssh/ssh-agent.env
@@ -960,7 +956,6 @@ if [[ -o LOGIN ]]; then
     fi
   }
 
-  #######################################
   # Default terminal name.
   # Global:
   #   None
@@ -968,7 +963,6 @@ if [[ -o LOGIN ]]; then
   #   None
   # Return:
   #   Terninal name
-  #######################################
   __default_terminal() {
     local -r TERMINALS=( \
       'alacritty' \
@@ -982,7 +976,6 @@ if [[ -o LOGIN ]]; then
     done
   }
 
-  #######################################
   # Default browser name.
   # Global:
   #   None
@@ -990,7 +983,6 @@ if [[ -o LOGIN ]]; then
   #   None
   # Return:
   #   Browser name
-  #######################################
   __default_browser() {
     local -r BROWSERS=( \
       'firefoxdeveloperedition' \
