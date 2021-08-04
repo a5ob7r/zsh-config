@@ -593,7 +593,7 @@ ghq-exist () {
   local -a repos
   ghq-find "$query" | { repos=($(<&0)) }
 
-  case "${#repos}" in
+  case "${#repos[@]}" in
     0 )
       error 'Not found matching repository.'
       return 1
