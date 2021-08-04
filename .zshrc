@@ -612,14 +612,30 @@ ghq-exist () {
 }
 
 ghq-cd () {
-  local -r query="$1"
+  local query=''
+  local -a args=()
+
+  while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+      -q )
+        args+=('-q')
+        shift
+        ;;
+      * )
+        query="$1"
+        shift
+        ;;
+    esac
+  done
 
   local -a repos
-  ghq-exist --verbose "$query" | { repos=($(<&0)) }
+  ghq-find "$query" | { repos=($(<&0)) }
 
   if [[ "${#repos[@]}" == 1 ]]; then
     # NOTE: `cd ''` means `cd .`.
-    builtin cd "${repos[1]}"
+    builtin cd "${args[@]}" "${repos[1]}"
+  else
+    return 1
   fi
 }
 
