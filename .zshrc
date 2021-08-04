@@ -557,6 +557,10 @@ docker-rmf () {
 # ghq {{{
 generate_subcommand_wrapper ghq
 
+ghq-find () {
+  command ghq list --full-path --exact "$1"
+}
+
 ghq-exist () {
   local -i verbose=0
   local query=''
@@ -587,7 +591,7 @@ ghq-exist () {
   }
 
   local -a repos
-  command ghq list --full-path --exact "$query" | { repos=($(<&0)) }
+  ghq-find "$query" | { repos=($(<&0)) }
 
   case "${#repos}" in
     0 )
