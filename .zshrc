@@ -1194,7 +1194,7 @@ xsource ~/.zinit/bin/zinit.zsh && zinit light-mode for \
 add-zsh-hook chpwd __chpwd_ls
 add-zsh-hook chpwd __chpwd_git_status
 add-zsh-hook chpwd chpwd_recent_dirs
-#
+
 xsource ~/.zshrc.local
 xcompile ~/.zshrc
 # }}}
