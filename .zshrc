@@ -900,7 +900,11 @@ if [[ -o LOGIN ]]; then
     #
     # NOTE: Supress `Vim: Reading from stdin...` message using `--not-a-term`.
     # https://github.com/vim/vim/commit/234d16286a2733adedef56784c17415ae169b9ad
-    export MANPAGER='vim -M +MANPAGER -c "set nolist" --not-a-term -'
+    #
+    # NOTE: Maybe it is enough to pass `-M` option to vim instead of
+    # `-c "set nomodifiable | set nowrite"` in accordance with the document.
+    # But somehow no effect even if passes `-M`. Is this bug?
+    export MANPAGER='vim +MANPAGER -c "set nolist | set nomodifiable | set nowrite" --not-a-term -'
   fi
   # }}}
 
