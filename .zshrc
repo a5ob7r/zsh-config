@@ -502,6 +502,25 @@ cdrf () {
 
   return "$exit_code"
 }
+
+# Compile file if only source file is newer than .zwc (compiled file)
+xcompile () {
+  local -r src="$1"
+  local -r zwc="${src}.zwc"
+
+  [[ "$src" -ot "$zwc" ]] || zcompile "$src"
+}
+
+# Source an external file with useful extra.
+xsource () {
+  local -r src="$1"
+
+  [[ -r "$src" ]] || return 1
+
+  xcompile "$src"
+
+  builtin source "$src"
+}
 # }}}
 
 # Custom subcommands {{{
@@ -1157,7 +1176,7 @@ ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
 
 ! [[ -d ~/.zinit ]] && curl -fsSL 'https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh' | sh
 
-source ~/.zinit/bin/zinit.zsh &>/dev/null && zinit light-mode for \
+xsource ~/.zinit/bin/zinit.zsh && zinit light-mode for \
   wait lucid blockf \
     zsh-users/zsh-completions \
   wait lucid atinit'zicompinit; zicdreplay' \
@@ -1176,7 +1195,8 @@ add-zsh-hook chpwd __chpwd_ls
 add-zsh-hook chpwd __chpwd_git_status
 add-zsh-hook chpwd chpwd_recent_dirs
 #
-source ~/.zshrc.local 2> /dev/null
+xsource ~/.zshrc.local
+xcompile ~/.zshrc
 # }}}
 
 # zprof {{{
