@@ -676,7 +676,7 @@ ghq-update () {
 
   help () {
     echo -n "\
-Update ('fetch' in fact) repositories.
+Update ('fetch' in fact) all git repositories which match each queries.
 
 Usage:
   ghq update [-a | --all] [[query]...]
@@ -710,13 +710,8 @@ Options:
 
   for query in "${queries[@]}"; (
     if ghq-cd -q "$query"; then
-      if [[ -d .git/refs/remotes/upstream ]]; then
-        echo "  update: ${query} (upstream)"
-        command git fetch upstream
-      else
-        echo "  update: ${query}"
-        command git fetch
-      fi
+      echo "  Update: ${query}"
+      command git remote update
     else
       error "Not found a unique repository in local to match '${query}'"
     fi
