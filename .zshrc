@@ -818,7 +818,7 @@ __fuzzy_select_manual () {
       exit_code=2
       ;;
     * )
-      error "Expected values are that first element is section number, second element is command name. But actual values are `${queries[@]}`"
+      error "Expected values are that first element is section number, second element is command name. But actual values are '${queries[@]}'"
       exit_code=2
       ;;
   esac
