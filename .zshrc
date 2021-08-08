@@ -533,8 +533,6 @@ xsource () {
 
 # Custom subcommands {{{
 # docker {{{
-generate_subcommand_wrapper docker
-
 docker-rmif () {
   local -a images
 
@@ -569,8 +567,6 @@ docker-rmf () {
 # }}}
 
 # ghq {{{
-generate_subcommand_wrapper ghq
-
 ghq-find () {
   command ghq list --full-path --exact "$1"
 }
@@ -1215,6 +1211,9 @@ xsource ~/.zinit/bin/zinit.zsh && zinit light-mode for \
 add-zsh-hook chpwd __chpwd_ls
 add-zsh-hook chpwd __chpwd_git_status
 add-zsh-hook chpwd chpwd_recent_dirs
+
+generate_subcommand_wrapper docker
+generate_subcommand_wrapper ghq
 
 xsource ~/.zshrc.local
 xcompile ~/.zshrc
