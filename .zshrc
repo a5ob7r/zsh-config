@@ -8,7 +8,7 @@
 #
 # $ ZPROF= zsh
 #
-if (( ${+ZPROF} )); then
+if [[ -v ZPROF ]]; then
   zmodload zsh/zprof && zprof
 fi
 # }}}
