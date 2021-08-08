@@ -8,7 +8,10 @@
 #
 # $ ZPROF= zsh
 #
-if [[ -v ZPROF ]]; then
+# NOTE: Wanna use `-v` option of `[[` to check whether or not `ZPROF` is
+# declared but it is introduced since 5.3. So maybe it can not use on some old
+# version's zsh. For example zsh 5.1 on Ubuntu 16.04.
+if (( ${+ZPROF} )); then
   zmodload zsh/zprof && zprof
 fi
 # }}}
