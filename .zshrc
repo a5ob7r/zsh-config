@@ -852,6 +852,35 @@ backward_kill_word_and_dir() {
 
 # Proxy to call `exit` from as ZLE.
 __quit () { exit }
+
+# Interactive cdr using fuzzy finder as ZLE widget.
+__cdrf () {
+  setopt LOCAL_OPTIONS PIPE_FAIL
+
+  local -i idx
+
+  cdr -l \
+    | fuzzyfinder \
+        --nth='2..' \
+        --no-multi \
+        --tiebreak='end,index' \
+        --query="$BUFFER" \
+    | read -r -d ' ' idx \
+    ;
+
+  local -ri exit_code="$?"
+
+  if [[ "$exit_code" == 0 && -n "$idx" ]]; then
+    # NOTE: Need to rewrite buffer and to use `accept-line` to change directory
+    # using cdr on ZLE widget. Somehow it does not work correctly if call `cdr`
+    # directly on ZLE widget. It changes current working directory to different
+    # one which is not selected by fuzzy finder. Why?
+    BUFFER="cdr ${idx}"
+    zle accept-line
+  else
+    zle redisplay
+  fi
+}
 # }}}
 
 # Login shell {{{
@@ -1164,6 +1193,8 @@ bind_key2fun '^X^A' __strip_head
 bind_key2fun '^X^M' __fuzzy_select_manual
 bind_key2fun '^[h' backward_kill_word_and_dir
 bind_key2fun '^X^E' __quit
+bind_key2fun '^J' __cdrf
+bind_key2fun '^X^J' __cdrf
 
 # Delete a forward char with a `delete` key.
 bindkey '^[[3~' delete-char
