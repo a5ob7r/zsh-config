@@ -13,16 +13,24 @@ if [[ -v ZPROF ]]; then
 fi
 # }}}
 
-# zinit module {{{
-# Zinit module to compile sourced files automatically
-# Need to build a module if wanna use it.
-#
-# $ zinit module build
-#
-if [[ -f ~/.zinit/bin/zmodules/Src/zdharma/zplugin.so ]]; then
-  module_path+=( ~/.zinit/bin/zmodules/Src )
-  zmodload zdharma/zplugin
+# zsh module {{{
+# `module_path` and `MODULE_PATH` in enrionment is ignored for security reason.
+# (See the `module_path` section in `ZSHPARAM(1)` for more detail.) So no
+# effect even if `export` it and need to add values to it at every shell
+# invocation.
+
+# Zinit module to compile sourced files, which contains plugins, automatically.
+# Build the module to use it by run `zinit module build`.
+if [[ -x ~/.zinit/bin/zmodules/Src/zdharma/zplugin.so ]]; then
+  module_path+=( ~/.zinit/bin/zmodules/Src(N/) )
 fi
+
+zmodload \
+  zdharma/zplugin \
+  zsh/complist \
+  zsh/datetime \
+  &>/dev/null \
+  ;
 # }}}
 
 # ZSHOPTIONS {{{
@@ -1108,9 +1116,6 @@ fi
 alias vloop='while [[ 1 ]] {}'
 alias vloop2='yes > /dev/null'
 
-# Current date and time.
-zmodload zsh/datetime
-
 alias datetime="strftime '%Y%m%d%H%M%S'"
 # Date only version of datetime.
 alias date2="strftime '%Y%m%d'"
@@ -1148,7 +1153,6 @@ zstyle ':completion:*' list-colors \
 # Key bindings {{{
 bindkey -e
 
-zmodload zsh/complist
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect 'k' vi-up-line-or-history
