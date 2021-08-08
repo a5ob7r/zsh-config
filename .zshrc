@@ -835,21 +835,6 @@ __fuzzy_select_manual () {
   return "$exit_code"
 }
 
-# Fixed version of backward-kill-word which is recognize also `/` as word
-# separators.
-# Global:
-#   WORDCHARS: See ZSHPARAM(1)
-# Arguments:
-#   None
-# Return:
-#   None
-#
-# NOTE: Maybe this should be global config.
-backward_kill_word_and_dir() {
-  local WORDCHARS="${WORDCHARS/\/}"
-  zle backward-kill-word
-}
-
 # Proxy to call `exit` from as ZLE.
 __quit () { exit }
 
@@ -945,6 +930,9 @@ if [[ -o LOGIN ]]; then
   export HISTFILE=~/.zsh_history
   export HISTSIZE=1100000
   export SAVEHIST=1000000
+
+  # Treat also slash(/) as word separater.
+  export WORDCHARS="${WORDCHARS/\//}"
 
   # spelling correction prompt
   export SPROMPT="zsh: correct: %F{red}%R%f -> %F{green}%r%f [No/Yes/Abort/Edit]? "
@@ -1191,7 +1179,6 @@ bind_key2fun '^R' __fuzzy_history_select
 bind_key2fun '^x^p' __fuzzy_executables_select
 bind_key2fun '^X^A' __strip_head
 bind_key2fun '^X^M' __fuzzy_select_manual
-bind_key2fun '^[h' backward_kill_word_and_dir
 bind_key2fun '^X^E' __quit
 bind_key2fun '^J' __cdrf
 bind_key2fun '^X^J' __cdrf
