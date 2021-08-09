@@ -317,12 +317,7 @@ join_path () {
 # NOTE: This can run shell function and builtin command because this is shell
 # function but not `xargs` which is standalone executable.
 xarg () {
-  # Close stdin file descriptor explicitly to suppress a error message from
-  # zinit. The error messaage is like this.
-  #
-  #   @zinit-scheduler:4: failed to close file descriptor 22: bad file descriptor
-  #
-  "$@" "$(<&0)" 0>&-
+  "$@" "$(read -d '' -e)"
 }
 
 __run-help-tmux-pane() {
@@ -445,7 +440,7 @@ ipinfo () {
 # Return:
 #   Wrapped text with arguments.
 wrap() {
-  echo -n "${1}$(<&0)${2}"
+  echo -n "${1}$(read -d '' -e)${2}"
 }
 
 # Template generator for sub command proxy.
@@ -544,7 +539,7 @@ docker-rmif () {
         --multi \
         --header-lines=1 \
     | while read; do echo "${${(z)REPLY}[3]}"; done \
-    | { images=($(<&0)) } \
+    | { images=( ${(f)"$(read -d '' -e)"} ) } \
     ;
 
   if [[ "${#images[@]}" != 0 ]]; then
@@ -560,7 +555,7 @@ docker-rmf () {
         --multi \
         --header-lines=1 \
     | while read; do echo "${${(z)REPLY}[1]}"; done \
-    | { containers=($(<&0)) } \
+    | { containers=( ${(f)"$(read -d '' -e)"} ) } \
     ;
 
   if [[ "${#containers[@]}" != 0 ]]; then
@@ -604,7 +599,7 @@ ghq-exist () {
   }
 
   local -a repos
-  ghq-find "$query" | { repos=($(<&0)) }
+  ghq-find "$query" | { repos=( ${(f)"$(read -d '' -e)"} ) }
 
   case "${#repos[@]}" in
     0 )
@@ -642,7 +637,7 @@ ghq-cd () {
   done
 
   local -a repos
-  ghq-find "$query" | { repos=($(<&0)) }
+  ghq-find "$query" | { repos=( ${(f)"$(read -d '' -e)"} ) }
 
   if [[ "${#repos[@]}" == 1 ]]; then
     # NOTE: `cd ''` means `cd .`.
@@ -653,8 +648,6 @@ ghq-cd () {
 }
 
 ghq-cdf () {
-  setopt LOCAL_OPTIONS PIPE_FAIL
-
   local repo
 
   # NOTE: Must split a selector step and cd one from single pipe line if no
@@ -666,15 +659,13 @@ ghq-cdf () {
         --tiebreak=end,length,index \
         --query="$*" \
         --select-1 \
-    | { repo="$(<&0)" }
-
-  local -ri exit_code="$?"
+    | { read -d '' repo }
 
   if [[ ${#repo} != 0 ]]; then
     builtin cd "$repo"
+  else
+    return 1
   fi
-
-  return "$exit_code"
 }
 
 ghq-update () {
