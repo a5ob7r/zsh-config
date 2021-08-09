@@ -527,6 +527,18 @@ xsource () {
 
   builtin source "$src"
 }
+
+prof () {
+  local -r viewer="${PAGER:-idp}"
+  ZPROF= zsh -i -c "zprof | ${viewer}"
+}
+
+# Identity mapping to use as a part of pipeline. This is a bare alternate of
+# `cat -` but pure zsh function.
+idp () {
+  # `read` with `-d ''` option always returns 1 as exit code.
+  read -d '' -e || true
+}
 # }}}
 
 # Custom subcommands {{{
@@ -1211,13 +1223,6 @@ generate_subcommand_wrapper ghq
 
 xsource ~/.zshrc.local
 xcompile ~/.zshrc
-# }}}
-
-# zprof {{{
-if has zprof; then
-  zprof | less
-  exit
-fi
 # }}}
 
 # vim: set foldmethod=marker :
