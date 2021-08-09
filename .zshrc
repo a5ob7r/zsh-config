@@ -539,6 +539,39 @@ idp () {
   # `read` with `-d ''` option always returns 1 as exit code.
   read -d '' -e || true
 }
+
+init_zinit () {
+  local -r src=~/.zinit/bin/zinit.zsh
+
+  if [[ ! -r $src ]]; then
+    warning "Not found '$src' and 'zinit' has not been installed yet so try to install it."
+
+    if ! check curl git sh; then
+      error 'Requirements are not installed. Try it again after install them.'
+      return 1
+    fi
+
+    curl -fsSL 'https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh' | sh
+  fi
+
+  xsource $src
+}
+
+# Check whether or not commands are found on command line.
+check () {
+  local -i exit_code=0
+
+  while (( $# )); do
+    if ! has $1; then
+      error "$0: Not found the command '$1'"
+      exit_code=1
+    fi
+
+    shift
+  done
+
+  return $exit_code
+}
 # }}}
 
 # Custom subcommands {{{
@@ -1197,9 +1230,7 @@ declare -A ZINIT
 ZINIT[COMPINIT_OPTS]=-C
 ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
 
-! [[ -d ~/.zinit ]] && curl -fsSL 'https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh' | sh
-
-xsource ~/.zinit/bin/zinit.zsh && zinit light-mode for \
+init_zinit && zinit light-mode for \
   wait lucid blockf \
     zsh-users/zsh-completions \
   wait lucid atinit'zicompinit; zicdreplay' \
