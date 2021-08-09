@@ -219,15 +219,15 @@ zshtimes() {
 # Measure zsh start up time and calculate mean time.
 zshtimes-stat() {
   local -ri n="$1"
+  local -F ave=0
 
   stdswap zshtimes "$n" \
-    | tee >(
-        local -F ave=0
-        while read; do
-          ave+="${${(z)REPLY}[7]}";
-        done
-        printf "\n  AVG: %f (s)\n" "$((ave / n))"
-      )
+    | while read; do
+        echo "$REPLY"
+        ave+="${${(z)REPLY}[7]}"
+      done
+
+  printf "\n  AVG: %f (s)\n" "$[ave / n]"
 }
 
 # Zcompile zsh user configures
