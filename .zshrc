@@ -1095,47 +1095,6 @@ if [[ -o LOGIN ]]; then
   # }}}
 
   # Functions {{{
-  # Default terminal name.
-  # Global:
-  #   None
-  # Arguments:
-  #   None
-  # Return:
-  #   Terninal name
-  __default_terminal() {
-    local -r TERMINALS=( \
-      'alacritty' \
-      'st' \
-      'urxvt' \
-      'xterm' \
-    )
-
-    for terminal in ${TERMINALS[@]}; do
-      has "$terminal" && { echo "$terminal"; return }
-    done
-  }
-
-  # Default browser name.
-  # Global:
-  #   None
-  # Arguments:
-  #   None
-  # Return:
-  #   Browser name
-  __default_browser() {
-    local -r BROWSERS=( \
-      'firefoxdeveloperedition' \
-      'firefox-developer-edition' \
-      'firefox' \
-      'google-chrome' \
-      'chromium' \
-    )
-
-    for browser in ${BROWSERS[@]}; do
-      has "$browser" && { echo "$browser"; return }
-    done
-  }
-
   __start_dropbox() {
     pgrep dropbox && return 1
     has dropbox-cli || return 1
@@ -1145,9 +1104,6 @@ if [[ -o LOGIN ]]; then
 
   # Per OS {{{
   if is_linux; then
-    export TERMINAL="$(__default_terminal)"
-    export BROWSER="$(__default_browser)"
-
     sshagent &>/dev/null
     runb __start_dropbox
   fi
