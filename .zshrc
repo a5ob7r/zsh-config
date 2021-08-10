@@ -712,6 +712,514 @@ Options:
     dropbox
   fi
 }
+
+# zhq {{{
+zhq () {
+  help () {
+    echo -n "\
+Description:
+  Pure zsh implementation of ghq as shell function, but supports only Git as
+  VCS. The biggest merit to implement this like this is to be able to use 'cd'
+  of shell in current shell process directly without extra process.
+
+  ghq's repository: https://github.com/x-motemen/ghq
+
+Usage:
+  zhq <subcommand> [<option>...] [<argument>...]
+
+Commands:
+  cd      Change directory to a repository.
+  create  Create new git repository.
+  dest    Convert query to destination path.
+  find    Alias of 'zhq list --full-path --exact'.
+  get     Clone remote repository to local.
+  list    Show all directories under zhq.
+  root    Show zhq root directory path.
+  update  Update repositories.
+
+Options:
+  -h, --help    Show this message.
+"
+  }
+
+  if ! (( $# )); then
+    help
+    return 0
+  fi
+
+  case $1 in
+    -h | --help )
+      help
+      return 0
+      ;;
+    cd )
+      shift
+      zhq-cd $@
+      ;;
+    create )
+      shift
+      zhq-create $@
+      ;;
+    dest )
+      shift
+      zhq-dest $@
+      ;;
+    find )
+      shift
+      zhq-find $@
+      ;;
+    get )
+      shift
+      zhq-get $@
+      ;;
+    list )
+      shift
+      zhq-list $@
+      ;;
+    root )
+      shift
+      zhq-root $@
+      ;;
+    update )
+      shift
+      zhq-update $@
+      ;;
+    * )
+      error "$0: Invalid subcommand or option '$1'"
+      return 1
+      ;;
+  esac
+}
+
+zhq-create () {
+  setopt LOCAL_OPTIONS PIPE_FAIL
+
+  help () {
+    echo -n "\
+Description:
+  Create new git repository in local.
+
+Usage:
+  zhq create [--allow-empty] <query>
+
+Options:
+  --allow-empty   Allow empty string as <query>.
+  -h, --help      Show this message.
+"
+  }
+
+  local query=
+  local -i allow_empty=0
+
+  while (( $# )); do
+    case $1 in
+      -h | --help )
+        help
+        return 0
+        ;;
+      --allow-empty )
+        allow_empty=1
+        shift
+        ;;
+      * )
+        query=$1
+        shift
+        ;;
+    esac
+  done
+
+  if [[ -z $query && $allow_empty == 0 ]]; then
+    error "$0: Need an not empty string as query. Use '--allow-empty' option to pass empty string."
+    return 1
+  fi
+
+  local q
+  zhq-dest --full-path $query | read q
+
+  if (( $? )); then
+    return 1
+  fi
+
+  command git init $q
+}
+
+zhq-root () {
+  setopt LOCAL_OPTIONS PIPE_FAIL
+
+  help () {
+    echo -n "\
+Description:
+  Show zhq root directory path.
+
+  The path is determined in accordance with the priorities below.
+
+  1. 'ZHQ_ROOT' environment variable if it is defined.
+  2. 'GHQ_ROOT' environment variable if it is defined.
+  3. 'zhq.root' in git config if it exists.
+  4. 'ghq.root' in git config if it exists.
+  5. '~/src', which is default value.
+
+Usage:
+  zhq root
+
+Options:
+  -h, --help  Show this message.
+"
+  }
+
+  while (( $# )); do
+    case $1 in
+      -h | --help )
+        help
+        return 0
+        ;;
+    esac
+  done
+
+  if is_defined ZHQ_ROOT; then
+    echo $ZHQ_ROOT
+    return 0
+  fi
+
+  if is_defined GHQ_ROOT; then
+    echo $GHQ_ROOT
+    return 0
+  fi
+
+  local root
+  { git config zhq.root || git config ghq.root } | read root
+
+  # Default value.
+  if (( $? )); then
+    echo ~/src
+    return 0
+  fi
+
+  # NOTE: Easiest way to expand tilda is `eval echo "~"` but it is bad
+  # practice due to the side effect.
+  case $root in
+    \~/* )
+      echo ${root/\~\//$HOME/}
+      ;;
+    \~ )
+      echo ~
+      ;;
+    * )
+      echo $root
+      ;;
+  esac
+}
+
+zhq-dest () {
+  help () {
+    echo -n "\
+Description:
+  Convert query to an appropriate destination path, which should be preceded by
+  zhq root.  If no some part to form appropriate path this completes it with
+  default value. The rule for completion is below.
+
+  - 'github.com' if no domain part.
+  - 'git config user.name' if no user part.
+  - no value for completion if no repository part so it must be provided as an
+    argument.
+
+  This is for internal API.
+
+Usage:
+  zhq dest <query>
+
+  <query> := [<domain>/][<user>/]<repository>
+           | <scheme>://<domain>/<path>[.git]
+           | git@<domain>:<user><repository>.git
+
+Options:
+  -p, --full-path   Output destination as full path.
+  -h, --help        Show this message.
+"
+  }
+
+  if ! (( $# )); then
+    error "$0: Need to pass one argument as <query>"
+    return 1
+  fi
+
+  local -i full_path=0
+
+  case $1 in
+    -h | --help )
+      help
+      return 0
+      ;;
+    -p | --full-path )
+      full_path=1
+      shift
+      ;;
+  esac
+
+  local q=$1
+
+  case $q in
+    *://*/*(|.git) )
+      q=${q#*://}
+      q=${q%.git}
+      ;;
+    git@*:*/*.git )
+      q=${q#git\@}
+      q=${q%.git}
+      q=${q/://}
+      ;;
+    */*/* )
+      # Valid form.
+      ;;
+    */* )
+      local -r domain='github.com'
+      q=$domain/$q
+      ;;
+    * )
+      local -r domain='github.com'
+      local user
+      command git config user.name | read user
+      q=$domain/$user/$q
+      ;;
+  esac
+
+  if (( full_path )); then
+    local root
+    zhq-root | read root
+    echo $root/$q
+  else
+    echo $q
+  fi
+}
+
+zhq-get () {
+  help () {
+    echo -n "\
+Descriptions:
+  Clone remote git repository to local.
+
+Usage:
+  zhq get <query>
+
+  This command assumes that the url indicate remote git repository, is similar
+  to 'git clone <url>'.
+
+Options:
+  -h, --help  Show this message.
+"
+  }
+
+  case $1 in
+    -h | --help )
+      help
+      return 0
+      ;;
+  esac
+
+  local -r query=$1
+  local q
+  zhq-dest --full-path $query | read q
+
+  if [[ -z $q ]]; then
+    error "$0: Invalid query '$query'"
+    return 1
+  fi
+
+  git clone $query $q
+}
+
+zhq-list () {
+  setopt LOCAL_OPTIONS NO_MARK_DIRS
+
+  local -i exact=0
+  local -i full_path=0
+  local query=
+
+  help () {
+    echo -n "\
+Show all git repositries under zhq control
+
+Usage:
+  zhq list [-e] [-p] [<query>]
+
+Options:
+  -e, --exact       Show repositories match query exactly.
+  -p, --full-path   Show repository path as full path.
+  -h, --help        Show this message.
+"
+  }
+
+  while (( $# )); do
+    case $1 in
+      -h | --help )
+        help
+        return 0
+        ;;
+      -e | --exact )
+        exact=1
+        shift
+        ;;
+      -p | --full-path )
+        full_path=1
+        shift
+        ;;
+      * )
+        query=$1
+        shift
+        ;;
+    esac
+  done
+
+  local root
+  zhq-root | read root
+
+  validate () {
+    if [[ -z $query ]]; then
+      return 0
+    fi
+
+    case ${base/$root\/} in
+      $query | */$query )
+        return 0
+        ;;
+      *$query* )
+        return $exact
+        ;;
+      * )
+        return 1
+        ;;
+    esac
+  }
+
+  f () {
+    setopt LOCAL_OPTIONS NO_MARK_DIRS
+
+    local base=$1
+
+    if [[ -d $base/.git ]]; then
+      if ! validate; then
+        return 0
+      fi
+
+      if (( full_path )); then
+        echo $base
+      else
+        echo ${base/$root\/}
+      fi
+
+      return 0
+    fi
+
+    for p in $base/(|.)*(N/); do
+      f $p
+    done
+  }
+
+  f $root
+}
+
+zhq-find () {
+  zhq-list --full-path --exact $@
+}
+
+zhq-cd () {
+  help () {
+    echo -n "\
+Description:
+  Change current directory to a repository which is under zhq control. This
+  command fails if it can not find unique repository from query.
+
+Usage:
+  zhq cd [-q] <query>
+
+Options:
+  -q          Change directory quietly. This means that invokes 'cd -q' inside.
+              It does not call hook function such as chpwd and functions in
+              chpwd_functions.
+  -h, --help  Show this message.
+"
+  }
+
+  local query=
+  local -a args=()
+
+  while (( $# )); do
+    case $1 in
+      -h | --help )
+        help
+        return 0
+        ;;
+      -q )
+        args+=(-q)
+        shift
+        ;;
+      * )
+        query=$1
+        shift
+        ;;
+    esac
+  done
+
+  local -a repos
+  repos=( ${(f)"$(zhq-find $query)"} )
+
+  if (( ${#repos[@]} == 1 )); then
+    # NOTE: `cd ''` means `cd .`.
+    builtin cd $args[@] $repos[1]
+  else
+    return 1
+  fi
+}
+
+zhq-update () {
+  local -a queries=()
+  local -i all=0
+
+  help () {
+    echo -n "\
+Description:
+  Update ('fetch' in fact) all git repositories which match each queries.
+
+Usage:
+  zhq update [-a] [<query>...]
+
+Options:
+  -a, --all     Update all repositories under zhq control.
+  -h, --help    Show this message.
+"
+  }
+
+  while (( $# )); do
+    case $1 in
+      -a | --all )
+        all=1
+        shift
+        ;;
+      -h | --help )
+        help
+        return
+        ;;
+      * )
+        queries+=($1)
+        shift
+        ;;
+    esac
+  done
+
+  if (( all )); then
+    queries=( ${(f)"$(zhq-list)"} )
+  fi
+
+  for query in $queries[@]; (
+    if zhq-cd -q $query; then
+      echo "  Update: $query"
+      command git remote update
+    else
+      error "Not found a unique repository in local to match '$query'"
+    fi
+  )
+}
+# }}}
 # }}}
 
 # Custom subcommands {{{
