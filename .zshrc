@@ -1415,22 +1415,23 @@ Options:
 __fuzzy_history_select() {
   setopt LOCAL_OPTIONS PIPE_FAIL
 
+  local -i idx
+
   history -r 1 \
     | fuzzyfinder \
         --no-multi \
         --nth=2..,.. \
         --tiebreak=index \
         --query="$LBUFFER" \
-    | read -Ee \
-    | read -d ' ' num \
+    | read -d ' ' idx \
     ;
 
-  local -ri exit_code="$?"
+  local -ri exit_code=$?
 
-  [[ -n "$num" ]] && zle vi-fetch-history -n "$num"
+  [[ -n $idx ]] && zle vi-fetch-history -n $idx
   zle redisplay
 
-  return "$exit_code"
+  return $exit_code
 }
 
 # All executables fuzzy selector.
