@@ -1116,12 +1116,10 @@ if [[ -o LOGIN ]]; then
   # {{{ other
   export LESS='-ij10FMRX'
 
-  if has fzf; then
-    export FZF_DEFAULT_OPTS='--reverse --height=40%'
+  export FZF_DEFAULT_OPTS='--reverse --height=40%'
 
-    if has rg; then
-      export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
-    fi
+  if has rg; then
+    export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
   fi
 
   if has go; then
@@ -1129,13 +1127,9 @@ if [[ -o LOGIN ]]; then
     add2path "${GOPATH}/bin"
   fi
 
-  if has pipenv; then
-    export PIPENV_VENV_IN_PROJECT=1
-  fi
+  export PIPENV_VENV_IN_PROJECT=1
 
-  if has rustc; then
-    export RUSTFLAGS='-C target-cpu=native'
-  fi
+  export RUSTFLAGS='-C target-cpu=native'
 
   export path
 
