@@ -1117,9 +1117,11 @@ if [[ -o LOGIN ]]; then
   export LESS='-ij10FMRX'
 
   export FZF_DEFAULT_OPTS='--reverse --height=40%'
+  export SKIM_DEFAULT_OPTIONS=$FZF_DEFAULT_OPTS
 
   if has rg; then
     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
+    export SKIM_DEFAULT_COMMAND=$FZF_DEFAULT_COMMAND
   fi
 
   if has go; then
