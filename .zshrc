@@ -97,25 +97,33 @@ is_macos () {
 }
 
 warning () {
-  local prefix='' suffix=''
+  local prefix= suffix=
 
   if [[ -t 2 ]]; then
     prefix='\033[33m'
     suffix='\033[0m'
   fi
 
-  echo "${prefix}${@}${suffix}" >&2
+  if (( $# )); then
+    echo $*
+  else
+    idp
+  fi | wrap $prefix $suffix >&2
 }
 
 error () {
-  local prefix='' suffix=''
+  local prefix= suffix=
 
   if [[ -t 2 ]]; then
     prefix='\033[31m'
     suffix='\033[0m'
   fi
 
-  echo "${prefix}${@}${suffix}" >&2
+  if (( $# )); then
+    echo $*
+  else
+    idp
+  fi | wrap $prefix $suffix >&2
 }
 
 # Add directory path to a environment variable "path", which is array form of
@@ -440,7 +448,7 @@ ipinfo () {
 # Return:
 #   Wrapped text with arguments.
 wrap() {
-  echo -n "${1}$(read -d '' -e)${2}"
+  echo "${1}$(read -d '' -e)${2}"
 }
 
 # Template generator for sub command proxy.
@@ -580,12 +588,13 @@ is_defined () {
 
 sshagent () {
   if ! is_linux; then
-    warning "\
+    warning <<EOF
 This assumes to be called on Linux. Override 'OSTYPE' environment variable to
 'linux*' and call this if wanna call this forcely.
 
   $ OSTYPE=linux sshagent
-"
+
+EOF
     return 1
   fi
 
