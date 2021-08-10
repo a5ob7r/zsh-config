@@ -572,6 +572,89 @@ check () {
 
   return $exit_code
 }
+
+# Whether or not the variable is defined.
+is_defined () {
+  (( ${(P)+${1}} ))
+}
+
+sshagent () {
+  if ! is_linux; then
+    warning "\
+This assumes to be called on Linux. Override 'OSTYPE' environment variable to
+'linux*' and call this if wanna call this forcely.
+
+  $ OSTYPE=linux sshagent
+"
+    return 1
+  fi
+
+  if ! check ssh-agent; then
+    return 1
+  fi
+
+  help () {
+    echo -n "\
+Description:
+  Simple utility for ssh-agent. The main purpose of this is to run ssh-agent
+  with a guard on Linux.
+
+Usage:
+  sshagent [-f] [-k] [-t <seconds>]
+
+Options:
+  -f, --force               Force run ssh-agent even if one has been already run.
+  -k, --kill                Kill an ssh-agent specified by 'SSH_AGENT_PID'.
+  -t, --lifetime=seconds    Specify a lifetime (seconds) of key id for ssh-agent.
+  -h, --help                Show this message.
+"
+  }
+
+  local -i force=0
+  local -i kill=0
+  # 1h = 60s * 60m
+  local -i lifetime=3600
+
+  while (( $# )); do
+    case $1 in
+      -h | --help )
+        help
+        return 0
+        ;;
+      -k | --kill )
+        kill=1
+        shift
+        ;;
+      -t )
+        lifetime=$2
+        shift 2
+        ;;
+      --lifetime=* )
+        lifetime=${1#--lifetime=}
+        shift
+        ;;
+      -f | --force )
+        force=1
+        shift
+        ;;
+      * )
+        error "$0: Invalid option '$1'"
+        return 1
+    esac
+  done
+
+  if (( kill )); then
+    eval "$(ssh-agent -k)"
+    return
+  fi
+
+  if is_defined SSH_AUTH_SOCK && is_defined SSH_AGENT_PID && ! (( force )); then
+    warning 'A ssh-agent process for this shell has already running.'
+    return 1
+  fi
+
+  eval "$(ssh-agent -t $lifetime)"
+}
 # }}}
 
 # Custom subcommands {{{
@@ -1003,30 +1086,6 @@ if [[ -o LOGIN ]]; then
   # }}}
 
   # Functions {{{
-  # Enable ssh-agent wisely. Cache ssh-agent output and load it as necessary.
-  # This is to prevent duplicate ssh-agent start.
-  # Global:
-  #   None
-  # Arguments:
-  #   None
-  # Return:
-  #   None
-  __enable_ssh_agent() {
-    export -i SSH_KEY_LIFE_TIME_SEC=3600
-    export SSH_AGENT_ENV=~/.ssh/ssh-agent.env
-
-    # When no existing ssh-agent process
-    if ! pgrep -x -u "$USER" ssh-agent &> /dev/null; then
-      # Start ssh-agent process and cache the output
-      ssh-agent -t "$SSH_KEY_LIFE_TIME_SEC" > "$SSH_AGENT_ENV"
-    fi
-
-    # When not loading ssh-agent process information
-    if [[ -f "$SSH_AGENT_ENV" && ! -v SSH_AUTH_SOCK && ! -v SSH_AGENT_PID ]]; then
-      source "$SSH_AGENT_ENV" &> /dev/null
-    fi
-  }
-
   # Default terminal name.
   # Global:
   #   None
@@ -1080,7 +1139,7 @@ if [[ -o LOGIN ]]; then
     export TERMINAL="$(__default_terminal)"
     export BROWSER="$(__default_browser)"
 
-    __enable_ssh_agent
+    sshagent &>/dev/null
     runb __start_dropbox
   fi
   # }}}
