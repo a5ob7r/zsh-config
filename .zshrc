@@ -1195,7 +1195,9 @@ alias fzfd='FZF_DEFAULT_COMMAND="find . -type d" fzf'
 alias m=man
 
 alias c='ghq cdf'
-alias cdh='cd ~'
+alias home='builtin cd'
+alias h=home
+alias cdh=home
 alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
