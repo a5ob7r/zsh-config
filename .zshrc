@@ -1287,16 +1287,19 @@ Options:
 docker-rmif () {
   local -a images
 
+  # NOTE: Use `(ps: :)` parameter expantion flag instead of `(z)` to split
+  # field correctly. Can not split it correctly if images named as `<none>` are
+  # exist.
   docker images --all \
     | fuzzyfinder \
         --multi \
         --header-lines=1 \
-    | while read; do echo "${${(z)REPLY}[3]}"; done \
+    | while read; do echo ${${(ps: :)REPLY}[3]}; done \
     | { images=( ${(f)"$(read -d '' -e)"} ) } \
     ;
 
-  if [[ "${#images[@]}" != 0 ]]; then
-    docker rmi "$@" "${images[@]}"
+  if (( $#images[@] )); then
+    docker rmi $@ $images[@]
   fi
 }
 
