@@ -277,26 +277,82 @@ zshcompiles() {
   for zc in "${ZSH_CONFIGS[@]}"; do zsh_compile "$zc"; done
 }
 
-# Proxy for fuzzy finder. Override this function or unset this and add a fuzzy
-# finder executable which the name is `fuzzyfinder` to a directory on `PATH` if
-# want to use another fuzzy finder.
-fuzzyfinder () {
-  local -ra ffs=( \
+fuzzyfinders () {
+  help () {
+    echo -n "\
+Descriptions:
+  List fuzzy finders expected.
+
+Usage:
+  fuzzyfinders [--installed]
+
+Options:
+  --is-installed  Whether or not fuzzy finder is installed at least one.
+  --installed     Installed fuzzy finders in local.
+  -h, --help      Show this message and exit.
+"
+  }
+
+  local -i is_installed
+  local -i installed
+
+  while (( $# )) {
+    case $1 in
+      -h | --help )
+        help
+        return 0
+        ;;
+      --is-installed )
+        is_installed=1
+        shift
+        ;;
+      --installed )
+        installed=1
+        shift
+        ;;
+      * )
+        error "$0: Invalid option '$1'"
+        return 1
+    esac
+  }
+
+  local -r ffs=(
     sk-tmux \
     sk \
     fzf-tmux \
     fzf \
   )
 
-  for ff in "${ffs[@]}"; do
-    if has "$ff"; then
-      "$ff" "$@"
-      return 0
-    fi
-  done
+  if (( is_installed )); then
+    for ff in $ffs[@]; do
+      if has $ff; then
+        return 0
+      fi
+    done
+    return 1
+  elif (( installed )); then
+    for ff in $ffs[@]; do
+      if has $ff; then
+        echo $ff
+      fi
+    done
+  else
+    echo ${(F)ffs[@]}
+  fi
+}
 
-  error "Not found expected fuzzy finders: ${ffs[@]}"
-  return 1
+# Proxy for fuzzy finder. Override this function or unset this and add a fuzzy
+# finder executable which the name is `fuzzyfinder` to a directory on `PATH` if
+# want to use another fuzzy finder.
+fuzzyfinder () {
+  local -ra ffs=( ${(f)"$(fuzzyfinders --installed)"} )
+
+  if (( $#ffs )); then
+    $ffs[1] $@
+  else
+    error "Not found expected fuzzy finders: ${(f)$(fuzzyfinders)}"
+    return 1
+  fi
 }
 
 # Join arguments as filesystem path.
@@ -1783,11 +1839,13 @@ bind_key2fun '^X^A' __strip_head
 bind_key2fun '^X^E' __quit
 
 # Widgets using fuzzy finder.
-bind_key2fun '^R' __fuzzy_history_select
-bind_key2fun '^x^p' __fuzzy_executables_select
-bind_key2fun '^X^M' __fuzzy_select_manual
-bind_key2fun '^J' __cdrf
-bind_key2fun '^X^J' __cdrf
+if fuzzyfinders --is-installed; then
+  bind_key2fun '^R' __fuzzy_history_select
+  bind_key2fun '^x^p' __fuzzy_executables_select
+  bind_key2fun '^X^M' __fuzzy_select_manual
+  bind_key2fun '^J' __cdrf
+  bind_key2fun '^X^J' __cdrf
+fi
 
 # Delete a forward char with a `delete` key.
 bindkey '^[[3~' delete-char
