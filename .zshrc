@@ -1778,11 +1778,14 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 
+# Pure zsh widgets.
+bind_key2fun '^X^A' __strip_head
+bind_key2fun '^X^E' __quit
+
+# Widgets using fuzzy finder.
 bind_key2fun '^R' __fuzzy_history_select
 bind_key2fun '^x^p' __fuzzy_executables_select
-bind_key2fun '^X^A' __strip_head
 bind_key2fun '^X^M' __fuzzy_select_manual
-bind_key2fun '^X^E' __quit
 bind_key2fun '^J' __cdrf
 bind_key2fun '^X^J' __cdrf
 
