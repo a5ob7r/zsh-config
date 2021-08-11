@@ -1864,9 +1864,10 @@ bindkey '^D' delete-char
 # }}}
 
 # Plugins {{{
-declare -A ZINIT
-ZINIT[COMPINIT_OPTS]=-C
-ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
+typeset -A ZINIT=(
+  [COMPINIT_OPTS]=-C
+  [OPTIMIZE_OUT_DISK_ACCESSES]=1
+)
 
 init_zinit && zinit light-mode for \
   wait lucid blockf \
