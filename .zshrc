@@ -1473,12 +1473,14 @@ __fuzzy_history_select() {
 
   local -i idx
 
+  # NOTE: First `read` is needed to strip head spaces.
   history -r 1 \
     | fuzzyfinder \
         --no-multi \
         --nth=2..,.. \
         --tiebreak=index \
         --query="$LBUFFER" \
+    | read -e \
     | read -d ' ' idx \
     ;
 
