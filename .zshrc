@@ -1683,6 +1683,9 @@ if [[ -o LOGIN ]]; then
   # Treat also slash(/) as word separater.
   export WORDCHARS="${WORDCHARS/\//}"
 
+  # Sub prompt.
+  export RPROMPT='%1(j.%F{yellow}%B%j%bj%f .)%F{cyan}%B%L%bl%f %0(?.%F{magenta}.%F{red})%B%D{%H:%M:%S} %D%b%f'
+
   # spelling correction prompt
   export SPROMPT="zsh: correct: %F{red}%R%f -> %F{green}%r%f [No/Yes/Abort/Edit]? "
   # }}}
