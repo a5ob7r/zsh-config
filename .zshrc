@@ -448,40 +448,17 @@ bind_key2fun () {
   bindkey "$keys" "$fun"
 }
 
-manual_description2query() {
-  setopt localoptions extended_glob
-
-  local -r query="${1/ ##-*/}"
-
-  # Valid patterns
-  # - Linux
-  #   - '1' 'cmd'
-  #   - 'cmd(1)'
-  #   - 'cmd.1'
-  # - macOS
-  #   - '1' 'cmd'
-  case "$query" in
-    *,* )
-      # This format may cause on macOS.
-      # i.g. command(1), commandor(1)
-      manual_description2query "${query/,*/}"
-      ;;
-    *\ \(* )
-      # i.g. command (1)
-      # NOTE: Assume `queries`'s length is 2 and first element is command name,
-      # second element is section number.
-      local -ra queries=(${(@s: :)query})
-      echo "${queries[2]//[()]/} ${queries[1]}"
-      ;;
-    *\(* )
-      # This format may cause on macOS.
-      # i.g. command(1)
-      manual_description2query "${query/\(/ (}"
-      ;;
-    * )
-      echo "$query"
-      ;;
-  esac
+# Convert manual description to arguments of `man`.
+man2args() {
+  # Expected input form.
+  #
+  # - "command (1)"
+  # - "command(1)"
+  # - "command(1), cmd(1)"
+  #
+  # NOTE: These last two formats may cause on macOS.
+  local -ra arr=(${(z)${1//[()]/ }})
+  echo $arr[2] $arr[1]
 }
 
 # Show GitHub contributions, which is called `kusa` by Japanese.
@@ -1560,13 +1537,13 @@ __fuzzy_select_manual () {
         --no-multi \
         --tiebreak=begin,length \
         --query="$LBUFFER" \
-        --preview="$(which manual_description2query); command man \$(manual_description2query {})" \
+        --preview="$(which man2args); command man \$(man2args {})" \
     | read -r query \
     ;
 
   local -i exit_code="$?"
 
-  local -ra queries=($(manual_description2query "$query"))
+  local -ra queries=(${(z)"$(man2args $query)"})
   case "${#queries[@]}" in
     2 )
       command man "${queries[@]}"
