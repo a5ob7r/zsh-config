@@ -573,12 +573,16 @@ cdrf () {
   return "$exit_code"
 }
 
-# Compile file if only source file is newer than .zwc (compiled file)
+# Compile file if only source file is newer than .zwc (compiled file).
+# Lightweight version of zrecompile.
 xcompile () {
-  local -r src="$1"
-  local -r zwc="${src}.zwc"
+  local -r src=${1%.zwc}
+  local -r zwc=$src.zwc
 
-  [[ "$src" -ot "$zwc" ]] || zcompile "$src"
+  # Compile outdated zwc.
+  if [[ $src -nt $zwc ]]; then
+    zcompile $src
+  fi
 }
 
 # Source an external file with useful extra.
