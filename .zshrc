@@ -1455,20 +1455,17 @@ Options:
 __fuzzy_history_select() {
   setopt LOCAL_OPTIONS PIPE_FAIL
 
-  local -i idx
-
-  # NOTE: First `read` is needed to strip head spaces.
   history -r 1 \
     | fuzzyfinder \
         --no-multi \
         --nth=2..,.. \
         --tiebreak=index \
-        --query="$LBUFFER" \
-    | read -e \
-    | read -d ' ' idx \
+        --query=$BUFFER \
+    | read -A \
     ;
 
   local -ri exit_code=$?
+  local -ri idx=$reply[1]
 
   [[ -n $idx ]] && zle vi-fetch-history -n $idx
   zle redisplay
