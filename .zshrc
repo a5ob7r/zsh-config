@@ -1531,33 +1531,33 @@ __strip_head () {
 __fuzzy_select_manual () {
   setopt LOCAL_OPTIONS PIPE_FAIL
 
+  local entry
+
   apropos . \
     | fuzzyfinder \
         --no-multi \
         --tiebreak=begin,length \
-        --query="$LBUFFER" \
+        --query=$BUFFER \
         --preview="$(which man2args); command man \$(man2args {})" \
-    | read -r query \
+    | read -r entry \
     ;
 
-  local -i exit_code="$?"
+  local -i exit_code=$?
 
-  local -ra queries=(${(z)"$(man2args $query)"})
-  case "${#queries[@]}" in
+  local -a queries
+  man2args $entry | read -rA queries
+
+  case ${#queries[@]} in
     2 )
-      command man "${queries[@]}"
-      ;;
-    0 )
-      exit_code=2
+      command man $queries[@]
       ;;
     * )
-      error "Expected values are that first element is section number, second element is command name. But actual values are '${queries[@]}'"
-      exit_code=2
+      exit_code=1
       ;;
   esac
 
   zle redisplay
-  return "$exit_code"
+  return $exit_code
 }
 
 # Proxy to call `exit` from as ZLE.
