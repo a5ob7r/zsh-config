@@ -9,16 +9,24 @@
 # prefix must be parent function name and the name format is `prefix::name`
 # like namespace of Ruby. This is for fake namespace.
 
+# Functions {{{
+# Whether or not the variable is defined.
+#
+# NOTE: An alternate way is to use `-v` option of `[[` but it is introduced
+# since 5.3. So maybe it can not use on some old version's zsh. For example zsh
+# 5.1 on Ubuntu 16.04.
+is_defined () {
+  (( ${(P)+${1}} ))
+}
+# }}}
+
 # zprof {{{
 # Profiling of zsh startup process using zprof. Define an environment variable
 # ZPROF if want to profile.
 #
 # $ ZPROF= zsh
 #
-# NOTE: Wanna use `-v` option of `[[` to check whether or not `ZPROF` is
-# declared but it is introduced since 5.3. So maybe it can not use on some old
-# version's zsh. For example zsh 5.1 on Ubuntu 16.04.
-if (( ${+ZPROF} )); then
+if is_defined ZPROF; then
   zmodload zsh/zprof && zprof
 fi
 # }}}
@@ -623,11 +631,6 @@ check () {
   done
 
   return $exit_code
-}
-
-# Whether or not the variable is defined.
-is_defined () {
-  (( ${(P)+${1}} ))
 }
 
 sshagent () {
