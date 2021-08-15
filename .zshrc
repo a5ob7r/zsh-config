@@ -1570,27 +1570,24 @@ __quit () { exit }
 
 # Interactive cdr using fuzzy finder as ZLE widget.
 __cdrf () {
-  setopt LOCAL_OPTIONS PIPE_FAIL
-
   local -i idx
 
   cdr -l \
     | fuzzyfinder \
-        --nth='2..' \
+        --nth=2.. \
         --no-multi \
-        --tiebreak='end,index' \
-        --query="$BUFFER" \
+        --tiebreak=end,index \
+        --query=$BUFFER \
     | read -r -d ' ' idx \
     ;
 
-  local -ri exit_code="$?"
-
-  if [[ "$exit_code" == 0 && -n "$idx" ]]; then
+  if (( idx )) ; then
     # NOTE: Need to rewrite buffer and to use `accept-line` to change directory
     # using cdr on ZLE widget. Somehow it does not work correctly if call `cdr`
     # directly on ZLE widget. It changes current working directory to different
     # one which is not selected by fuzzy finder. Why?
-    BUFFER="cdr ${idx}"
+    BUFFER="cdr $idx"
+    zle redisplay
     zle accept-line
   else
     zle redisplay
