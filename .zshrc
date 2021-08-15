@@ -8,6 +8,11 @@
 # Add prefix to each functions which are defined (nested) in functions. The
 # prefix must be parent function name and the name format is `prefix::name`
 # like namespace of Ruby. This is for fake namespace.
+#
+# ## Indirect function prefix
+#
+# Add `__` as prefix to name of each functions which are for invocation by not
+# user. The most frequent situation is ZLE widget.
 
 # Functions {{{
 # Whether or not the variable is defined.
