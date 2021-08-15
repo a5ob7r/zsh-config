@@ -410,8 +410,8 @@ __run-help-tmux-pane() {
 }
 
 # Whether or not current working directory is git root.
-__is_at_git_root () {
-  [[ "$(git rev-parse --is-inside-work-tree 2> /dev/null)" == true ]]
+is_inside_git_repository () {
+  command git rev-parse --is-inside-work-tree &>/dev/null
 }
 
 # Apply Oceanic-Nect color scheme for Linux Console.
@@ -540,7 +540,7 @@ __chpwd_ls () {
 
 # Proxy function for git status on chpwd.
 __chpwd_git_status () {
-  if __is_at_git_root; then
+  if is_inside_git_repository; then
     echo
     git status --short --branch
   fi
