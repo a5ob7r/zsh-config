@@ -917,16 +917,20 @@ Options:
         zhq-root::help
         return 0
         ;;
+      * )
+        error "$0: Invalid option '$1'"
+        return 1
+        ;;
     esac
   done
 
   if is_defined ZHQ_ROOT; then
-    echo $ZHQ_ROOT
+    echo ${~ZHQ_ROOT}
     return 0
   fi
 
   if is_defined GHQ_ROOT; then
-    echo $GHQ_ROOT
+    echo ${~GHQ_ROOT}
     return 0
   fi
 
@@ -939,19 +943,7 @@ Options:
     return 0
   fi
 
-  # NOTE: Easiest way to expand tilda is `eval echo "~"` but it is bad
-  # practice due to the side effect.
-  case $root in
-    \~/* )
-      echo ${root/\~\//$HOME/}
-      ;;
-    \~ )
-      echo ~
-      ;;
-    * )
-      echo $root
-      ;;
-  esac
+  echo ${~root}
 }
 
 zhq-dest () {
