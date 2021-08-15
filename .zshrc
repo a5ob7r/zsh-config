@@ -1827,6 +1827,9 @@ if fuzzyfinders --is-installed; then
   bind_key2fun '^X^M' __fuzzy_select_manual
   bind_key2fun '^J' __cdrf
   bind_key2fun '^X^J' __cdrf
+else
+  bindkey '^R' history-incremental-pattern-search-backward
+  bindkey '^S' history-incremental-pattern-search-forward
 fi
 
 # Delete a forward char with a `delete` key.
