@@ -1,6 +1,13 @@
 #
 # ~/.zshrc
 #
+# # Coding Style
+#
+# ## Nested function prefix
+#
+# Add prefix to each functions which are defined (nested) in functions. The
+# prefix must be parent function name and the name format is `prefix::name`
+# like namespace of Ruby. This is for fake namespace.
 
 # zprof {{{
 # Profiling of zsh startup process using zprof. Define an environment variable
@@ -278,7 +285,7 @@ zshcompiles() {
 }
 
 fuzzyfinders () {
-  help () {
+  fuzzyfinders::help () {
     echo -n "\
 Descriptions:
   List fuzzy finders expected.
@@ -299,7 +306,7 @@ Options:
   while (( $# )) {
     case $1 in
       -h | --help )
-        help
+        fuzzyfinders::help
         return 0
         ;;
       --is-installed )
@@ -639,7 +646,7 @@ EOF
     return 1
   fi
 
-  help () {
+  sshagent::help () {
     echo -n "\
 Description:
   Simple utility for ssh-agent. The main purpose of this is to run ssh-agent
@@ -664,7 +671,7 @@ Options:
   while (( $# )); do
     case $1 in
       -h | --help )
-        help
+        sshagent::help
         return 0
         ;;
       -k | --kill )
@@ -704,7 +711,7 @@ Options:
 
 # NOTE: Optional. Call it on local config if wanna start dropbox.
 start_dropbox () {
-  help () {
+  start_dropbox::help () {
     echo -n "\
 Description:
   Simple utility to run dropbox on Linux.
@@ -719,7 +726,7 @@ Options:
 
   case $1 in
     -h | --help )
-      help
+      start_dropbox::help
       return 0
       ;;
   esac
@@ -752,7 +759,7 @@ Options:
 
 # zhq {{{
 zhq () {
-  help () {
+  zhq::help () {
     echo -n "\
 Description:
   Pure zsh implementation of ghq as shell function, but supports only Git as
@@ -780,13 +787,13 @@ Options:
   }
 
   if ! (( $# )); then
-    help
+    zhq::help
     return 0
   fi
 
   case $1 in
     -h | --help )
-      help
+      zhq::help
       return 0
       ;;
     cd )
@@ -831,7 +838,7 @@ Options:
 zhq-create () {
   setopt LOCAL_OPTIONS PIPE_FAIL
 
-  help () {
+  zhq-create::help () {
     echo -n "\
 Description:
   Create new git repository in local.
@@ -851,7 +858,7 @@ Options:
   while (( $# )); do
     case $1 in
       -h | --help )
-        help
+        zhq-create::help
         return 0
         ;;
       --allow-empty )
@@ -883,7 +890,7 @@ Options:
 zhq-root () {
   setopt LOCAL_OPTIONS PIPE_FAIL
 
-  help () {
+  zhq-root::help () {
     echo -n "\
 Description:
   Show zhq root directory path.
@@ -907,7 +914,7 @@ Options:
   while (( $# )); do
     case $1 in
       -h | --help )
-        help
+        zhq-root::help
         return 0
         ;;
     esac
@@ -948,7 +955,7 @@ Options:
 }
 
 zhq-dest () {
-  help () {
+  zhq-dest::help () {
     echo -n "\
 Description:
   Convert query to an appropriate destination path, which should be preceded by
@@ -984,7 +991,7 @@ Options:
 
   case $1 in
     -h | --help )
-      help
+      zhq-dest::help
       return 0
       ;;
     -p | --full-path )
@@ -1030,7 +1037,7 @@ Options:
 }
 
 zhq-get () {
-  help () {
+  zhq-get::help () {
     echo -n "\
 Descriptions:
   Clone remote git repository to local.
@@ -1048,7 +1055,7 @@ Options:
 
   case $1 in
     -h | --help )
-      help
+      zhq-get::help
       return 0
       ;;
   esac
@@ -1072,7 +1079,7 @@ zhq-list () {
   local -i full_path=0
   local query=
 
-  help () {
+  zhq-list::help () {
     echo -n "\
 Show all git repositries under zhq control
 
@@ -1089,7 +1096,7 @@ Options:
   while (( $# )); do
     case $1 in
       -h | --help )
-        help
+        zhq-list::help
         return 0
         ;;
       -e | --exact )
@@ -1110,7 +1117,7 @@ Options:
   local root
   zhq-root | read root
 
-  validate () {
+  zhq-list::validate () {
     if [[ -z $query ]]; then
       return 0
     fi
@@ -1128,13 +1135,13 @@ Options:
     esac
   }
 
-  f () {
+  zhq-list::f () {
     setopt LOCAL_OPTIONS NO_MARK_DIRS
 
     local base=$1
 
     if [[ -d $base/.git ]]; then
-      if ! validate; then
+      if ! zhq-list::validate; then
         return 0
       fi
 
@@ -1148,11 +1155,11 @@ Options:
     fi
 
     for p in $base/(|.)*(N/); do
-      f $p
+      zhq-list::f $p
     done
   }
 
-  f $root
+  zhq-list::f $root
 }
 
 zhq-find () {
@@ -1160,7 +1167,7 @@ zhq-find () {
 }
 
 zhq-cd () {
-  help () {
+  zhq-cd::help () {
     echo -n "\
 Description:
   Change current directory to a repository which is under zhq control. This
@@ -1183,7 +1190,7 @@ Options:
   while (( $# )); do
     case $1 in
       -h | --help )
-        help
+        zhq-cd::help
         return 0
         ;;
       -q )
@@ -1212,7 +1219,7 @@ zhq-update () {
   local -a queries=()
   local -i all=0
 
-  help () {
+  zhq-update::help () {
     echo -n "\
 Description:
   Update ('fetch' in fact) all git repositories which match each queries.
@@ -1233,7 +1240,7 @@ Options:
         shift
         ;;
       -h | --help )
-        help
+        zhq-update::help
         return
         ;;
       * )
@@ -1405,7 +1412,7 @@ ghq-update () {
   local -a queries=()
   local -i all=0
 
-  help () {
+  ghq-update::help () {
     echo -n "\
 Update ('fetch' in fact) all git repositories which match each queries.
 
@@ -1425,7 +1432,7 @@ Options:
         shift
         ;;
       -h | --help )
-        help
+        ghq-update::help
         return
         ;;
       * )
