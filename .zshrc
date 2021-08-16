@@ -519,7 +519,7 @@ ipinfo () {
 # Return:
 #   Wrapped text with arguments.
 wrap() {
-  echo "${1}$(read -d '' -e)${2}"
+  echo "${1}$(idp)${2}"
 }
 
 # Template generator for sub command proxy.
@@ -616,11 +616,18 @@ prof () {
   ZPROF= zsh -i -c "zprof | ${viewer}"
 }
 
-# Identity mapping to use as a part of pipeline. This is a bare alternate of
-# `cat -` but pure zsh function.
+# Identity mapping to use as a part of pipeline.
 idp () {
-  # `read` with `-d ''` option always returns 1 as exit code.
-  read -d '' -e || true
+  if has is-at-least && is-at-least 5.2; then
+    # Pure zsh function version. `read` with `-d ''` option always returns 1 as
+    # exit code.
+    #
+    # NOTE: Somehow `read` waits forever in early version (>= 5.1.1) of zsh.
+    # So in the situation use `cat -` instead of `read` as fallback.
+    read -d '' -e -r || true
+  else
+    cat -
+  fi
 }
 
 init_zinit () {
