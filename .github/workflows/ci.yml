@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Create symbolic link from ~/.zshrc to .zshrc on repository
-        run: ln -sfv ${PWD}/.zshrc ~/
+        run: ln -sfv "${PWD}/.zshrc" ~/
 
       - name: Run zsh
-        run: zsh -exilc 'exit'
+        run: zsh -exilc exit
