@@ -19,6 +19,11 @@
 # Separates variable declaration and value assignment for array due to a bug of
 # early version of zsh. This is fixed since version `5.1`. See [1].
 #
+# ## Associative Array Declaration
+#
+# Separates variable declaration and each value assignment for associative
+# array for compatibility of eary version of zsh.
+#
 # ## References
 #
 # [1] https://qiita.com/mpyw/items/e9e4c3b872b30c7024ee
@@ -1863,10 +1868,8 @@ bindkey '^D' delete-char
 
 # Plugins {{{
 typeset -A ZINIT
-ZINIT=(
-  [COMPINIT_OPTS]=-C
-  [OPTIMIZE_OUT_DISK_ACCESSES]=1
-)
+ZINIT[COMPINIT_OPTS]=-C
+ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
 
 init_zinit && zinit light-mode for \
   wait lucid blockf \
