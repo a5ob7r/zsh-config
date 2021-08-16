@@ -333,6 +333,7 @@ Options:
       * )
         error "$0: Invalid option '$1'"
         return 1
+        ;;
     esac
   }
 
@@ -700,6 +701,7 @@ Options:
       * )
         error "$0: Invalid option '$1'"
         return 1
+        ;;
     esac
   done
 
