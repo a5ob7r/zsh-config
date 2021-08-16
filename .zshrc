@@ -159,9 +159,9 @@ add2path() {
   if [[ -z "${path[(r)${candidate}]}" ]]; then
     # Validates the directory path existance. This substitutes empty string if
     # no directory existance on the path.
-    path=( \
-      "$candidate"(N-/) \
-      "${path[@]}" \
+    path=(
+      "$candidate"(N-/)
+      "${path[@]}"
     )
   fi
 }
@@ -266,11 +266,11 @@ zshtimes-stat() {
 # Return:
 #   Compiled zsh user configure names
 zshcompiles() {
-  local -ra ZSH_CONFIGS=( \
-    ~/.zshenv \
-    ~/.zprofile \
-    ~/.zshrc \
-    ~/.zlogin \
+  local -ra ZSH_CONFIGS=(
+    ~/.zshenv
+    ~/.zprofile
+    ~/.zshrc
+    ~/.zlogin
   )
 
   # Zcompile zsh user configure and local it
@@ -281,9 +281,9 @@ zshcompiles() {
   # Return:
   #   Compiled zsh user configure names
   zsh_compile() {
-    local -ra CONFIGS=( \
-      "$1" \
-      "${1}.local" \
+    local -ra CONFIGS=(
+      "$1"
+      "${1}.local"
     )
 
     for c in "${CONFIGS[@]}"; do
@@ -338,10 +338,10 @@ Options:
   }
 
   local -r ffs=(
-    sk-tmux \
-    sk \
-    fzf-tmux \
-    fzf \
+    sk-tmux
+    sk
+    fzf-tmux
+    fzf
   )
 
   if (( is_installed )); then
