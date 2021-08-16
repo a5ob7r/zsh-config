@@ -316,7 +316,7 @@ Options:
   local -i is_installed
   local -i installed
 
-  while (( $# )) {
+  while (( $# )); do
     case $1 in
       -h | --help )
         fuzzyfinders::help
@@ -335,7 +335,7 @@ Options:
         return 1
         ;;
     esac
-  }
+  done
 
   local -r ffs=(
     sk-tmux
