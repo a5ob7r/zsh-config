@@ -13,6 +13,15 @@
 #
 # Add `__` as prefix to name of each functions which are for invocation by not
 # user. The most frequent situation is ZLE widget.
+#
+# ## Array Declaration
+#
+# Separates variable declaration and value assignment for array due to a bug of
+# early version of zsh. This is fixed since version `5.1`. See [1].
+#
+# ## References
+#
+# [1] https://qiita.com/mpyw/items/e9e4c3b872b30c7024ee
 
 # Functions {{{
 # Whether or not the variable is defined.
@@ -266,7 +275,8 @@ zshtimes-stat() {
 # Return:
 #   Compiled zsh user configure names
 zshcompiles() {
-  local -ra ZSH_CONFIGS=(
+  local -a ZSH_CONFIGS
+  ZSH_CONFIGS=(
     ~/.zshenv
     ~/.zprofile
     ~/.zshrc
@@ -281,7 +291,8 @@ zshcompiles() {
   # Return:
   #   Compiled zsh user configure names
   zsh_compile() {
-    local -ra CONFIGS=(
+    local -a CONFIGS
+    CONFIGS=(
       "$1"
       "${1}.local"
     )
@@ -337,7 +348,8 @@ Options:
     esac
   done
 
-  local -r ffs=(
+  local -a ffs
+  ffs=(
     sk-tmux
     sk
     fzf-tmux
@@ -366,7 +378,8 @@ Options:
 # finder executable which the name is `fuzzyfinder` to a directory on `PATH` if
 # want to use another fuzzy finder.
 fuzzyfinder () {
-  local -ra ffs=( ${(f)"$(fuzzyfinders --installed)"} )
+  local -a ffs
+  ffs=( ${(f)"$(fuzzyfinders --installed)"} )
 
   if (( $#ffs )); then
     $ffs[1] $@
@@ -1186,7 +1199,7 @@ Options:
   }
 
   local query=
-  local -a args=()
+  local -a args
 
   while (( $# )); do
     case $1 in
@@ -1217,7 +1230,7 @@ Options:
 }
 
 zhq-update () {
-  local -a queries=()
+  local -a queries
   local -i all=0
 
   zhq-update::help () {
@@ -1362,7 +1375,7 @@ ghq-exist () {
 
 ghq-cd () {
   local query=''
-  local -a args=()
+  local -a args
 
   while [[ "$#" -gt 0 ]]; do
     case "$1" in
@@ -1410,7 +1423,7 @@ ghq-cdf () {
 }
 
 ghq-update () {
-  local -a queries=()
+  local -a queries
   local -i all=0
 
   ghq-update::help () {
@@ -1849,7 +1862,8 @@ bindkey '^D' delete-char
 # }}}
 
 # Plugins {{{
-typeset -A ZINIT=(
+typeset -A ZINIT
+ZINIT=(
   [COMPINIT_OPTS]=-C
   [OPTIMIZE_OUT_DISK_ACCESSES]=1
 )
