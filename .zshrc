@@ -477,8 +477,7 @@ man2args() {
   # - "command(1), cmd(1)"
   #
   # NOTE: These last two formats may cause on macOS.
-  local -ra arr=(${(z)${1//[()]/ }})
-  echo $arr[2] $arr[1]
+  echo ${(Oa)${(z)${1//[()]/ }}[1,2]}
 }
 
 # Show GitHub contributions, which is called `kusa` by Japanese.
