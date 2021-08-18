@@ -630,18 +630,25 @@ idp () {
   fi
 }
 
+fetch2stdout () {
+  local -r url=$1
+
+  if has curl; then
+    command curl -fsSL $url
+  elif has wget; then
+    command wget -O - $url
+  else
+    error 'Not found "curl" and "wget".'
+  fi
+}
+
 init_zinit () {
   local -r src=~/.zinit/bin/zinit.zsh
 
   if [[ ! -r $src ]]; then
     warning "Not found '$src' and 'zinit' has not been installed yet so try to install it."
 
-    if ! check curl git sh; then
-      error 'Requirements are not installed. Try it again after install them.'
-      return 1
-    fi
-
-    curl -fsSL 'https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh' | sh
+    fetch2stdout 'https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh' | sh
   fi
 
   xsource $src
