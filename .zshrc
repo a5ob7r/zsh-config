@@ -503,11 +503,11 @@ man2args() {
 kusa () {
   local -r username="$(command git config user.name)"
 
-  curl "https://github-contributions-api.deno.dev/${username}.term"
+  fetch2stdout "https://github-contributions-api.deno.dev/${username}.term"
 }
 
 ipinfo () {
-  curl ipinfo.io
+  fetch2stdout ipinfo.io
 }
 
 # Wrap text with two arguments.
