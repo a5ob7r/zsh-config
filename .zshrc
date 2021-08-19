@@ -820,6 +820,7 @@ Commands:
   get     Clone remote repository to local.
   list    Show all directories under zhq.
   root    Show zhq root directory path.
+  src     Convert query to remote URL.
   update  Update repositories.
 
 Options:
@@ -864,6 +865,10 @@ Options:
     root )
       shift
       zhq-root $@
+      ;;
+    src )
+      shift
+      zhq-src $@
       ;;
     update )
       shift
@@ -987,6 +992,74 @@ Options:
   echo ${~root}
 }
 
+zhq-src () {
+  zhq-src::help () {
+    echo -n "\
+Description:
+  Convert and complete query to an appropriate url which indicates remote
+  repository.
+
+Usage:
+  zhq src <query>
+
+Options:
+  -p, --ssh     Convert query to ssh url. Support only github.com.
+  -h, --help    Show this message and exit.
+"
+  }
+
+  if ! (( $# )); then
+    error 'No <query>'
+    return 1
+  fi
+
+  local query
+  local -i is_ssh
+
+  while (( $# )); do
+    case $1 in
+      -h | --help )
+        zhq-src::help
+        return 0
+        ;;
+      -p | --ssh )
+        is_ssh=1
+        shift
+        ;;
+      -* )
+        error "$0: Invalid option '$1'"
+        return 1
+        ;;
+      * )
+        query=$1
+        shift
+        ;;
+    esac
+  done
+
+  if (( is_ssh )); then
+    case $query in
+      (|*@)*.*:*.git )
+        echo $query
+        ;;
+      * )
+        zhq dest $query | read -r
+        local -a part=(${(ps:/:)REPLY})
+        echo "git@${part[1]}:${(pj:/:)part[2,-1]}.git"
+        ;;
+    esac
+  else
+    case $query in
+      http(|s)://*.*/*.git )
+        echo $query
+        ;;
+      * )
+        zhq dest $query | wrap https:// .git
+        ;;
+    esac
+  fi
+}
+
 zhq-dest () {
   zhq-dest::help () {
     echo -n "\
@@ -1082,27 +1155,45 @@ Usage:
   to 'git clone <url>'.
 
 Options:
+  -p, --ssh   Clone with ssh protocol.
   -h, --help  Show this message.
 "
   }
+
+  local -i is_ssh
 
   case $1 in
     -h | --help )
       zhq-get::help
       return 0
       ;;
+    -p | --ssh )
+      is_ssh=1
+      shift
+      ;;
+    -* )
+      error "$0: Invalid option '$1'"
+      return 1
+      ;;
   esac
 
   local -r query=$1
-  local q
-  zhq-dest --full-path $query | read q
+  local p q
+
+  zhq-dest --full-path $query | read p
+
+  if (( is_ssh )); then
+    zhq-src --ssh $query
+  else
+    zhq-src $query
+  fi | read q
 
   if [[ -z $q ]]; then
     error "$0: Invalid query '$query'"
     return 1
   fi
 
-  git clone $query $q
+  git clone $q $p
 }
 
 zhq-list () {
