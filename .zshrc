@@ -1862,6 +1862,8 @@ fi
 alias e="$EDITOR"
 alias v=vim
 alias vw=view
+# cat(1) bare replacement using vim but it is for single file only.
+alias vat="command vim -R -M -c 'nnoremap <silent> q :quit<CR>'"
 alias dk=docker
 alias dkcp=docker-compose
 alias dkcpe='dkcp exec'
