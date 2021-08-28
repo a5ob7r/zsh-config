@@ -1182,6 +1182,11 @@ Options:
 
   zhq-dest --full-path $query | read p
 
+  if [[ -d $p ]]; then
+    error "$0: Already exists '$p'"
+    return 1
+  fi
+
   if (( is_ssh )); then
     zhq-src --ssh $query
   else
