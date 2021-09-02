@@ -1698,8 +1698,20 @@ __fuzzy_select_manual () {
 __quit () { exit }
 
 # Interactive cdr using fuzzy finder as ZLE widget.
+#
+# Global:
+#   CDRF_PREVIEW_COMMAND: Directory contents preview command for fuzzy finder.
+#   Single argument, which has quoted target directory path, is passed to the
+#   preview command. Default preview command is pure zsh ls alternative looks
+#   like `ls -1ABFv`.
+#
+# TODO: This function is for ZLE widget but `cdrf` is a normal function in
+# spite both functions have same purpose. Should integrate them or extract same
+# logic?
 __cdrf () {
   local -i idx
+
+  local -r preview_cmd=${CDRF_PREVIEW_COMMAND:-'() { cd -q $1 && print -l {.,}*[^~](NTn) }'}
 
   cdr -l \
     | fuzzyfinder \
@@ -1707,6 +1719,7 @@ __cdrf () {
         --no-multi \
         --tiebreak=end,index \
         --query=$BUFFER \
+        --preview="$preview_cmd \${(Q)~:-{2..-1}}" \
     | read -r -d ' ' idx \
     ;
 
