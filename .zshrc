@@ -1790,7 +1790,7 @@ if [[ -o LOGIN ]]; then
     # NOTE: Maybe it is enough to pass `-M` option to vim instead of
     # `-c "set nomodifiable | set nowrite"` in accordance with the document.
     # But somehow no effect even if passes `-M`. Is this bug?
-    export MANPAGER='vim +MANPAGER -c "set nolist nomodifiable nowrite" --not-a-term -'
+    export MANPAGER='vim +MANPAGER -c "set nolist nomodifiable nowrite | nnoremap <buffer> <silent> q :quit<CR>" --not-a-term -'
   fi
   # }}}
 
