@@ -1931,6 +1931,7 @@ alias datetime="strftime '%Y%m%d%H%M%S'"
 alias date2="strftime '%Y%m%d'"
 
 alias hl='haskellorls --color=auto --extra-color --icons -ABFhvo'
+alias cg=cargo
 # }}}
 
 # Zstyle {{{
