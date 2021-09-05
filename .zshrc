@@ -226,17 +226,6 @@ gnui() {
   has dircolors
 }
 
-# List up path directories per line
-# Global:
-#   path: Command "path"
-# Arguments:
-#   None
-# Return:
-#   Path directories
-path() {
-  echo "${(F)path[@]}"
-}
-
 # List full pathes of all executables on $path.
 executables () {
   setopt LOCAL_OPTIONS EXTENDED_GLOB
@@ -1918,6 +1907,7 @@ alias qq=q
 alias qqq=q
 alias quit=q
 alias :q=q
+alias path='print -l $path'
 
 if is_linux; then
   alias open=xdg-open
