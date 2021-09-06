@@ -161,33 +161,40 @@ error () {
 }
 
 # Pretty printer for shell variables.
+#
+# NOTE: We can't use any string as a variable name to store variable names
+# which are pretty printed because they overwrite global variables with
+# themself name in function. So we must use potential parameters directly to
+# reference variable names even if it is not understandable.
+#
+# TODO: Consider empty array and associative array.
 pp () {
   while (( $# )); do
-    local var=$1
-    shift
-
-    if ! is_defined $var; then
-      warning "$0: not defined '$var'"
+    if ! is_defined $1; then
+      warning "$0: not defined '$1'"
+      shift
       continue
     fi
 
-    local attrs=${(Pt)var}
+    local attrs=${(Pt)1}
 
     case $attrs in
       scalar* | integer* | float* )
-        echo "$attrs $var=${(PV)var}"
+        printf '%s %s=%b\n' $attrs $1 ${(PV)1}
         ;;
       array* )
-        echo "$attrs $var=("
-        print -f '  %s\n' "${(@PV)var}"
-        echo ')'
+        printf '%s %s=(\n' $attrs $1
+        printf '  %b\n' "${(@PV)1}"
+        printf ')\n'
         ;;
       association* )
-        echo "$attrs $var=("
-        print -f '  [%s]=%s\n' "${(@PVkv)var}"
-        echo ')'
+        printf '%s %s=(\n' $attrs $1
+        printf '  [%b]=%b\n' "${(@PVkv)1}"
+        printf ')\n'
         ;;
     esac
+
+    shift
   done
 }
 
