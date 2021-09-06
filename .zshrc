@@ -240,17 +240,6 @@ has() {
   (( ${+commands["$1"]} )) || whence "$1" > /dev/null
 }
 
-# Search that whether or not a command is made by GNU
-# Global:
-#   None
-# Arguments:
-#   1: A command name
-# Return:
-#   0 or 1: Whether or not a command is made by GNU
-gnu() {
-  "$1" --version 2>&1 | grep -q GNU
-}
-
 # Search that whether or not GNU coreutils is installed
 # Global:
 #   None
