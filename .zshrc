@@ -590,25 +590,6 @@ __chpwd_git_status () {
   fi
 }
 
-cdrf () {
-  setopt LOCAL_OPTIONS PIPE_FAIL
-
-  cdr -l \
-    | fuzzyfinder \
-        --nth='2..' \
-        --no-multi \
-        --tiebreak='end,index' \
-        --query="${*}" \
-    | read -r -d ' ' idx \
-    ;
-
-  local -ri exit_code="$?"
-
-  [[ -n "$idx" ]] && cdr "$idx"
-
-  return "$exit_code"
-}
-
 # Compile file if only source file is newer than .zwc (compiled file).
 # Lightweight version of zrecompile.
 xcompile () {
@@ -1728,7 +1709,8 @@ __fuzzy_select_manual () {
 # Proxy to call `exit` from as ZLE.
 __quit () { exit }
 
-# Interactive cdr using fuzzy finder as ZLE widget.
+# Interactive cdr using fuzzy finder as not only ZLE widget but also normal
+# function.
 #
 # Global:
 #   CDRF_PREVIEW_COMMAND: Directory contents preview command for fuzzy finder.
@@ -1736,11 +1718,17 @@ __quit () { exit }
 #   preview command. Default preview command is pure zsh ls alternative looks
 #   like `ls -1ABFv`.
 #
-# TODO: This function is for ZLE widget but `cdrf` is a normal function in
-# spite both functions have same purpose. Should integrate them or extract same
-# logic?
+# NOTE: This function can call as ZLE widget and also as normal function.
 __cdrf () {
+  setopt LOCAL_OPTIONS PIPE_FAIL
+
   local -i idx
+
+  if is_defined ZLE_STATE; then
+    local q=$BUFFER
+  else
+    local q=$*
+  fi
 
   local -r preview_cmd=${CDRF_PREVIEW_COMMAND:-'() { cd -q $1 && print -l {.,}*[^~](NTn) }'}
 
@@ -1749,10 +1737,18 @@ __cdrf () {
         --nth=2.. \
         --no-multi \
         --tiebreak=end,index \
-        --query=$BUFFER \
+        --query=$q \
         --preview="$preview_cmd \${(Q)~:-{2..-1}}" \
     | read -r -d ' ' idx \
     ;
+
+  local -ri exit_code=$?
+
+  if ! is_defined ZLE_STATE; then
+    (( idx )) && cdr "$idx"
+
+    return $exit_code
+  fi
 
   if (( idx )) ; then
     # NOTE: Need to rewrite buffer and to use `accept-line` to change directory
