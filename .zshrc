@@ -1784,6 +1784,7 @@ if [[ -o LOGIN ]]; then
   add2path ~/.ghcup/bin
   add2path ~/.cabal/bin
   add2path ~/bin
+  export path
   # }}}
 
   # {{{ man
@@ -1848,16 +1849,9 @@ if [[ -o LOGIN ]]; then
     export SKIM_DEFAULT_COMMAND=$FZF_DEFAULT_COMMAND
   fi
 
-  if has go; then
-    export GOPATH=~/go
-    add2path "${GOPATH}/bin"
-  fi
-
   export PIPENV_VENV_IN_PROJECT=1
 
   export RUSTFLAGS='-C target-cpu=native'
-
-  export path
 
   [[ "$TERM" == "linux" ]] && oceanic_next
 
