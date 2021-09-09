@@ -293,45 +293,25 @@ zshtimes-stat() {
   printf "\n  AVG: %f (s)\n" "$[ave / n]"
 }
 
-# Zcompile zsh user configures
-# Global:
-#   None
-# Arguments:
-#   None
-# Return:
-#   Compiled zsh user configure names
-zshcompiles() {
-  local -a ZSH_CONFIGS
-  ZSH_CONFIGS=(
-    ~/.zshenv
-    ~/.zprofile
-    ~/.zshrc
-    ~/.zlogin
+# Zcompile zsh user configs.
+zshcompiles () {
+  local -r zhome=${ZDOTDIR:-~}
+
+  local -a configs
+  configs=(
+    $zhome/.zshenv
+    ~/.local.zshenv
+    $zhome/.zprofile
+    ~/.local.zprofile
+    $zhome/.zshrc
+    ~/.local.zshrc
+    $zhome/.zlogin
+    ~/.local.zlogin
   )
 
-  # Zcompile zsh user configure and local it
-  # Global:
-  #   None
-  # Arguments:
-  #   1: Zsh configure path
-  # Return:
-  #   Compiled zsh user configure names
-  zsh_compile() {
-    local -a CONFIGS
-    CONFIGS=(
-      "$1"
-      ".local${1}"
-    )
-
-    for c in "${CONFIGS[@]}"; do
-      if [[ -f "$c" ]]; then
-        zcompile "$c"
-        echo "Compiled: ${c}"
-      fi
-    done
-  }
-
-  for zc in "${ZSH_CONFIGS[@]}"; do zsh_compile "$zc"; done
+  for c in $configs[@]; do
+    xcompile $c
+  done
 }
 
 fuzzyfinders () {
@@ -597,6 +577,7 @@ xcompile () {
   local -r zwc=$src.zwc
 
   # Compile outdated zwc.
+  # NOTE: This conditional contains also file existance check.
   if [[ $src -nt $zwc ]]; then
     zcompile $src
   fi
@@ -1922,7 +1903,7 @@ alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias shinit='exec "$SHELL"'
-alias zshinit='zshcompiles &> /dev/null && shinit'
+alias zshinit='zshcompiles && shinit'
 alias z=zshinit
 alias q=exit
 alias qq=q
