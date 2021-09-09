@@ -320,7 +320,7 @@ zshcompiles() {
     local -a CONFIGS
     CONFIGS=(
       "$1"
-      "${1}.local"
+      ".local${1}"
     )
 
     for c in "${CONFIGS[@]}"; do
@@ -2041,7 +2041,7 @@ add-zsh-hook chpwd chpwd_recent_dirs
 generate_subcommand_wrapper docker
 generate_subcommand_wrapper ghq
 
-xsource ~/.zshrc.local
+xsource ~/.local.zshrc
 xcompile ~/.zshrc
 # }}}
 
