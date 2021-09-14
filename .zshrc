@@ -882,7 +882,7 @@ Options:
   }
 
   local query=
-  local -i allow_empty=0
+  local -i allow_empty
 
   while (( $# )); do
     case $1 in
@@ -1138,23 +1138,17 @@ Usage:
   to 'git clone <url>'.
 
 Options:
-  -l, --look  Change the current directory to the cloned repository if the
-              clone is complete successfully.
   -p, --ssh   Clone with ssh protocol.
   -h, --help  Show this message.
 "
   }
 
-  local -i is_look is_ssh
+  local -i is_ssh
 
   case $1 in
     -h | --help )
       zhq-get::help
       return 0
-      ;;
-    -l | --look )
-      is_look=1
-      shift
       ;;
     -p | --ssh )
       is_ssh=1
@@ -1187,11 +1181,7 @@ Options:
     return 1
   fi
 
-  git clone $q $p || return
-
-  if (( is_look )); then
-    builtin cd $p
-  fi
+  git clone $q $p
 }
 
 zhq-list () {
