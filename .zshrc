@@ -1814,11 +1814,6 @@ if [[ -o LOGIN ]]; then
     sshagent &>/dev/null
   fi
   # }}}
-
-  # Plugin configures {{{
-  export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-  export PURE_PROMPT_SYMBOL=λ
-  # }}}
 fi
 # }}}
 
@@ -1997,6 +1992,10 @@ bindkey '^D' delete-char
 typeset -A ZINIT
 ZINIT[COMPINIT_OPTS]=-C
 ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
+
+# Plugin configs.
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+PURE_PROMPT_SYMBOL=λ
 
 init_zinit && zinit light-mode for \
   wait lucid blockf \
