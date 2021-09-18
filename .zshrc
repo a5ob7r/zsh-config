@@ -1793,22 +1793,6 @@ if [[ -o LOGIN ]]; then
   fi
   # }}}
 
-  # {{{ zsh
-  # history
-  export HISTFILE=~/.zsh_history
-  export HISTSIZE=1100000
-  export SAVEHIST=1000000
-
-  # Treat also slash(/) as word separater.
-  export WORDCHARS="${WORDCHARS/\//}"
-
-  # Sub prompt.
-  export RPROMPT='%1(j.%F{yellow}%B%j%bj%f .)%F{cyan}%B%L%bl%f %0(?.%F{magenta}.%F{red})%B%D{%H:%M:%S} %D%b%f'
-
-  # spelling correction prompt
-  export SPROMPT="zsh: correct: %F{red}%R%f -> %F{green}%r%f [No/Yes/Abort/Edit]? "
-  # }}}
-
   # {{{ other
   export LESS='-ij10FMRX'
 
@@ -1836,6 +1820,22 @@ if [[ -o LOGIN ]]; then
   export PURE_PROMPT_SYMBOL=λ
   # }}}
 fi
+# }}}
+
+# Parameters {{{
+# History.
+HISTFILE=~/.zsh_history
+HISTSIZE=1100000
+SAVEHIST=1000000
+
+# Treat also slash(/) as word separater.
+WORDCHARS="${WORDCHARS/\//}"
+
+# Sub prompt.
+RPROMPT='%1(j.%F{yellow}%B%j%bj%f .)%F{cyan}%B%L%bl%f %0(?.%F{magenta}.%F{red})%B%D{%H:%M:%S} %D%b%f'
+
+# Spelling correction prompt.
+SPROMPT="zsh: correct: %F{red}%R%f -> %F{green}%r%f [No/Yes/Abort/Edit]? "
 # }}}
 
 # Aliases {{{
