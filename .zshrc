@@ -1836,6 +1836,14 @@ RPROMPT='%1(j.%F{yellow}%B%j%bj%f .)%F{cyan}%B%L%bl%f %0(?.%F{magenta}.%F{red})%
 
 # Spelling correction prompt.
 SPROMPT="zsh: correct: %F{red}%R%f -> %F{green}%r%f [No/Yes/Abort/Edit]? "
+
+# Report.
+REPORTTIME=1
+REPORTMEMORY=1000
+TIMEFMT+=' max RSS %MKB'
+
+# Others.
+watch=(notme)
 # }}}
 
 # Aliases {{{
