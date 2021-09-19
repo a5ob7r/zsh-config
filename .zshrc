@@ -1737,83 +1737,11 @@ __cdrf () {
 
 # Login shell {{{
 if [[ -o LOGIN ]]; then
-  # {{{ basic
-  export EDITOR=vim
-  export VISUAL=vim
-  export PAGER=less
-
-  export XDG_CONFIG_HOME=~/.config
-  export XDG_CACHE_HOME=~/.cache
-  export XDG_DATA_HOME=~/.local/share
-
-  # prevent adding duplication path
-  typeset -U path PATH
-
-  add2path ~/.node_modules/bin
-  add2path ~/.local/bin
-  add2path ~/.cargo/bin
-  add2path ~/.ghcup/bin
-  add2path ~/.cabal/bin
-  add2path ~/bin
-  export path
-  # }}}
-
-  # {{{ man
-  export MANOPT='--nj'
-
-  # colorized man with less
-  export LESS_TERMCAP_mb=$'\E[01;31m'      # Begins blinking.
-  export LESS_TERMCAP_md=$'\E[01;31m'      # Begins bold.
-  export LESS_TERMCAP_me=$'\E[0m'          # Ends mode.
-  export LESS_TERMCAP_se=$'\E[0m'          # Ends standout-mode.
-  export LESS_TERMCAP_so=$'\E[00;47;30m'   # Begins standout-mode.
-  export LESS_TERMCAP_ue=$'\E[0m'          # Ends underline.
-  export LESS_TERMCAP_us=$'\E[01;32m'      # Begins underline.
-
-  if has vim; then
-    # Maybe fail to open man page with vim as pager due to no filetype plugin
-    # of vim loaded. Then, there are two ways to resolve this problem.
-    #
-    # 1. Overwrite the environment variable `MANPAGER` with empty string.
-    #   e.g.
-    #   $ MANPAGER= man some_command
-    #
-    # 2. Config vimrc to load filetype plugin.
-    #   e.g.
-    #   "in vimrc
-    #   filetype plugin on
-    #
-    # NOTE: Supress `Vim: Reading from stdin...` message using `--not-a-term`.
-    # https://github.com/vim/vim/commit/234d16286a2733adedef56784c17415ae169b9ad
-    #
-    # NOTE: Maybe it is enough to pass `-M` option to vim instead of
-    # `-c "set nomodifiable | set nowrite"` in accordance with the document.
-    # But somehow no effect even if passes `-M`. Is this bug?
-    export MANPAGER='vim +MANPAGER -c "set nolist nomodifiable nowrite | nnoremap <buffer> <silent> q :quit<CR>" --not-a-term -'
-  fi
-  # }}}
-
-  # {{{ other
-  export LESS='-ij10FMRX'
-
-  export FZF_DEFAULT_OPTS='--reverse --height=40%'
-  export SKIM_DEFAULT_OPTIONS=$FZF_DEFAULT_OPTS
-
-  if has rg; then
-    export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
-    export SKIM_DEFAULT_COMMAND=$FZF_DEFAULT_COMMAND
-  fi
-
-  export PIPENV_VENV_IN_PROJECT=1
-
-  export RUSTFLAGS='-C target-cpu=native'
-
   [[ "$TERM" == "linux" ]] && oceanic_next
 
   if is_linux; then
     sshagent &>/dev/null
   fi
-  # }}}
 fi
 # }}}
 
