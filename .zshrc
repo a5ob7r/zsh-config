@@ -1850,10 +1850,6 @@ elif is_macos; then
   alias op=open
 fi
 
-# void loop
-alias vloop='while [[ 1 ]] {}'
-alias vloop2='yes > /dev/null'
-
 alias datetime="strftime '%Y%m%d%H%M%S'"
 # Date only version of datetime.
 alias date2="strftime '%Y%m%d'"
