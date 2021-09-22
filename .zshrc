@@ -1860,6 +1860,10 @@ alias date2="strftime '%Y%m%d'"
 
 alias hl='haskellorls --color=auto --extra-color --icons -ABFhvo'
 alias cg=cargo
+
+alias zhq-gc='() { zhq-get $1 && zhq-cd $1 }'
+alias zhq-pc='() { zhq-get -p $1 && zhq-cd $1 }'
+alias zhq-cc='() { zhq-create $1 && zhq-cd $1 }'
 # }}}
 
 # Zstyle {{{
