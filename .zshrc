@@ -1819,6 +1819,7 @@ alias p=pipenv
 alias fzfd='FZF_DEFAULT_COMMAND="find . -type d" fzf'
 alias m=man
 
+alias mkcd='() { command mkdir -pv $1 && builtin cd $1 }'
 alias c='ghq cdf'
 alias home='builtin cd'
 alias h=home
