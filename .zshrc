@@ -1770,6 +1770,9 @@ watch=(notme)
 # }}}
 
 # Aliases {{{
+alias rmf='command rm -frv'
+alias rr=rmf
+
 if gnui; then
   alias chmod='chmod --verbose'
   alias chown='chown --verbose'
