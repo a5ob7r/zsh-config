@@ -1803,7 +1803,6 @@ else
   alias lg='la -l'
 fi
 
-alias e="$EDITOR"
 alias v=vim
 alias vw=view
 # cat(1) bare replacement using vim but it is for single file only.
@@ -1816,7 +1815,6 @@ alias t=tig
 alias tiga='tig --all'
 alias a=tiga
 alias p=pipenv
-alias fzfd='FZF_DEFAULT_COMMAND="find . -type d" fzf'
 alias m=man
 
 alias mkcd='() { command mkdir -pv $@ && builtin cd $@[-1] }'
