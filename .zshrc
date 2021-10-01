@@ -160,44 +160,6 @@ error () {
   fi | wrap $prefix $suffix >&2
 }
 
-# Pretty printer for shell variables.
-#
-# NOTE: We can't use any string as a variable name to store variable names
-# which are pretty printed because they overwrite global variables with
-# themself name in function. So we must use potential parameters directly to
-# reference variable names even if it is not understandable.
-#
-# TODO: Consider empty array and associative array.
-pp () {
-  while (( $# )); do
-    if ! is_defined $1; then
-      warning "$0: not defined '$1'"
-      shift
-      continue
-    fi
-
-    local attrs=${(Pt)1}
-
-    case $attrs in
-      scalar* | integer* | float* )
-        printf '%s %s=%b\n' $attrs $1 ${(PV)1}
-        ;;
-      array* )
-        printf '%s %s=(\n' $attrs $1
-        printf '  %b\n' "${(@PV)1}"
-        printf ')\n'
-        ;;
-      association* )
-        printf '%s %s=(\n' $attrs $1
-        printf '  [%b]=%b\n' "${(@PVkv)1}"
-        printf ')\n'
-        ;;
-    esac
-
-    shift
-  done
-}
-
 # Show all types of a shell variable.
 vtype () {
   print -l ${(tps:-:)${(P)1}}
@@ -1935,6 +1897,8 @@ init_zinit && zinit light-mode for \
     zsh-users/zsh-autosuggestions \
   wait lucid atclone'dircolors -b LS_COLORS > c.zsh' atpull'%atclone' pick'c.zsh' has'dircolors' atload'zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"' \
     trapd00r/LS_COLORS \
+  wait lucid atload"alias pp='zpp --color=auto'" \
+    a5ob7r/zsh-prettyprint \
   pick'async.zsh' src'pure.zsh' atload'zstyle :prompt:pure:git:stash show yes' \
     sindresorhus/pure \
   ;
