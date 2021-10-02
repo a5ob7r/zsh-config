@@ -1663,7 +1663,7 @@ __cdrf () {
     local q=$*
   fi
 
-  local -r preview_cmd=${CDRF_PREVIEW_COMMAND:-'() { cd -q $1 && print -l {.,}*[^~](NTn) }'}
+  local -r preview_cmd=${CDRF_PREVIEW_COMMAND:-'() { cd -q $1 && print -rC1 -- {.,}*[^~](NTn) }'}
 
   cdr -l \
     | fuzzyfinder \
@@ -1795,7 +1795,19 @@ alias qq=q
 alias qqq=q
 alias quit=q
 alias :q=q
-alias path='print -l $path'
+
+# NOTE: Use '-rC1' and '--' options instead of '-l' to print every arguments
+# separated by newline. This is more robust way about following three points.
+#
+# 1. Raw literal printing even if contains escaped characters.
+# 2. Empty output if no argument.
+# 3. Explicit arguments even if they start with hyphen.
+#
+# See '-l' option and other of 'print' in zshbuiltins (1) for more detail. But
+# maybe no need this to print $path because almost $path doesn't be empty and
+# almost their elements don't contain escaped characters and don't start with
+# hyphen.
+alias path='print -rC1 -- $path'
 
 if is_linux; then
   alias open=xdg-open
