@@ -564,14 +564,20 @@ prof () {
 # Identity mapping to use as a part of pipeline.
 idp () {
   if has is-at-least && is-at-least 5.2; then
-    # Pure zsh function version. `read` with `-d ''` option always returns 1 as
-    # exit code.
-    #
     # NOTE: Somehow `read` waits forever in early version (>= 5.1.1) of zsh.
-    # So in the situation use `cat -` instead of `read` as fallback.
+    # So in such situation use `while read` instead of `read -d ''` as
+    # fallback.
+    # NOTE: `read -d '' -e` is so naive, doesn't have no good buffering, and
+    # doesn't output until read all inputs. It is a bit faster than `while
+    # read` but maybe we feel it as no responsively when treat large input.
+    # NOTE: `read` with `-d ''` option always returns 1 as exit code.
     read -d '' -e -r || true
   else
-    cat -
+    # NOTE: Set $'\n' to IFS explicitly to get whitespaces at line's head.
+    local IFS=$'\n'
+
+    # NOTE: `while read -e -r {}` outputs an extra empty line at the end.
+    while read -r; do print -r -- $REPLY; done
   fi
 }
 
