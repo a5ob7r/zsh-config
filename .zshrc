@@ -1813,7 +1813,7 @@ alias :q=q
 # maybe no need this to print $path because almost $path doesn't be empty and
 # almost their elements don't contain escaped characters and don't start with
 # hyphen.
-alias path='print -rC1 -- $path'
+alias path='print -rC1 -D -- $path'
 
 if is_linux; then
   alias open=xdg-open
