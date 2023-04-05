@@ -113,6 +113,7 @@ autoload -Uz \
   add-zsh-hook \
   cdr \
   chpwd_recent_dirs \
+  compinit \
   ;
 
 is_linux () {
@@ -1891,6 +1892,8 @@ bindkey '^D' delete-char
 # }}}
 
 # Others {{{
+compinit
+
 add-zsh-hook chpwd __chpwd_ls
 add-zsh-hook chpwd __chpwd_git_status
 add-zsh-hook chpwd chpwd_recent_dirs
