@@ -1448,6 +1448,10 @@ SAVEHIST=1000000
 # Treat also slash(/) as word separater.
 WORDCHARS="${WORDCHARS/\//}"
 
+PS1='
+%F{cyan}%~%f%(?.. %B%F{red}%?%f%b)
+%(?.%F{green}.%F{red})%(!.#.$)%f '
+
 # Sub prompt.
 RPROMPT='%1(j.%F{yellow}%B%j%bj%f .)%F{cyan}%B%L%bl%f %0(?.%F{magenta}.%F{red})%B%D{%H:%M:%S} %D%b%f'
 
