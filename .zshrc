@@ -56,14 +56,7 @@ fi
 # effect even if `export` it and need to add values to it at every shell
 # invocation.
 
-# Zinit module to compile sourced files, which contains plugins, automatically.
-# Build the module to use it by run `zinit module build`.
-if [[ -x ~/.zinit/bin/zmodules/Src/zdharma/zplugin.so ]]; then
-  module_path+=( ~/.zinit/bin/zmodules/Src(N/) )
-fi
-
 zmodload \
-  zdharma/zplugin \
   zsh/complist \
   zsh/datetime \
   &>/dev/null \
@@ -1895,31 +1888,6 @@ bindkey '^[[3~' delete-char
 
 # No need to list possible completions even if command line buffer is empty.
 bindkey '^D' delete-char
-# }}}
-
-# Plugins {{{
-typeset -A ZINIT
-ZINIT[COMPINIT_OPTS]=-C
-ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
-
-# Plugin configs.
-ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-PURE_PROMPT_SYMBOL=λ
-
-init_zinit && zinit light-mode for \
-  wait lucid blockf \
-    zsh-users/zsh-completions \
-  wait lucid atinit'zicompinit; zicdreplay' \
-    zdharma/fast-syntax-highlighting \
-  wait lucid compile'{src/*.zsh,src/strategies/*.zsh}' atload'_zsh_autosuggest_start' \
-    zsh-users/zsh-autosuggestions \
-  wait lucid atclone'dircolors -b LS_COLORS > c.zsh' atpull'%atclone' pick'c.zsh' has'dircolors' atload'zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"' \
-    trapd00r/LS_COLORS \
-  wait lucid atload"alias pp='zpp --color=auto'" \
-    a5ob7r/zsh-prettyprint \
-  pick'async.zsh' src'pure.zsh' atload'zstyle :prompt:pure:git:stash show yes' \
-    sindresorhus/pure \
-  ;
 # }}}
 
 # Others {{{
