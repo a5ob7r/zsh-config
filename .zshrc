@@ -270,87 +270,6 @@ zshcompiles () {
   done
 }
 
-fuzzyfinders () {
-  fuzzyfinders::help () {
-    echo -n "\
-Descriptions:
-  List fuzzy finders expected.
-
-Usage:
-  fuzzyfinders [--installed]
-
-Options:
-  --is-installed  Whether or not fuzzy finder is installed at least one.
-  --installed     Installed fuzzy finders in local.
-  -h, --help      Show this message and exit.
-"
-  }
-
-  local -i is_installed
-  local -i installed
-
-  while (( $# )); do
-    case $1 in
-      -h | --help )
-        fuzzyfinders::help
-        return 0
-        ;;
-      --is-installed )
-        is_installed=1
-        shift
-        ;;
-      --installed )
-        installed=1
-        shift
-        ;;
-      * )
-        error "$0: Invalid option '$1'"
-        return 1
-        ;;
-    esac
-  done
-
-  local -a ffs
-  ffs=(
-    sk-tmux
-    sk
-    fzf-tmux
-    fzf
-  )
-
-  if (( is_installed )); then
-    for ff in $ffs[@]; do
-      if has $ff; then
-        return 0
-      fi
-    done
-    return 1
-  elif (( installed )); then
-    for ff in $ffs[@]; do
-      if has $ff; then
-        echo $ff
-      fi
-    done
-  else
-    echo ${(F)ffs[@]}
-  fi
-}
-
-# Proxy for fuzzy finder. Override this function or unset this and add a fuzzy
-# finder executable which the name is `fuzzyfinder` to a directory on `PATH` if
-# want to use another fuzzy finder.
-fuzzyfinder () {
-  local -a ffs
-  ffs=( ${(f)"$(fuzzyfinders --installed)"} )
-
-  if (( $#ffs )); then
-    $ffs[1] $@
-  else
-    error "Not found expected fuzzy finders: ${(f)$(fuzzyfinders)}"
-    return 1
-  fi
-}
-
 # Join arguments as filesystem path.
 join_path () {
   setopt LOCAL_OPTIONS EXTENDED_GLOB
@@ -1341,43 +1260,6 @@ Options:
 # }}}
 
 # Custom subcommands {{{
-# docker {{{
-docker-rmif () {
-  local -a images
-
-  # NOTE: Use `(ps: :)` parameter expantion flag instead of `(z)` to split
-  # field correctly. Can not split it correctly if images named as `<none>` are
-  # exist.
-  docker images --all \
-    | fuzzyfinder \
-        --multi \
-        --header-lines=1 \
-    | while read; do echo ${${(ps: :)REPLY}[3]}; done \
-    | { images=( ${(f)"$(read -d '' -e)"} ) } \
-    ;
-
-  if (( $#images[@] )); then
-    docker rmi $@ $images[@]
-  fi
-}
-
-docker-rmf () {
-  local -a containers
-
-  docker container ls --all \
-    | fuzzyfinder \
-        --multi \
-        --header-lines=1 \
-    | while read; do echo "${${(z)REPLY}[1]}"; done \
-    | { containers=( ${(f)"$(read -d '' -e)"} ) } \
-    ;
-
-  if [[ "${#containers[@]}" != 0 ]]; then
-    docker rm "$@" "${containers[@]}"
-  fi
-}
-# }}}
-
 # ghq {{{
 ghq-find () {
   command ghq list --full-path --exact "$1"
@@ -1461,27 +1343,6 @@ ghq-cd () {
   fi
 }
 
-ghq-cdf () {
-  local repo
-
-  # NOTE: Must split a selector step and cd one from single pipe line if no
-  # guard about no selection on fuzzy finder because maybe cause cd to ghq root
-  # unintentionally.
-  ghq list --full-path \
-    | fuzzyfinder \
-        --no-multi \
-        --tiebreak=end,length,index \
-        --query="$*" \
-        --select-1 \
-    | { read -d '' repo }
-
-  if [[ ${#repo} != 0 ]]; then
-    builtin cd "$repo"
-  else
-    return 1
-  fi
-}
-
 ghq-update () {
   local -a queries
   local -i all=0
@@ -1533,49 +1394,6 @@ Options:
 # }}}
 
 # Widgets {{{
-__fuzzy_history_select() {
-  setopt LOCAL_OPTIONS PIPE_FAIL
-
-  history -r 1 \
-    | fuzzyfinder \
-        --no-multi \
-        --nth=2..,.. \
-        --tiebreak=index \
-        --query=$BUFFER \
-    | read -A \
-    ;
-
-  local -ri exit_code=$?
-  local -ri idx=$reply[1]
-
-  [[ -n $idx ]] && zle vi-fetch-history -n $idx
-  zle redisplay
-
-  return $exit_code
-}
-
-# All executables fuzzy selector.
-__fuzzy_executables_select () {
-  setopt LOCAL_OPTIONS PIPE_FAIL 2> /dev/null
-
-  executables \
-    | fuzzyfinder \
-        --no-multi \
-        --query="${LBUFFER}${RBUFFER}" \
-    | read cmd \
-    ;
-
-  local -ri exit_code="$?"
-
-  if [[ "$exit_code" == 0 ]]; then
-    LBUFFER="$cmd"
-    RBUFFER=''
-  fi
-
-  zle redisplay
-  return "$exit_code"
-}
-
 __strip_head () {
   setopt localoptions extended_glob
 
@@ -1607,94 +1425,8 @@ __strip_head () {
   zle redisplay
 }
 
-__fuzzy_select_manual () {
-  setopt LOCAL_OPTIONS PIPE_FAIL
-
-  local entry
-
-  apropos . \
-    | fuzzyfinder \
-        --no-multi \
-        --tiebreak=begin,length \
-        --query=$BUFFER \
-        --preview="$(which man2args); command man \$(man2args {})" \
-    | read -r entry \
-    ;
-
-  local -i exit_code=$?
-
-  local -a queries
-  man2args $entry | read -rA queries
-
-  case ${#queries[@]} in
-    2 )
-      command man $queries[@]
-      ;;
-    * )
-      exit_code=1
-      ;;
-  esac
-
-  zle redisplay
-  return $exit_code
-}
-
 # Proxy to call `exit` from as ZLE.
 __quit () { exit }
-
-# Interactive cdr using fuzzy finder as not only ZLE widget but also normal
-# function.
-#
-# Global:
-#   CDRF_PREVIEW_COMMAND: Directory contents preview command for fuzzy finder.
-#   Single argument, which has quoted target directory path, is passed to the
-#   preview command. Default preview command is pure zsh ls alternative looks
-#   like `ls -1ABFv`.
-#
-# NOTE: This function can call as ZLE widget and also as normal function.
-__cdrf () {
-  setopt LOCAL_OPTIONS PIPE_FAIL
-
-  local -i idx
-
-  if is_defined ZLE_STATE; then
-    local q=$BUFFER
-  else
-    local q=$*
-  fi
-
-  local -r preview_cmd=${CDRF_PREVIEW_COMMAND:-'() { cd -q $1 && print -rC1 -- {.,}*[^~](NTn) }'}
-
-  cdr -l \
-    | fuzzyfinder \
-        --nth=2.. \
-        --no-multi \
-        --tiebreak=end,index \
-        --query=$q \
-        --preview="$preview_cmd \${(Q)~:-{2..-1}}" \
-    | read -r -d ' ' idx \
-    ;
-
-  local -ri exit_code=$?
-
-  if ! is_defined ZLE_STATE; then
-    (( idx )) && cdr "$idx"
-
-    return $exit_code
-  fi
-
-  if (( idx )) ; then
-    # NOTE: Need to rewrite buffer and to use `accept-line` to change directory
-    # using cdr on ZLE widget. Somehow it does not work correctly if call `cdr`
-    # directly on ZLE widget. It changes current working directory to different
-    # one which is not selected by fuzzy finder. Why?
-    BUFFER="cdr $idx"
-    zle redisplay
-    zle accept-line
-  else
-    zle redisplay
-  fi
-}
 # }}}
 
 # Login shell {{{
@@ -1872,17 +1604,8 @@ bindkey -M menuselect 'l' vi-forward-char
 bind_key2fun '^X^A' __strip_head
 bind_key2fun '^X^E' __quit
 
-# Widgets using fuzzy finder.
-if fuzzyfinders --is-installed; then
-  bind_key2fun '^R' __fuzzy_history_select
-  bind_key2fun '^x^p' __fuzzy_executables_select
-  bind_key2fun '^X^M' __fuzzy_select_manual
-  bind_key2fun '^J' __cdrf
-  bind_key2fun '^X^J' __cdrf
-else
-  bindkey '^R' history-incremental-pattern-search-backward
-  bindkey '^S' history-incremental-pattern-search-forward
-fi
+bindkey '^R' history-incremental-pattern-search-backward
+bindkey '^S' history-incremental-pattern-search-forward
 
 # Delete a forward char with a `delete` key.
 bindkey '^[[3~' delete-char
