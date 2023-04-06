@@ -1448,8 +1448,8 @@ SAVEHIST=1000000
 WORDCHARS="${WORDCHARS/\//}"
 
 PS1='
-%F{cyan}%~%f%(?.. %B%F{red}%?%f%b)%1(j. %F{yellow}%B%j%bj%f.) %F{cyan}%B%L%bl%f %F{magenta}%B%D{%H:%M:%S} %D%b%f
-%(?.%F{green}.%F{red})%(!.#.$)%f '
+%F{cyan}%~%f%(?.. %B%F{red}%?%f%b)%1(j. %F{yellow}%B%j%bj%f.) Lv.%L %F{magenta}%D{%H:%M:%S} %D%f
+%(?.%F{green}.%F{red})%#%f '
 
 # Spelling correction prompt.
 SPROMPT="zsh: correct: %F{red}%R%f -> %F{green}%r%f [No/Yes/Abort/Edit]? "
