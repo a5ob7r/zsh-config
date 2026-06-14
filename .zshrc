@@ -50,6 +50,10 @@ if is_defined ZPROF; then
 fi
 # }}}
 
+if [[ -r ~/.shrc ]]; then
+  emulate sh -c 'source ~/.shrc'
+fi
+
 # zsh module {{{
 # `module_path` and `MODULE_PATH` in enrionment is ignored for security reason.
 # (See the `module_path` section in `ZSHPARAM(1)` for more detail.) So no
