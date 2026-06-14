@@ -399,11 +399,6 @@ generate_subcommand_wrapper () {
   has "$cmd" && eval "$(subcommand_wrapper_def "$cmd")"
 }
 
-# Proxy function for ls on chpwd.
-__chpwd_ls () {
-  l
-}
-
 # Proxy function for git status on chpwd.
 __chpwd_git_status () {
   if is_inside_git_repository; then
@@ -876,7 +871,6 @@ bindkey '^D' delete-char
 # Others {{{
 compinit
 
-add-zsh-hook chpwd __chpwd_ls
 add-zsh-hook chpwd __chpwd_git_status
 add-zsh-hook chpwd chpwd_recent_dirs
 
