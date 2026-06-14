@@ -92,26 +92,6 @@ error () {
   echo -e '\033[31m'$*'\033[0m' >&2
 }
 
-# Add directory path to a environment variable "path", which is array form of
-# `PATH`, if it passes through some validations.
-add2path() {
-  setopt LOCAL_OPTIONS NO_MARK_DIRS EXTENDED_GLOB
-
-  # Strip any tail slashes.
-  local -r candidate="${1%%/##}"
-
-  # Add the path if no duplication. This can be achieved by `-U` option of
-  # `typeset` but it moves the duplicated path to head of `path`.
-  if [[ -z "${path[(r)${candidate}]}" ]]; then
-    # Validates the directory path existance. This substitutes empty string if
-    # no directory existance on the path.
-    path=(
-      "$candidate"(N-/)
-      "${path[@]}"
-    )
-  fi
-}
-
 # Search whether or not a command can call from a shell prompt.
 #
 # This function can search not only commands on PATH but also shell functions
