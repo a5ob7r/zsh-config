@@ -84,14 +84,6 @@ autoload -Uz \
   compinit \
   ;
 
-is_linux () {
-  [[ "$OSTYPE" =~ '^linux.*' ]]
-}
-
-is_macos () {
-  [[ "$OSTYPE" =~ '^darwin.*' ]]
-}
-
 warning () {
   echo -e '\033[33m'$*'\033[0m' >&2
 }
