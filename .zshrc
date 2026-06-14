@@ -1420,9 +1420,6 @@ watch=(notme)
 # }}}
 
 # Aliases {{{
-alias rmf='command rm -frv'
-alias rr=rmf
-
 if gnui; then
   alias chmod='chmod --verbose'
   alias chown='chown --verbose'
@@ -1469,11 +1466,6 @@ alias h=home
 alias cdh=home
 alias zshinit='zshcompiles && shinit'
 alias z=zshinit
-alias q=exit
-alias qq=q
-alias qqq=q
-alias quit=q
-alias :q=q
 
 # NOTE: Use '-rC1' and '--' options instead of '-l' to print every arguments
 # separated by newline. This is more robust way about following three points.
