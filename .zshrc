@@ -204,27 +204,6 @@ zshtimes-stat() {
   printf "\n  AVG: %f (s)\n" "$[ave / n]"
 }
 
-# Zcompile zsh user configs.
-zshcompiles () {
-  local -r zhome=${ZDOTDIR:-~}
-
-  local -a configs
-  configs=(
-    $zhome/.zshenv
-    ~/.local.zshenv
-    $zhome/.zprofile
-    ~/.local.zprofile
-    $zhome/.zshrc
-    ~/.local.zshrc
-    $zhome/.zlogin
-    ~/.local.zlogin
-  )
-
-  for c in $configs[@]; do
-    xcompile $c
-  done
-}
-
 # Apply Oceanic-Nect color scheme for Linux Console.
 oceanic_next() {
   echo -e "
@@ -320,26 +299,11 @@ generate_subcommand_wrapper () {
   has "$cmd" && eval "$(subcommand_wrapper_def "$cmd")"
 }
 
-# Compile file if only source file is newer than .zwc (compiled file).
-# Lightweight version of zrecompile.
-xcompile () {
-  local -r src=${1%.zwc}
-  local -r zwc=$src.zwc
-
-  # Compile outdated zwc.
-  # NOTE: This conditional contains also file existance check.
-  if [[ $src -nt $zwc ]]; then
-    zcompile $src
-  fi
-}
-
 # Source an external file with useful extra.
 xsource () {
   local -r src="$1"
 
   [[ -r "$src" ]] || return 1
-
-  xcompile "$src"
 
   builtin source "$src"
 }
@@ -574,9 +538,6 @@ watch=(notme)
 # }}}
 
 # Aliases {{{
-alias zshinit='zshcompiles && shinit'
-alias z=zshinit
-
 # NOTE: Use '-rC1' and '--' options instead of '-l' to print every arguments
 # separated by newline. This is more robust way about following three points.
 #
@@ -648,7 +609,6 @@ add-zsh-hook chpwd chpwd_recent_dirs
 generate_subcommand_wrapper ghq
 
 xsource ~/.local.zshrc
-xcompile ~/.zshrc
 # }}}
 
 # vim: set foldmethod=marker :
