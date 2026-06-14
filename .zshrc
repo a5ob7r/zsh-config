@@ -617,54 +617,6 @@ Options:
   eval "$(ssh-agent -t $lifetime)"
 }
 
-# NOTE: Optional. Call it on local config if wanna start dropbox.
-start_dropbox () {
-  start_dropbox::help () {
-    echo -n "\
-Description:
-  Simple utility to run dropbox on Linux.
-
-Usage:
-  start_dropbox
-
-Options:
-  -h, --help    Show this message and exit.
-"
-  }
-
-  case $1 in
-    -h | --help )
-      start_dropbox::help
-      return 0
-      ;;
-  esac
-
-  if ! is_linux; then
-    warning "$0: This assumes to be run on Linux."
-    return 1
-  fi
-
-  if ! has dropbox; then
-    return 1
-  fi
-
-  if ! has pgrep; then
-    error "$0: Can not detect whether or not dropbox has been already running."
-    return 1
-  fi
-
-  if pgrep dropbox &>/dev/null; then
-    warning "$0: A dropbox process has already been running."
-    return 0
-  fi
-
-  if has dropbox-cli; then
-    dropbox-cli start && dropbox-cli lansync n
-  else
-    dropbox
-  fi
-}
-
 # zhq {{{
 zhq () {
   zhq::help () {
