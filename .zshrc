@@ -837,7 +837,6 @@ compinit
 
 add-zsh-hook chpwd chpwd_recent_dirs
 
-generate_subcommand_wrapper docker
 generate_subcommand_wrapper ghq
 
 xsource ~/.local.zshrc
