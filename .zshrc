@@ -437,31 +437,37 @@ ghq-find () {
 }
 
 ghq-cd () {
-  local query=''
-  local -a args
+  setopt LOCAL_OPTIONS ERR_RETURN
 
-  while [[ "$#" -gt 0 ]]; do
-    case "$1" in
-      -q )
-        args+=('-q')
-        shift
-        ;;
-      * )
-        query="$1"
-        shift
-        ;;
-    esac
-  done
+  case $# in
+    0 )
+      error 'ghq-cd: Require one argument.'
+      return 1
+      ;;
+    1 )
+      ;;
+    * )
+      error 'ghq-cd: Too many arguments.'
+      return 1
+      ;;
+  esac
 
-  local -a repos
-  ghq-find "$query" | { repos=( ${(f)"$(read -d '' -e)"} ) }
+  local -a repositories
+  repositories=("${(f)$(ghq-find $1)}")
 
-  if [[ "${#repos[@]}" == 1 ]]; then
-    # NOTE: `cd ''` means `cd .`.
-    builtin cd "${args[@]}" "${repos[1]}"
-  else
-    return 1
-  fi
+  case ${#repositories[@]} in
+    0 )
+      error 'ghq-cd: No repository was found.'
+      return 1
+      ;;
+    1 )
+      builtin cd ${repositories[@]}
+      ;;
+    * )
+      error 'ghq-cd: Multiple repositories were found.'
+      return 1
+      ;;
+  esac
 }
 # }}}
 # }}}
