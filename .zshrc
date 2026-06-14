@@ -273,25 +273,6 @@ zshcompiles () {
   done
 }
 
-# Join arguments as filesystem path.
-join_path () {
-  setopt LOCAL_OPTIONS EXTENDED_GLOB
-
-  local joined="${1%%\/##}"
-  shift
-
-  while [[ $# != 0 ]]; do
-    local p="$1"
-    shift
-
-    p="${p##\/##}"
-    p="${p%%\/##}"
-    joined="${joined}/${p}"
-  done
-
-  echo "$joined"
-}
-
 # Shell function version of xargs, but this can get one argument from stdin
 # like a xargs passed `-x -n 1` options. So this name is `xarg` but not
 # `xargs`.
