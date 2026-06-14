@@ -720,7 +720,6 @@ alias a=tiga
 alias p=pipenv
 
 alias mkcd='() { command mkdir -pv $@ && builtin cd $@[-1] }'
-alias c='ghq cdf'
 alias home='builtin cd'
 alias h=home
 alias cdh=home
