@@ -1,6 +1,8 @@
 #
 # ~/.zshrc
 #
+# - The minimal requirement version is 5.8.1 (installed in macOS v12.7.6 by default).
+#
 
 # Functions {{{
 # Whether or not the variable is defined.
