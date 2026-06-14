@@ -300,18 +300,6 @@ bind_key2fun () {
   bindkey "$keys" "$fun"
 }
 
-# Convert manual description to arguments of `man`.
-man2args() {
-  # Expected input form.
-  #
-  # - "command (1)"
-  # - "command(1)"
-  # - "command(1), cmd(1)"
-  #
-  # NOTE: These last two formats may cause on macOS.
-  echo ${(Oa)${(z)${1//[()]/ }}[1,2]}
-}
-
 # Wrap text with two arguments.
 # Global:
 #   None
