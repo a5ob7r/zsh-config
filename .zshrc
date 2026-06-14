@@ -309,21 +309,6 @@ TIMEFMT+=' max RSS %MKB'
 watch=(notme)
 # }}}
 
-# Aliases {{{
-# NOTE: Use '-rC1' and '--' options instead of '-l' to print every arguments
-# separated by newline. This is more robust way about following three points.
-#
-# 1. Raw literal printing even if contains escaped characters.
-# 2. Empty output if no argument.
-# 3. Explicit arguments even if they start with hyphen.
-#
-# See '-l' option and other of 'print' in zshbuiltins (1) for more detail. But
-# maybe no need this to print $path because almost $path doesn't be empty and
-# almost their elements don't contain escaped characters and don't start with
-# hyphen.
-alias path='print -rC1 -D -- $path'
-# }}}
-
 # Zstyle {{{
 zstyle ':chpwd:*' recent-dirs-max 0
 zstyle ':completion:*' completer _expand _complete _match _approximate _list
