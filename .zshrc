@@ -710,19 +710,6 @@ watch=(notme)
 # }}}
 
 # Aliases {{{
-alias vw=view
-# cat(1) bare replacement using vim but it is for single file only.
-alias vat="command vim -R -M -c 'nnoremap <silent> q :quit<CR>'"
-alias dkcpe='dkcp exec'
-alias t=tig
-alias tiga='tig --all'
-alias a=tiga
-alias p=pipenv
-
-alias mkcd='() { command mkdir -pv $@ && builtin cd $@[-1] }'
-alias home='builtin cd'
-alias h=home
-alias cdh=home
 alias zshinit='zshcompiles && shinit'
 alias z=zshinit
 
@@ -738,23 +725,6 @@ alias z=zshinit
 # almost their elements don't contain escaped characters and don't start with
 # hyphen.
 alias path='print -rC1 -D -- $path'
-
-if is_linux; then
-  alias open=xdg-open
-  alias op='runb open'
-  alias ff=firefox
-  alias xc='xclip -selection clipboard -filter -rmlastnl && echo'
-  alias lb='lsblk -o NAME,FSTYPE,FSVER,FSSIZE,FSUSED,FSAVAIL,FSUSE%,PARTTYPENAME,MOUNTPOINT'
-  alias ip='ip -color=auto'
-  alias x=startx
-  alias xr=xrandr
-elif is_macos; then
-  alias op=open
-fi
-
-alias datetime="strftime '%Y%m%d%H%M%S'"
-# Date only version of datetime.
-alias date2="strftime '%Y%m%d'"
 # }}}
 
 # Zstyle {{{
