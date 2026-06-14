@@ -144,35 +144,6 @@ has() {
   (( ${+commands["$1"]} )) || whence "$1" > /dev/null
 }
 
-# Swap stdout and stderr.
-stdswap () {
-  "$@" 3>&2 2>&1 1>&3 3>&-
-}
-
-# Measure zsh start up time.
-zshtimes() {
-  local -ri n="$1"
-
-  repeat "$n"; do
-    sleep 1
-    time zsh -ic exit 2> /dev/null
-  done
-}
-
-# Measure zsh start up time and calculate mean time.
-zshtimes-stat() {
-  local -ri n="$1"
-  local -F ave=0
-
-  stdswap zshtimes "$n" \
-    | while read; do
-        echo "$REPLY"
-        ave+="${${(z)REPLY}[7]}"
-      done
-
-  printf "\n  AVG: %f (s)\n" "$[ave / n]"
-}
-
 # Apply Oceanic-Nect color scheme for Linux Console.
 oceanic_next() {
   echo -e "
