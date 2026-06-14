@@ -93,33 +93,11 @@ is_macos () {
 }
 
 warning () {
-  local prefix= suffix=
-
-  if [[ -t 2 ]]; then
-    prefix='\033[33m'
-    suffix='\033[0m'
-  fi
-
-  if (( $# )); then
-    echo $*
-  else
-    idp
-  fi | wrap $prefix $suffix >&2
+  echo -e '\033[33m'$*'\033[0m' >&2
 }
 
 error () {
-  local prefix= suffix=
-
-  if [[ -t 2 ]]; then
-    prefix='\033[31m'
-    suffix='\033[0m'
-  fi
-
-  if (( $# )); then
-    echo $*
-  else
-    idp
-  fi | wrap $prefix $suffix >&2
+  echo -e '\033[31m'$*'\033[0m' >&2
 }
 
 # Add directory path to a environment variable "path", which is array form of
@@ -315,13 +293,12 @@ check () {
 
 sshagent () {
   if ! is_linux; then
-    warning <<EOF
+    warning "\
 This assumes to be called on Linux. Override 'OSTYPE' environment variable to
 'linux*' and call this if wanna call this forcely.
 
   $ OSTYPE=linux sshagent
-
-EOF
+"
     return 1
   fi
 
