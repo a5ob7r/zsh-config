@@ -1453,29 +1453,20 @@ else
   alias lg='la -l'
 fi
 
-alias v=vim
 alias vw=view
 # cat(1) bare replacement using vim but it is for single file only.
 alias vat="command vim -R -M -c 'nnoremap <silent> q :quit<CR>'"
-alias dk=docker
-alias dkcp=docker-compose
 alias dkcpe='dkcp exec'
-alias g=git
 alias t=tig
 alias tiga='tig --all'
 alias a=tiga
 alias p=pipenv
-alias m=man
 
 alias mkcd='() { command mkdir -pv $@ && builtin cd $@[-1] }'
 alias c='ghq cdf'
 alias home='builtin cd'
 alias h=home
 alias cdh=home
-alias ..='cd ../'
-alias ...='cd ../../'
-alias ....='cd ../../../'
-alias shinit='exec "$SHELL"'
 alias zshinit='zshcompiles && shinit'
 alias z=zshinit
 alias q=exit
@@ -1513,9 +1504,6 @@ fi
 alias datetime="strftime '%Y%m%d%H%M%S'"
 # Date only version of datetime.
 alias date2="strftime '%Y%m%d'"
-
-alias hl='haskellorls --color=auto --extra-color --icons -ABFhvo'
-alias cg=cargo
 
 alias zhq-gc='() { zhq-get $@ && zhq-cd $@[-1] }'
 alias zhq-cc='() { zhq-create $@ && zhq-cd $@[-1] }'
