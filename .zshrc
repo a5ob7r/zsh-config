@@ -337,17 +337,6 @@ man2args() {
   echo ${(Oa)${(z)${1//[()]/ }}[1,2]}
 }
 
-# Show GitHub contributions, which is called `kusa` by Japanese.
-kusa () {
-  local -r username="$(command git config user.name)"
-
-  fetch2stdout "https://github-contributions-api.deno.dev/${username}.term"
-}
-
-ipinfo () {
-  fetch2stdout ipinfo.io
-}
-
 # Wrap text with two arguments.
 # Global:
 #   None
@@ -440,18 +429,6 @@ idp () {
 
     # NOTE: `while read -e -r {}` outputs an extra empty line at the end.
     while read -r; do print -r -- $REPLY; done
-  fi
-}
-
-fetch2stdout () {
-  local -r url=$1
-
-  if has curl; then
-    command curl -fsSL $url
-  elif has wget; then
-    command wget -O - $url
-  else
-    error 'Not found "curl" and "wget".'
   fi
 }
 
