@@ -157,11 +157,6 @@ error () {
   fi | wrap $prefix $suffix >&2
 }
 
-# Show all types of a shell variable.
-vtype () {
-  print -l ${(tps:-:)${(P)1}}
-}
-
 # Add directory path to a environment variable "path", which is array form of
 # `PATH`, if it passes through some validations.
 add2path() {
