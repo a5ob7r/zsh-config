@@ -266,8 +266,15 @@ xsource () {
 }
 
 prof () {
-  local -r viewer="${PAGER:-idp}"
-  ZPROF= zsh -i -c "zprof | ${viewer}"
+  local -r pager=${PAGER:-less}
+
+  if has $pager; then
+    local -r command="zprof | $pager"
+  else
+    local -r command=zprof
+  fi
+
+  ZPROF= zsh -i -c $command
 }
 
 # Identity mapping to use as a part of pipeline.
