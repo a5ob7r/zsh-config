@@ -206,17 +206,6 @@ has() {
   (( ${+commands["$1"]} )) || whence "$1" > /dev/null
 }
 
-# Search that whether or not GNU coreutils is installed
-# Global:
-#   None
-# Arguments:
-#   None
-# Return:
-#   0 or 1: Whether or not GNU coreutils is installed
-gnui() {
-  has dircolors
-}
-
 # Swap stdout and stderr.
 stdswap () {
   "$@" 3>&2 2>&1 1>&3 3>&-
@@ -787,36 +776,6 @@ watch=(notme)
 # }}}
 
 # Aliases {{{
-if gnui; then
-  alias chmod='chmod --verbose'
-  alias chown='chown --verbose'
-  alias cp='cp --verbose'
-  alias diff='diff --color=auto'
-  alias grep='grep --color=auto'
-  alias ln='ln --verbose'
-  alias ls='ls --color=auto'
-  alias mkdir='mkdir --verbose --parents'
-  alias mv='mv --verbose'
-  alias rm='rm --verbose'
-  alias rmdir='rmdir --verbose'
-
-  alias __ls='ls -hvFB'
-  alias la='__ls -A'
-  alias l='la -1'
-  alias ll='la -o'
-  alias lg='la -l'
-  alias gr="grep -F -irn --exclude-dir='.git'"
-else
-  # BSD
-  alias ls='ls -G'
-
-  alias __ls='ls -Fh'
-  alias la='__ls -A'
-  alias l='la -1'
-  alias ll='la -o'
-  alias lg='la -l'
-fi
-
 alias vw=view
 # cat(1) bare replacement using vim but it is for single file only.
 alias vat="command vim -R -M -c 'nnoremap <silent> q :quit<CR>'"
