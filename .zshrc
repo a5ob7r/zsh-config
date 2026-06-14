@@ -497,9 +497,6 @@ __strip_head () {
 
   zle redisplay
 }
-
-# Proxy to call `exit` from as ZLE.
-__quit () { exit }
 # }}}
 
 # Login shell {{{
@@ -589,7 +586,6 @@ bindkey -M menuselect 'l' vi-forward-char
 
 # Pure zsh widgets.
 bind_key2fun '^X^A' __strip_head
-bind_key2fun '^X^E' __quit
 
 bindkey '^R' history-incremental-pattern-search-backward
 bindkey '^S' history-incremental-pattern-search-forward
