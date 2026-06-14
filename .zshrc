@@ -116,30 +116,6 @@ has() {
   (( ${+commands["$1"]} )) || whence "$1" > /dev/null
 }
 
-# Apply Oceanic-Nect color scheme for Linux Console.
-oceanic_next() {
-  echo -e "
-  \033]P0121c21
-  \033]P1e44754
-  \033]P289bd82
-  \033]P3f7bd51
-  \033]P45486c0
-  \033]P5b77eb8
-  \033]P650a5a4
-  \033]P7ffffff
-  \033]P852606b
-  \033]P9e44754
-  \033]PA89bd82
-  \033]PBf7bd51
-  \033]PC5486c0
-  \033]PDb77eb8
-  \033]PE50a5a4
-  \033]PFffffff
-  "
-  # get rid of artifacts
-  clear
-}
-
 # Run a process in the background and no output to stdout and stderr.
 runb () {
   "$@" &> /dev/null &|
@@ -276,12 +252,6 @@ __strip_head () {
 
   zle redisplay
 }
-# }}}
-
-# Login shell {{{
-if [[ -o LOGIN ]]; then
-  [[ "$TERM" == "linux" ]] && oceanic_next
-fi
 # }}}
 
 # Parameters {{{
