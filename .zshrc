@@ -217,12 +217,6 @@ gnui() {
   has dircolors
 }
 
-# List full pathes of all executables on $path.
-executables () {
-  setopt LOCAL_OPTIONS EXTENDED_GLOB
-  which "${^path[@]%%/##}"/*(N-*) || true
-}
-
 # Swap stdout and stderr.
 stdswap () {
   "$@" 3>&2 2>&1 1>&3 3>&-
