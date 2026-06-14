@@ -3,5 +3,5 @@
 ## Setup
 
 ```sh
-$ ln -sv $PWD/.zshrc ~
+ln -sv $PWD/.zshrc ~
 ```
