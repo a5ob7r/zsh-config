@@ -509,18 +509,6 @@ fetch2stdout () {
   fi
 }
 
-init_zinit () {
-  local -r src=~/.zinit/bin/zinit.zsh
-
-  if [[ ! -r $src ]]; then
-    warning "Not found '$src' and 'zinit' has not been installed yet so try to install it."
-
-    fetch2stdout 'https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh' | sh
-  fi
-
-  xsource $src
-}
-
 # Check whether or not commands are found on command line.
 check () {
   local -i exit_code=0
