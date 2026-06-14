@@ -276,11 +276,6 @@ __run-help-tmux-pane() {
   fi
 }
 
-# Whether or not current working directory is git root.
-is_inside_git_repository () {
-  command git rev-parse --is-inside-work-tree &>/dev/null
-}
-
 # Apply Oceanic-Nect color scheme for Linux Console.
 oceanic_next() {
   echo -e "
@@ -397,14 +392,6 @@ generate_subcommand_wrapper () {
   local -r cmd="$1"
 
   has "$cmd" && eval "$(subcommand_wrapper_def "$cmd")"
-}
-
-# Proxy function for git status on chpwd.
-__chpwd_git_status () {
-  if is_inside_git_repository; then
-    echo
-    git status --short --branch
-  fi
 }
 
 # Compile file if only source file is newer than .zwc (compiled file).
@@ -871,7 +858,6 @@ bindkey '^D' delete-char
 # Others {{{
 compinit
 
-add-zsh-hook chpwd __chpwd_git_status
 add-zsh-hook chpwd chpwd_recent_dirs
 
 generate_subcommand_wrapper docker
