@@ -442,7 +442,7 @@ SPROMPT="zsh: correct: %F{red}%R%f -> %F{green}%r%f [No/Yes/Abort/Edit]? "
 
 # Report.
 REPORTTIME=1
-REPORTMEMORY=1000
+REPORTMEMORY=131072 # 1024 * 128 KB
 TIMEFMT+=' max RSS %MKB'
 
 # Others.
