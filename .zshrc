@@ -251,16 +251,6 @@ zshcompiles () {
   done
 }
 
-# Shell function version of xargs, but this can get one argument from stdin
-# like a xargs passed `-x -n 1` options. So this name is `xarg` but not
-# `xargs`.
-#
-# NOTE: This can run shell function and builtin command because this is shell
-# function but not `xargs` which is standalone executable.
-xarg () {
-  "$@" "$(read -d '' -e)"
-}
-
 # Apply Oceanic-Nect color scheme for Linux Console.
 oceanic_next() {
   echo -e "
