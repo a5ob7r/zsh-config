@@ -261,16 +261,6 @@ xarg () {
   "$@" "$(read -d '' -e)"
 }
 
-__run-help-tmux-pane() {
-  local -r CMD="${(qqq)LBUFFER}"
-
-  if [[ -n "$TMUX_PANE" ]]; then
-    tmux split-window "man ${CMD}"
-  else
-    man "$CMD"
-  fi
-}
-
 # Apply Oceanic-Nect color scheme for Linux Console.
 oceanic_next() {
   echo -e "
