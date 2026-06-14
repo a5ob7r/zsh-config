@@ -4,24 +4,13 @@
 # - The minimal requirement version is 5.8.1 (installed in macOS v12.7.6 by default).
 #
 
-# Functions {{{
-# Whether or not the variable is defined.
-#
-# NOTE: An alternate way is to use `-v` option of `[[` but it is introduced
-# since 5.3. So maybe it can not use on some old version's zsh. For example zsh
-# 5.1 on Ubuntu 16.04.
-is_defined () {
-  (( ${(P)+${1}} ))
-}
-# }}}
-
 # zprof {{{
 # Profiling of zsh startup process using zprof. Define an environment variable
 # ZPROF if want to profile.
 #
 # $ ZPROF= zsh
 #
-if is_defined ZPROF; then
+if (( ${+ZPROF} )); then
   zmodload zsh/zprof && zprof
 fi
 # }}}
@@ -389,7 +378,7 @@ Options:
     return
   fi
 
-  if is_defined SSH_AUTH_SOCK && is_defined SSH_AGENT_PID && ! (( force )); then
+  if (( ${+SSH_AUTH_SOCK} )) && (( ${+SSH_AGENT_PID} )) && ! (( force )); then
     warning 'A ssh-agent process for this shell has already running.'
     return 1
   fi
