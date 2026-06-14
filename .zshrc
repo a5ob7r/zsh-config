@@ -498,56 +498,6 @@ ghq-find () {
   command ghq list --full-path --exact "$1"
 }
 
-ghq-exist () {
-  local -i verbose=0
-  local query=''
-
-  while [[ "$#" > 0 ]]; do
-    case "$1" in
-      -v | --verbose )
-        verbose=1
-        shift
-        ;;
-      * )
-        query="$1"
-        shift
-        ;;
-    esac
-  done
-
-  __print () {
-    if [[ "$verbose" == 0 ]]; then
-      return 0
-    fi
-
-    echo "$@"
-  }
-
-  __info () {
-    __print "$@" >&2
-  }
-
-  local -a repos
-  ghq-find "$query" | { repos=( ${(f)"$(read -d '' -e)"} ) }
-
-  case "${#repos[@]}" in
-    0 )
-      error 'Not found matching repository.'
-      return 1
-      ;;
-    1 )
-      __info 'Exist unique repository.'
-      __print "${repos[1]}"
-      return 0
-      ;;
-    * )
-      warning "Found some ambiguous repositories."
-      __print "${(F)repos[@]}"
-      return 1
-      ;;
-  esac
-}
-
 ghq-cd () {
   local query=''
   local -a args
@@ -574,54 +524,6 @@ ghq-cd () {
   else
     return 1
   fi
-}
-
-ghq-update () {
-  local -a queries
-  local -i all=0
-
-  ghq-update::help () {
-    echo -n "\
-Update ('fetch' in fact) all git repositories which match each queries.
-
-Usage:
-  ghq update [-a | --all] [[query]...]
-
-Options:
-  -a, --all     Update all repositories under ghq control.
-  -h, --help    Show this message.
-"
-  }
-
-  while [[ "$#" -gt 0 ]]; do
-    case "$1" in
-      -a | --all )
-        all=1
-        shift
-        ;;
-      -h | --help )
-        ghq-update::help
-        return
-        ;;
-      * )
-        queries+=("$1")
-        shift
-        ;;
-    esac
-  done
-
-  if (( all )); then
-    queries=($(ghq list))
-  fi
-
-  for query in "${queries[@]}"; (
-    if ghq-cd -q "$query"; then
-      echo "  Update: ${query}"
-      command git remote update
-    else
-      error "Not found a unique repository in local to match '${query}'"
-    fi
-  )
 }
 # }}}
 # }}}
