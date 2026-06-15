@@ -137,15 +137,6 @@ bind_key2fun () {
   bindkey "$keys" "$fun"
 }
 
-# Source an external file with useful extra.
-xsource () {
-  local -r src="$1"
-
-  [[ -r "$src" ]] || return 1
-
-  builtin source "$src"
-}
-
 prof () {
   local -r pager=${PAGER:-less}
 
@@ -328,7 +319,9 @@ compinit
 
 add-zsh-hook chpwd chpwd_recent_dirs
 
-xsource ~/.local.zshrc
+if [[ -r ~/.local.zshrc ]]; then
+  source ~/.local.zshrc
+fi
 # }}}
 
 # vim: set foldmethod=marker :
