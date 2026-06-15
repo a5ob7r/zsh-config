@@ -33,43 +33,23 @@ zmodload \
 # }}}
 
 # ZSHOPTIONS {{{
-# Completion {{{
-setopt LIST_PACKED
-# }}}
-
-# Expansion and Globbing {{{
+setopt CORRECT
 setopt EXTENDED_GLOB
-setopt MAGIC_EQUAL_SUBST
-setopt MARK_DIRS
-# }}}
-
-# History {{{
 setopt EXTENDED_HISTORY
 setopt HIST_EXPAND
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_DUPS
 setopt HIST_VERIFY
-setopt SHARE_HISTORY
-# }}}
-
-# Input/Output {{{
-setopt CORRECT
-setopt PRINT_EXIT_VALUE
-
-unsetopt FLOW_CONTROL
-# }}}
-
-# Job Control {{{
+setopt LIST_PACKED
 setopt LONG_LIST_JOBS
-# }}}
-
-# Prompting {{{
+setopt MAGIC_EQUAL_SUBST
+setopt MARK_DIRS
+setopt PRINT_EXIT_VALUE
 setopt PROMPT_SUBST
-# }}}
+setopt SHARE_HISTORY
 
-# Zle {{{
 unsetopt BEEP
-# }}}
+unsetopt FLOW_CONTROL
 # }}}
 
 # Functions {{{
