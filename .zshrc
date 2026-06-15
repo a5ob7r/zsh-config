@@ -122,22 +122,6 @@ prof () {
 
   ZPROF= zsh -i -c $command
 }
-
-# Check whether or not commands are found on command line.
-check () {
-  local -i exit_code=0
-
-  while (( $# )); do
-    if ! has $1; then
-      error "$0: Not found the command '$1'"
-      exit_code=1
-    fi
-
-    shift
-  done
-
-  return $exit_code
-}
 # }}}
 
 # Custom subcommands {{{
