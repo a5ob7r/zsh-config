@@ -21,7 +21,6 @@ fi
 
 zmodload \
   zsh/complist \
-  zsh/datetime \
   &>/dev/null \
   ;
 # }}}
