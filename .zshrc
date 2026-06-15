@@ -272,7 +272,6 @@ bindkey '^[[3~' delete-char
 bindkey '^D' delete-char
 # }}}
 
-# Others {{{
 compinit
 
 add-zsh-hook chpwd chpwd_recent_dirs
@@ -280,6 +279,5 @@ add-zsh-hook chpwd chpwd_recent_dirs
 if [[ -r ~/.local.zshrc ]]; then
   source ~/.local.zshrc
 fi
-# }}}
 
 # vim: set foldmethod=marker :
