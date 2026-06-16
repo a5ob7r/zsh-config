@@ -36,10 +36,6 @@ unsetopt FLOW_CONTROL
 # }}}
 
 # Functions {{{
-autoload -Uz \
-  compinit \
-  ;
-
 warning () {
   echo -e '\033[33m'$*'\033[0m' >&2
 }
@@ -237,7 +233,7 @@ bindkey '^[[3~' delete-char
 bindkey '^D' delete-char
 # }}}
 
-compinit
+autoload -Uz compinit; compinit
 
 if [[ -r ~/.local.zshrc ]]; then
   source ~/.local.zshrc
