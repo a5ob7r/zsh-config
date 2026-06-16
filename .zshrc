@@ -61,28 +61,8 @@ error () {
   echo -e '\033[31m'$*'\033[0m' >&2
 }
 
-# Search whether or not a command can call from a shell prompt.
-#
-# This function can search not only commands on PATH but also shell functions
-# and shell aliases. Also, This function is fastest and practical way to search
-# command on Zsh. [1] is so fast way to do that. But it can search only
-# commands on PATH and can't do shell functions and shell aliases. And
-# execution speed of [2] is slower than above a command, but it can search not
-# only commands on PATH but also shell functions and shell aliases. So it is
-# the best way if has a function which combines merits of both ways, the
-# execution speed and the wide search range. This function is exactly that.
-#
-# [1] `(( ${+commands[<command_name>]} ))`
-# [2] `whence <command_name>`
-#
-# Global:
-#   None
-# Arguments:
-#   1: A command name
-# Return:
-#   0 or 1: Whether or not a command can call
 has() {
-  (( ${+commands["$1"]} )) || whence "$1" > /dev/null
+  whence $1 > /dev/null
 }
 
 # Run a process in the background and no output to stdout and stderr.
