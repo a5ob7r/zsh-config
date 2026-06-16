@@ -13,17 +13,7 @@ if [[ -r ~/.shrc ]]; then
   emulate sh -c 'source ~/.shrc'
 fi
 
-# zsh module {{{
-# `module_path` and `MODULE_PATH` in enrionment is ignored for security reason.
-# (See the `module_path` section in `ZSHPARAM(1)` for more detail.) So no
-# effect even if `export` it and need to add values to it at every shell
-# invocation.
-
-zmodload \
-  zsh/complist \
-  &>/dev/null \
-  ;
-# }}}
+zmodload zsh/complist
 
 # ZSHOPTIONS {{{
 setopt CORRECT
