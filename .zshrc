@@ -37,9 +37,6 @@ unsetopt FLOW_CONTROL
 
 # Functions {{{
 autoload -Uz \
-  add-zsh-hook \
-  cdr \
-  chpwd_recent_dirs \
   compinit \
   ;
 
@@ -194,7 +191,6 @@ watch=(notme)
 # }}}
 
 # Zstyle {{{
-zstyle ':chpwd:*' recent-dirs-max 0
 zstyle ':completion:*' completer _expand _complete _match _approximate _list
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z-_}={A-Za-z_-}'
 zstyle ':completion:*' menu select
@@ -242,8 +238,6 @@ bindkey '^D' delete-char
 # }}}
 
 compinit
-
-add-zsh-hook chpwd chpwd_recent_dirs
 
 if [[ -r ~/.local.zshrc ]]; then
   source ~/.local.zshrc
