@@ -48,11 +48,6 @@ has() {
   whence $1 > /dev/null
 }
 
-# Run a process in the background and no output to stdout and stderr.
-runb () {
-  "$@" &> /dev/null &|
-}
-
 prof () {
   local -r pager=${PAGER:-less}
 
