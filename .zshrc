@@ -4,11 +4,6 @@
 # - The minimal requirement version is 5.8.1 (installed in macOS v12.7.6 by default).
 #
 
-# For prof().
-if (( ${+ZPROF} )); then
-  zmodload zsh/zprof && zprof
-fi
-
 if [[ -r ~/.shrc ]]; then
   emulate sh -c 'source ~/.shrc'
 fi
@@ -46,18 +41,6 @@ error () {
 
 has() {
   whence $1 > /dev/null
-}
-
-prof () {
-  local -r pager=${PAGER:-less}
-
-  if has $pager; then
-    local -r command="zprof | $pager"
-  else
-    local -r command=zprof
-  fi
-
-  ZPROF= zsh -i -c $command
 }
 # }}}
 
