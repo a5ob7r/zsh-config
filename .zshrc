@@ -114,9 +114,6 @@ HISTFILE=~/.zsh_history
 HISTSIZE=1100000
 SAVEHIST=1000000
 
-# Treat also slash(/) as word separater.
-WORDCHARS="${WORDCHARS/\//}"
-
 PS1='
 %F{cyan}%~%f%(?.. %B%F{red}%?%f%b)%1(j. %F{yellow}%B%j%bj%f.) Lv.%L %F{magenta}%D{%H:%M:%S} %D%f
 %(?.%F{green}.%F{red})%#%f '
