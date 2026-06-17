@@ -128,9 +128,6 @@ SPROMPT="zsh: correct: %F{red}%R%f -> %F{green}%r%f [No/Yes/Abort/Edit]? "
 REPORTTIME=1
 REPORTMEMORY=131072 # 1024 * 128 KB
 TIMEFMT+=' max RSS %MKB'
-
-# Others.
-watch=(notme)
 # }}}
 
 # Zstyle {{{
