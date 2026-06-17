@@ -53,26 +53,6 @@ runb () {
   "$@" &> /dev/null &|
 }
 
-# Map a keybinding to a function using ZLE.
-#
-# 1. Create user defined widget.
-# 2. Bind a key combination to the widget.
-#
-# Global:
-#   None
-# Arguments:
-#   keys: key combinations
-#   fun: function name
-# Return:
-#   None
-bind_key2fun () {
-  local -r keys="$1"
-  local -r fun="$2"
-
-  zle -N "$fun"
-  bindkey "$keys" "$fun"
-}
-
 prof () {
   local -r pager=${PAGER:-less}
 
@@ -126,39 +106,6 @@ ghq-cd () {
   esac
 }
 # }}}
-# }}}
-
-# Widgets {{{
-__strip_head () {
-  setopt localoptions extended_glob
-
-  # Assume that head character of all command line buffer is not whitespaces or
-  # newline. This is normalization for following case match.
-  LBUFFER="${LBUFFER##[[:IFS:]]##}"
-
-  # e.g. sudo ls path -> ls path
-  # | is cursor position
-  case "$LBUFFER" in
-    # sudo ls path|
-    # sudo    |    ls path
-    *[[:IFS:]]* )
-      LBUFFER="${LBUFFER##[^[:IFS:]]##}"
-      LBUFFER="${LBUFFER##[[:IFS:]]##}"
-      RBUFFER="${RBUFFER##[[:IFS:]]##}"
-      ;;
-    # sudo| ls path
-    # s|udo     ls path
-    # |   sudo ls path
-    * )
-      LBUFFER=''
-      RBUFFER="${RBUFFER##[[:IFS:]]##}"
-      RBUFFER="${RBUFFER##[^[:IFS:]]##}"
-      RBUFFER="${RBUFFER##[[:IFS:]]##}"
-      ;;
-  esac
-
-  zle redisplay
-}
 # }}}
 
 # Parameters {{{
@@ -219,9 +166,6 @@ bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
-
-# Pure zsh widgets.
-bind_key2fun '^X^A' __strip_head
 
 bindkey '^R' history-incremental-pattern-search-backward
 bindkey '^S' history-incremental-pattern-search-forward
