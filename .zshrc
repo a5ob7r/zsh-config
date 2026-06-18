@@ -34,10 +34,7 @@ unsetopt FLOW_CONTROL
 error () {
   echo -e '\033[31m'$*'\033[0m' >&2
 }
-# }}}
 
-# Custom subcommands {{{
-# ghq {{{
 ghq-find () {
   command ghq list --full-path --exact "$1"
 }
@@ -75,7 +72,6 @@ ghq-cd () {
       ;;
   esac
 }
-# }}}
 # }}}
 
 # Parameters {{{
