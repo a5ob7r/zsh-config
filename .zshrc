@@ -122,7 +122,7 @@ zstyle ':completion:*' list-colors \
 # Key bindings {{{
 bindkey -e
 
-# Make "Delete" key work.
+# Make "Delete" (not "delete" for Apple's Mac) key work.
 if [[ -n ${terminfo[kdch1]} ]]; then bindkey ${terminfo[kdch1]} delete-char; fi
 
 bindkey '^R' history-incremental-pattern-search-backward
