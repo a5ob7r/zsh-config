@@ -137,13 +137,13 @@ bindkey -e
 # Make "Delete" key work.
 if [[ -n ${terminfo[kdch1]} ]]; then bindkey ${terminfo[kdch1]} delete-char; fi
 
+bindkey '^R' history-incremental-pattern-search-backward
+bindkey '^S' history-incremental-pattern-search-forward
+
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
-
-bindkey '^R' history-incremental-pattern-search-backward
-bindkey '^S' history-incremental-pattern-search-forward
 # }}}
 
 autoload -Uz compinit; compinit
