@@ -144,9 +144,6 @@ bindkey '^S' history-incremental-pattern-search-forward
 
 # Delete a forward char with a `delete` key.
 bindkey '^[[3~' delete-char
-
-# No need to list possible completions even if command line buffer is empty.
-bindkey '^D' delete-char
 # }}}
 
 autoload -Uz compinit; compinit
