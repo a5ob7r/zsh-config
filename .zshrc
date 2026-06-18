@@ -38,10 +38,6 @@ warning () {
 error () {
   echo -e '\033[31m'$*'\033[0m' >&2
 }
-
-has() {
-  whence $1 > /dev/null
-}
 # }}}
 
 # Custom subcommands {{{
