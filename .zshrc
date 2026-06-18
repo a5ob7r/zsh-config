@@ -31,10 +31,6 @@ unsetopt FLOW_CONTROL
 # }}}
 
 # Functions {{{
-warning () {
-  echo -e '\033[33m'$*'\033[0m' >&2
-}
-
 error () {
   echo -e '\033[31m'$*'\033[0m' >&2
 }
