@@ -30,50 +30,6 @@ unsetopt BEEP
 unsetopt FLOW_CONTROL
 # }}}
 
-# Functions {{{
-error () {
-  echo -e '\033[31m'$*'\033[0m' >&2
-}
-
-ghq-find () {
-  command ghq list --full-path --exact "$1"
-}
-
-ghq-cd () {
-  setopt LOCAL_OPTIONS ERR_RETURN
-
-  case $# in
-    0 )
-      error 'ghq-cd: Require one argument.'
-      return 1
-      ;;
-    1 )
-      ;;
-    * )
-      error 'ghq-cd: Too many arguments.'
-      return 1
-      ;;
-  esac
-
-  local -a repositories
-  repositories=("${(f)$(ghq-find $1)}")
-
-  case ${#repositories[@]} in
-    0 )
-      error 'ghq-cd: No repository was found.'
-      return 1
-      ;;
-    1 )
-      builtin cd ${repositories[@]}
-      ;;
-    * )
-      error 'ghq-cd: Multiple repositories were found.'
-      return 1
-      ;;
-  esac
-}
-# }}}
-
 # Parameters {{{
 # History.
 HISTFILE=~/.zsh_history
